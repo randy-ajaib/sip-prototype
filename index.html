@@ -609,6 +609,10 @@ h1, h2, h3, p { margin: 0; }
 .dd-l { flex: 1; font-size: 14px; color: var(--text-2); }
 .dd b { font-size: 14px; }
 .dd svg { flex: none; color: var(--text); }
+.sel-empty { display: flex; align-items: center; gap: 12px; width: calc(100% - 32px); padding: 12px 8px 12px 12px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.sel-empty .t { flex: 1; font-size: 16px; line-height: 20px; font-weight: 700; }
+.sel-empty:active { background: var(--surface-2); }
+.amt.inl input::placeholder { color: var(--text); }
 </style>
 </head>
 <body>
@@ -938,15 +942,16 @@ function hubBody(st) {
       <span class="pill ${dir(ret(s))}">${pctTxt(ret(s))}</span></button>`).join('')}
     <button type="button" class="link qp-all" data-a="openStock" data-k="qp-all">Lihat semua saham</button></div>
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
-  if (stock) {
+  {
     const schedLbl = !st.s.freq ? 'Pilih jadwal' : st.s.freq === 'daily' ? 'Setiap Hari' : schedShort(st.s);
     const endLbl = st.s.end == null ? 'Pilih durasi' : st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan';
     const dd = (k, a, label, value) => `<button type="button" class="dd" data-a="${a}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20, 2)}</button>`;
     return `<form class="form" novalidate><div class="scroll">
-      <div class="sel-card"><div class="sel-top">${logo(stock, 'lg')}<span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>
-        <button type="button" class="icon-btn" data-a="openStock" data-k="row-stock" aria-label="Ganti saham">${svg('edit', 22, 1.9)}</button></div>${potensiPill(stock, st)}</div>
-      <div class="inl-nom"><label for="amt-h">Nominal pembelian</label>
-        <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
+      ${!stock ? `<button type="button" class="sel-card sel-empty" data-a="openStock" data-k="row-stock"><span class="logo ph lg" aria-hidden="true"></span><span class="t">Pilih Saham</span>${svg('chev', 24, 2)}</button>` :
+      `<div class="sel-card"><div class="sel-top">${logo(stock, 'lg')}<span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>
+        <button type="button" class="icon-btn" data-a="openStock" data-k="row-stock" aria-label="Ganti saham">${svg('edit', 22, 1.9)}</button></div>${potensiPill(stock, st)}</div>`}
+      <div class="inl-nom"><label for="amt-h">Nominal pembelian${stock ? ' ' + stock.t : ''}</label>
+        <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
         <p class="err" id="amt-h-err" data-err>${st.amtErr ? svg('info', 16) + st.amtErr : ''}</p>
         ${quickChips(parseAmt(st.amount))}</div>
       <div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLbl)}</div>
@@ -979,7 +984,7 @@ const hubFooter = st => {
     const i = !st.stock ? 0 : (!st.amount || amtError(st.amount)) ? 1 : !schedDone(st.s) ? 2 : 3;
     return `<button type="button" class="cta" data-a="${NEXT_STEP[i][0]}" data-k="cta">${NEXT_STEP[i][1]}</button>`;
   }
-  return `${ok ? (st.infoView || infoBullets)(st) + fund() : ''}${cta(ok, st.submitting)}`;
+  return `${ok ? (st.infoView || infoBullets)(st) : ''}${fund()}${cta(ok, st.submitting)}`;
 };
 
 function schedSheet(st) {
@@ -1008,7 +1013,7 @@ const schedBody = (d, st) => {
 function endSheet(st) {
   const cur = st.draftEnd ?? 'forever';
   return { title: 'Durasi Nabung', fit: true, body: `<div class="sheet-body" style="padding:0" data-endlist>${endList(st, cur)}</div>
-    <div class="footer" style="padding-top:8px"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Selesai</button></div>` };
+    <div class="footer" style="padding-top:8px"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
 }
 const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) => {
   const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : (() => { const last = buyDates({ ...st.s, end: v }).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; })();
@@ -1020,7 +1025,8 @@ const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-
 /* ================= App engine ================= */
 function app(V) {
   return function (stage) {
-    const freshS = () => ({ freq: null, day: null, date: null, end: V.endIn === 'row' ? null : 'forever' });
+    // Figma 14067:20236: Jadwal and Durasi start on Setiap Hari / Sampai dihapus.
+    const freshS = () => ({ freq: 'daily', day: null, date: null, end: 'forever' });
     const st = { ...baseState(), s: freshS(), endIn: V.endIn, amount: '', pages: [], sheet: null, enter: null, draft: null, draftAmt: '10', simFreq: 'weekly', simEnd: 'forever', sort: 'pop', detail: null };
     const phone = document.createElement('div');
     phone.className = 'phone';
@@ -1246,6 +1252,7 @@ const nominalSheet = st => ({ title: 'Nominal Pembelian', fit: true, body: `<div
   <div class="keypad" aria-label="Papan angka">${KEYS.map(k => `<button type="button" class="key" data-a="key" data-v="${k}" data-k="key-${k}" ${k === 'del' ? 'aria-label="Hapus"' : k === ',' ? 'aria-label="Koma"' : ''}>${k === 'del' ? `<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M8 2h15a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 0123 18H8l-6.5-8z"/><path d="M12 7l6 6M18 7l-6 6" stroke-linecap="round"/></svg>` : k}</button>`).join('')}</div></div>` });
 function nominalProj(st) {
   const s = byT(st.stock);
+  if (!s) return '';
   if (amtError(st.draftAmt)) return '';
   return `<div class="desc">${usd(parseAmt(st.draftAmt))} ≈ <b>${lots(s, parseAmt(st.draftAmt))} lembar ${s.t}</b> per pembelian, dengan harga sekarang ${usd(s.p)}.</div>`;
 }

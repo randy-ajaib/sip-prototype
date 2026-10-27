@@ -1,5 +1,13 @@
 # SIP creation — decisions from /sip-prototype
 
+## Initial state — Figma 14067:20236 (28 Okt 2026)
+- Same layout as the picked state, empty: placeholder card "Pilih Saham ›", "Nominal pembelian" input with **$0** placeholder (no chip selected),
+  Jadwal **Setiap Hari** and Durasi **Sampai dihapus** preset from the start.
+- Footer: **Sumber Dana always shown**; info box only once the plan is complete; disabled "Mulai Nabung Rutin".
+- Picked state label reads "Nominal pembelian {TICKER}". Picking a stock prefills $10 only if no amount was entered yet.
+- Durasi sheet button now **Simpan** (all sheets opened from the page use Simpan).
+- Replaces the step-icon empty state (Figma 13947:15639).
+
 ## Main page after picking a stock — Figma 14030:20305 (28 Okt 2026)
 - Stock card (bordered): logo, ticker, name, pencil button to change stock; green "Potensi kenaikan …" strip inside the card.
 - **Nominal on the page** again: "Nominal pembelian" input + $5 / $10 / $25 / $50 chips (no nominal sheet in this path).
