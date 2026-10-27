@@ -530,6 +530,47 @@ h1, h2, h3, p { margin: 0; }
 .row.filled .t { font-size: 16px; line-height: 20px; font-variant-numeric: tabular-nums; }
 .num[data-state="done"] { background: var(--tint); color: var(--primary); }
 
+/* ---------- Round 20: initial state (Figma 13947:15639), stock list (14006:18615), whole-screen scroll ---------- */
+:root { --header: #083c96; }
+.hd { height: 52px; }
+.intro { line-height: 19px; }
+.tabs { height: 40px; padding: 2px; background: rgba(0,0,0,.1); border-radius: 8px; }
+.tab { height: 36px; border-radius: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.6); }
+.body { border-radius: 12px 12px 0 0; }
+.row { min-height: 65px; padding: 16px; }
+.row:disabled > svg:last-child { color: var(--text-3); }
+.ico { width: 32px; height: 32px; flex: none; border-radius: 999px; display: grid; place-items: center; background: #f5f5f5; color: rgba(0,0,0,.48); }
+.ico[data-state="on"] { background: var(--primary); color: #fff; }
+.footer { padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); }
+.cta:disabled:not([data-loading]) { background: var(--primary); color: #fff; opacity: .4; }
+
+/* The whole screen scrolls, not just the rows; the footer stays pinned to the bottom. */
+.main, .page { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.main::-webkit-scrollbar, .page::-webkit-scrollbar { display: none; }
+.main .body, .page-body { flex: 1 0 auto; min-height: auto; overflow: clip; }
+.main .form { flex: 1 0 auto; min-height: auto; }
+.main .scroll, .page .scroll { flex: 1 0 auto; min-height: auto; overflow: visible; }
+.main .footer { position: sticky; bottom: 0; z-index: 1; }
+
+.page-top.light .hd h1 { font-size: 17px; line-height: 23px; }
+.page-top.light + .page-body { padding-top: 0; }
+.fig-head { gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,.1); }
+.search.fig svg { left: 10px; color: rgba(0,0,0,.48); }
+.search.fig input { height: 40px; border: 0; border-radius: 8px; background: rgba(0,0,0,.04); padding-left: 38px; }
+.search.fig input::placeholder { color: rgba(0,0,0,.34); }
+.search.fig input:focus { background: rgba(0,0,0,.04); box-shadow: inset 0 0 0 1px var(--border-strong); }
+.fchip { height: 32px; gap: 4px; padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,.04); font-size: 13px; }
+.tabs-sub .retnote { gap: 6px; }
+.retnote-ic { width: 24px; height: 24px; background: rgba(28,184,126,.11); color: #0c8a5c; }
+.tabs-sub .link { gap: 6px; height: auto; margin-right: 16px; padding: 0; font-size: 12px; line-height: 16px; font-weight: 400; }
+.fig-row { gap: 8px; padding: 16px; border-bottom-color: rgba(0,0,0,.1); }
+.fig-row .row-meta { gap: 2px; }
+.fig-row .t { font-size: 14px; line-height: 19px; }
+.fig-row .s { color: rgba(0,0,0,.48); }
+.fig-ret b { line-height: 19px; }
+.fig-ret b.up { color: #0c8a5c; }
+.fig-ret .s { color: rgba(0,0,0,.48); }
+
 /* ---------- Picker (verbatim from PICKER.md) ---------- */
 .proto-picker {
   position: fixed;
@@ -678,6 +719,10 @@ const P = {
   stock: '<path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/>',
   sort: '<path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/>',
   filter: '<path d="M6 4v6M6 14v6M12 4v2M12 10v10M18 4v10M18 18v2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18" cy="16" r="2"/>',
+  // Hub row icons (Figma 13947:15639: ic_Line Graphic, ic_Dollar_sign, ic_Auto Mutual Fund, ic_Calendar)
+  line: '<path d="M5.5 16.5l4-6 4.5 3 4.5-7"/><circle cx="5.5" cy="16.5" r="1.5"/><circle cx="9.5" cy="10.5" r="1.5"/><circle cx="14" cy="13.5" r="1.5"/><circle cx="18.5" cy="6.5" r="1.5"/>',
+  dollar: '<path d="M12 3.5v17M16 8c0-1.7-1.8-3-4-3s-4 1.2-4 3c0 4.2 8 2.3 8 6.5 0 1.8-1.8 3-4 3s-4-1.3-4-3"/>',
+  sched: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M7.5 13.5h2M11 13.5h2M14.5 13.5h2M7.5 17h2M11 17h2"/>',
 };
 const svg = (k, size = 20, sw = 1.75) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
 
@@ -811,7 +856,7 @@ function sim(s, amt, freq = 'weekly', months = 12) {
 }
 const BASIS = 10;
 const usd0 = n => '$' + Math.round(n).toLocaleString('en-US');
-const pctTxt = p => (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(1) + '%';
+const pctTxt = p => (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(1).replace('.', ',') + '%';
 const gainTxt = g => (g >= 0 ? '+' : '−') + usd0(Math.abs(g));
 const dir = n => n >= 0 ? 'up' : 'down';
 const FREQ_PER = { daily: 'tiap hari bursa', weekly: 'tiap minggu', monthly: 'tiap bulan' };
@@ -893,14 +938,15 @@ function hubBody(st) {
   const stock = byT(st.stock), amtOk = !!st.amount && !amtError(st.amount), sd = schedDone(st.s);
   const endOk = st.s.end != null;
   const step = !stock ? 1 : !amtOk ? 2 : !sd ? 3 : !endOk ? 4 : 5;
-  const num = (n, done) => `<span class="num" data-state="${done ? 'done' : step === n ? 'active' : 'todo'}" aria-hidden="true">${done ? svg('check', 16, 2.5) : n}</span>`;
-  const sub = (n, text) => text ? `<span class="s ${step === n ? 'cue' : ''}">${text}</span>` : '';
+  // Figma 13947:15639: icon per step, blue once reachable; no subtitles on unfilled rows.
+  const ROW_ICON = { stock: 'line', nominal: 'dollar', sched: 'sched', end: 'cal' };
+  const ico = (k, n, done) => `<span class="ico" data-state="${done || step >= n ? 'on' : 'off'}" aria-hidden="true">${svg(ROW_ICON[k], 20)}</span>`;
   const row = (k, a, on, n, done, title, subText, label) => `<button type="button" class="row ${done ? 'filled' : ''}" data-a="${a}" data-k="row-${k}" ${on ? '' : 'disabled'}>
-      ${num(n, done)}<span class="row-meta">${done && label ? `<span class="rl">${label}</span><span class="t">${title}</span>` : `<span class="t">${title}</span>${sub(n, subText)}`}</span>${svg('chev', 24, 2)}</button>`;
+      ${ico(k, n, done)}<span class="row-meta">${done && label ? `<span class="rl">${label}</span><span class="t">${title}</span>` : `<span class="t">${title}</span>`}</span>${svg('chev', 24, 2)}</button>`;
   const stockBlock = stock
     ? `<div class="stock-blk"><button type="button" class="row" data-a="openStock" data-k="row-stock">${logo(stock)}
         <span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>${svg('chev', 24, 2)}</button>${potensiPill(stock, st)}</div>`
-    : row('stock', 'openStock', true, 1, false, 'Pilih Saham', 'Lihat return tiap saham');
+    : row('stock', 'openStock', true, 1, false, 'Pilih saham');
   const last = endOk && st.s.end !== 'forever' ? buyDates(st.s).at(-1) : null;
   const mode = st.initMode;
   if (!stock && mode === 'reveal') return `<form class="form" novalidate><div class="scroll">
@@ -917,11 +963,9 @@ function hubBody(st) {
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
   const show = n => mode !== 'reveal' || n <= step;
   return `<form class="form" novalidate><div class="scroll">${stockBlock}
-    ${!show(2) ? '' : row('nominal', 'openNominal', !!stock, 2, amtOk, amtOk ? usd(parseAmt(st.amount)) : 'Nominal per Pembelian',
-      !stock ? 'Pilih saham terlebih dahulu' : 'Tentukan nominal tiap pembelian', 'Nominal pembelian')}
-    ${!show(3) ? '' : row('sched', 'openSched', amtOk, 3, sd, sd ? schedShort(st.s) : 'Jadwal Pembelian', !amtOk ? 'Isi nominal terlebih dahulu' : 'Harian, mingguan, atau bulanan', 'Jadwal nabung rutin')}
-    ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Durasi Nabung',
-      !sd ? 'Atur jadwal terlebih dahulu' : 'Sampai dihapus, atau 1–12 bulan', 'Durasi')}
+    ${!show(2) ? '' : row('nominal', 'openNominal', !!stock, 2, amtOk, amtOk ? usd(parseAmt(st.amount)) : 'Tentukan nominal', '', 'Nominal pembelian')}
+    ${!show(3) ? '' : row('sched', 'openSched', amtOk, 3, sd, sd ? schedShort(st.s) : 'Jadwal pembelian', '', 'Jadwal nabung rutin')}
+    ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Durasi', '', 'Durasi')}
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
 }
 // Bullet info box (Figma 13974:26541)
@@ -995,11 +1039,11 @@ function app(V) {
 
     function view() {
       const top = st.pages.length - 1;
-      let html = `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${statusBar()}${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
+      let html = `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
       html += st.pages.map((p, i) => {
         const pg = V.page(p, st);
         return `<div class="page ${st.enter === 'page' && i === top ? 'enter' : ''}" ${i < top || st.sheet ? 'inert' : ''} role="dialog" aria-label="${esc(pg.title)}">
-          <div class="page-top ${V.lightPage ? 'light' : ''}">${statusBar()}<div class="hd"><button type="button" class="icon-btn" data-a="pop" data-k="pop-${i}" aria-label="Kembali">${svg('back', 24, 2)}</button><h1>${esc(pg.title)}</h1></div></div>
+          <div class="page-top ${V.lightPage ? 'light' : ''}"><div class="hd"><button type="button" class="icon-btn" data-a="pop" data-k="pop-${i}" aria-label="Kembali">${svg('back', 24, 2)}</button><h1>${esc(pg.title)}</h1></div></div>
           <div class="page-body">${pg.body}</div></div>`;
       }).join('');
       if (st.sheet) {
@@ -1108,7 +1152,9 @@ function app(V) {
     function syncAmt() {
       const input = phone.querySelector('[data-amt]');
       if (input) { input.setAttribute('aria-invalid', String(!!st.amtErr)); const err = phone.querySelector('[data-err]'); if (err) err.innerHTML = st.amtErr ? svg('info', 16) + st.amtErr : ''; }
-      ctx.patch('[data-quick]', quickChips(parseAmt(st.draftAmt)));
+      // Toggle in place: patching [data-quick] nested a second grid inside the first and shrank the chips.
+      const n = parseAmt(st.draftAmt);
+      phone.querySelectorAll('[data-quick] [data-a="quick"]').forEach(b => b.setAttribute('aria-pressed', String(n === +b.dataset.v)));
       ctx.patch('[data-proj]', V.proj(st));
       const c = phone.querySelector('[data-k="confirmAmt"]'); if (c) c.disabled = !!amtError(st.draftAmt);
     }
@@ -1487,7 +1533,7 @@ const retRight = (s, st) => {
   const y = st?.period || 1, v = retP(s, y);
   if (!st?.period) return `<span class="fig-ret"><b class="${dir(ret(s))}">${pctTxt(ret(s))}</b><span class="s">dalam 1 tahun</span></span>`;
   if (v == null) return `<span class="fig-ret"><b class="na">—</b><span class="s">Belum ${y} tahun</span></span>`;
-  if (st.figPeriod) return `<span class="fig-ret"><b class="${dir(v)}">${pctTxt(v)}${y > 1 ? '<span class="per-u">/thn</span>' : ''}</b><span class="s">${y === 1 ? 'dalam 1 tahun' : `rata-rata ${y} tahun`}</span></span>`;
+  if (st.figPeriod) return `<span class="fig-ret"><b class="${dir(v)}">${pctTxt(v)}</b><span class="s">${y === 1 ? 'dalam 1 tahun' : 'per tahun'}</span></span>`;
   return `<span class="fig-ret"><b class="${dir(v)}">${pctTxt(v)}${y > 1 ? '<span class="per-u">/thn</span>' : ''}</b></span>`;
 };
 const figRow = (st, s, mid = '') => `<button type="button" class="stock fig-row" data-a="pick" data-v="${s.t}" data-k="pick-${s.t}" aria-pressed="${st.stock === s.t}">
@@ -1545,10 +1591,10 @@ const svFigma = stockVariant(slFigma), svSpark = stockVariant(slSpark), svTabs =
 const slFigma2 = {
   title: 'Pilih Saham', period: 1,
   head: st => { const y = st.period || 1; return `${searchFig(st, 'qf2')}<div class="fchips">
-      <button type="button" class="fchip" data-a="openPeriod" data-k="chip-period" aria-haspopup="dialog">${svg('cal', 16)}Return ${y} tahun terakhir</button>
+      <button type="button" class="fchip" data-a="openPeriod" data-k="chip-period" aria-haspopup="dialog">${svg('cal', 16)}${y} tahun terakhir</button>
       <button type="button" class="fchip" data-a="openCat" data-k="chip-cat" aria-haspopup="dialog">${svg('filter', 16)}${catLabel(st)}</button></div>
-    <div class="tabs-sub"><p class="retnote"><span class="retnote-ic">${svg('stock', 14)}</span>${y === 1 ? 'Return saham 1 tahun terakhir' : `Rata-rata return per tahun, ${y} tahun terakhir`}</p>
-      <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 14)} ${sortLabel(st)}</button></div>`; },
+    <div class="tabs-sub"><p class="retnote"><span class="retnote-ic">${svg('line', 16)}</span>${y === 1 ? 'Return saham 1 tahun terakhir' : `Avg. return ${y} tahun terakhir`}</p>
+      <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 16)}${sortLabel(st)}</button></div>`; },
   list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)),
 };
 const svFigma2 = app({ ...sparkCfg, lightPage: true,

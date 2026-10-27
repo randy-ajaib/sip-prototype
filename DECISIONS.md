@@ -1,5 +1,16 @@
 # SIP creation — decisions from /sip-prototype
 
+## Initial state + stock list — Figma 13947:15639 and 14006:18615 (27 Okt 2026)
+- Hub rows: icon per step (line graphic / dollar / jadwal calendar / calendar), blue once the step is reachable, grey before.
+  Titles "Pilih saham", "Tentukan nominal", "Jadwal pembelian", "Durasi"; no subtitles or "… terlebih dahulu" hints.
+  Filled rows keep the grey label + bold value, with the blue icon instead of the check badge.
+- Tabs restyled as the Figma currency switcher; header #083c96; disabled CTA is primary at 40% opacity.
+- No status bar. The whole screen scrolls (header included); the hub footer stays pinned to the bottom.
+- Stock list: chip "📅 {N} tahun terakhir"; line "Return saham 1 tahun terakhir" / "Avg. return N tahun terakhir";
+  right column "+42,5%" over "dalam 1 tahun" (1 year) or "per tahun" (3 / 5 years, no "/thn" suffix).
+- Percentages use a decimal comma everywhere ("+42,5%").
+- Nominal sheet: amount chips keep their width when another one is tapped.
+
 ## Current direction — Figma 13959:20993 (26 Okt 2026, "use this approach for now")
 - Stock row: logo + ticker + name + chevron, no badge; green strip below:
   "Potensi kenaikan **+x%** dalam 1 tahun terakhir" (red "Perubahan harga −x%" when negative).
