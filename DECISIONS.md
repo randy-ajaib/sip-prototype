@@ -1,5 +1,12 @@
 # SIP creation — decisions from /sip-prototype
 
+## Rencana SIP — Figma 14014:19075 (27 Okt 2026)
+- Title "Rencana SIP kamu" + note that SIP buys run when the US market opens (21.30 WIB).
+- One card per plan: logo + ticker, "Aktif" label, three cells Nominal / Frekuensi (Harian, Mingguan, Bulanan) / Autodebit (next debit date).
+- Infobox below the cards: keep enough funds in Rekening Saham AS, link "Deposit Rekening Saham AS" (not wired up).
+- Tab label is plain "Rencana SIP" (no count). Empty state kept from earlier rounds; Figma doesn't show one.
+- The variant picker pill is gone; the page opens straight on the prototype.
+
 ## Initial state + stock list — Figma 13947:15639 and 14006:18615 (27 Okt 2026)
 - Hub rows: icon per step (line graphic / dollar / jadwal calendar / calendar), blue once the step is reachable, grey before.
   Titles "Pilih saham", "Tentukan nominal", "Jadwal pembelian", "Durasi"; no subtitles or "… terlebih dahulu" hints.
