@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SIP creation — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #3278f0;
+  --primary-press: #2264d4;
+  --primary-text: #2264d4;
+  --tint: #eaf2fe;
+  --text: #06090d;
+  --text-2: rgba(6, 9, 13, 0.62);
+  --text-3: rgba(6, 9, 13, 0.45);
+  --surface: #fff;
+  --surface-2: #f4f6f6;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --danger: #d02f2f;
+  --up: #0f8a4c;
+  --down: #d02f2f;
+  --header: #0b3fae;
+  --disabled-bg: #e4e7eb;
+  --disabled-text: rgba(6, 9, 13, 0.4);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: #e6e9ed;
+  font-family: Lato, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+input { font: inherit; }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+
+#stage { min-height: 100%; display: grid; place-items: center; padding: 80px 16px 32px; }
+.phone {
+  position: relative; width: 390px; height: 844px; background: var(--header);
+  border-radius: 44px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 24px 48px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.06);
+}
+@media (max-width: 430px) {
+  #stage { padding: 0; }
+  .phone { width: 100vw; height: 100dvh; border-radius: 0; }
+}
+.main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* Chrome */
+.sb { height: 36px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 4px 28px 0; color: #fff; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sb svg { display: block; }
+.hd { height: 56px; flex: none; display: flex; align-items: center; gap: 4px; padding: 0 8px; color: #fff; }
+.hd h1 { font-size: 18px; line-height: 24px; font-weight: 700; }
+.hd :focus-visible, .intro :focus-visible { outline-color: #fff; }
+.icon-btn { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; background: transparent; border-radius: 999px; cursor: pointer; }
+.icon-btn[hidden] { display: grid; visibility: hidden; }
+.intro { padding: 0 16px 16px; color: #fff; font-size: 14px; line-height: 20px; flex: none; }
+.tabs { display: flex; padding: 4px; margin-top: 12px; background: rgba(0,0,0,.2); border-radius: 10px; }
+.tab { flex: 1; height: 36px; border: 0; border-radius: 7px; background: transparent; color: rgba(255,255,255,.72); font-size: 14px; cursor: pointer; transition: background-color .15s ease-out, color .15s ease-out; }
+.tab[aria-selected="true"] { background: #fff; color: var(--primary-text); font-weight: 700; }
+
+.body { flex: 1; min-height: 0; background: var(--surface); border-radius: 16px 16px 0 0; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.form { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.footer { flex: none; padding: 12px 16px calc(20px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 12px; background: var(--surface); }
+
+/* Rows (Sheets variant) */
+.row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 68px; padding: 12px 16px; border: 0; border-bottom: 1px solid var(--border); background: transparent; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.row:disabled { cursor: not-allowed; }
+.row:disabled .t { color: var(--text-3); }
+.row:active:not(:disabled) { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .row:hover:not(:disabled) { background: var(--surface-2); } }
+.row-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.t { font-weight: 700; font-size: 14px; line-height: 20px; }
+.s { font-size: 12px; line-height: 16px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-end { display: flex; align-items: center; gap: 2px; color: var(--text-2); font-size: 12px; }
+.row-end svg { color: var(--text); }
+
+.logo { width: 32px; height: 32px; flex: none; border-radius: 999px; display: grid; place-items: center; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .02em; user-select: none; }
+.logo.lg { width: 40px; height: 40px; font-size: 11px; }
+.logo.ph { background: var(--surface-2); color: var(--text-2); }
+
+/* Stock list */
+.search { position: relative; margin: 0 16px 8px; }
+.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-3); }
+.search input { width: 100%; height: 44px; border-radius: 10px; border: 1px solid transparent; background: var(--surface-2); padding: 0 12px 0 40px; font-size: 16px; color: var(--text); }
+.search input::placeholder { color: var(--text-3); }
+.search input:focus { background: #fff; border-color: var(--border-strong); }
+.stock { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 10px 16px; border: 0; background: transparent; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.stock:active { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .stock:hover { background: var(--surface-2); } }
+.stock .row-meta { gap: 0; }
+.px { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; line-height: 20px; flex: none; }
+.chg { display: block; font-size: 12px; line-height: 16px; }
+.chg.up { color: var(--up); } .chg.down { color: var(--down); }
+.stock .tick { width: 20px; flex: none; color: var(--primary); }
+.stock[aria-pressed="true"] { background: var(--tint); }
+.list-empty { padding: 32px 24px; text-align: center; color: var(--text-2); font-size: 14px; line-height: 20px; }
+.list-empty b { color: var(--text); display: block; margin-bottom: 4px; }
+
+/* Schedule editor */
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; background: var(--surface-2); border-radius: 10px; }
+.seg button { height: 40px; border: 0; border-radius: 7px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 700; cursor: pointer; transition: background-color .15s ease-out, color .15s ease-out, box-shadow .15s ease-out; }
+.seg button[aria-checked="true"] { background: #fff; color: var(--text); box-shadow: 0 0 0 1px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04); }
+.sub { display: flex; flex-direction: column; gap: 10px; }
+.lbl { font-size: 12px; line-height: 16px; color: var(--text-2); font-weight: 700; }
+.days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.dates { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.chip { height: 44px; border-radius: 10px; border: 1px solid var(--border-strong); background: #fff; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out, transform .16s var(--ease-out); }
+.chip:active { transform: scale(.96); }
+.chip[aria-checked="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.note { display: flex; gap: 6px; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.note svg { flex: none; margin-top: 0; }
+.desc { padding: 12px; border-radius: 10px; background: var(--surface-2); font-size: 14px; line-height: 20px; color: var(--text-2); }
+.desc b { color: var(--text); }
+.editor { display: flex; flex-direction: column; gap: 16px; }
+
+/* Amount */
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label { font-size: 14px; line-height: 20px; font-weight: 700; }
+.amt { position: relative; }
+.amt .pre { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; font-weight: 700; font-size: 16px; }
+.amt input { width: 100%; height: 48px; border-radius: 10px; border: 1px solid var(--border-strong); background: #fff; padding: 0 14px 0 28px; font-size: 16px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; transition: border-color .15s ease-out; }
+.amt input:focus { border-color: var(--primary); }
+.amt input[aria-invalid="true"] { border-color: var(--danger); }
+.quick { display: flex; gap: 8px; flex-wrap: wrap; }
+.qchip { position: relative; height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--border-strong); background: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out, transform .16s var(--ease-out); }
+.qchip::before { content: ""; position: absolute; inset: -6px -4px; }
+.qchip:active { transform: scale(.96); }
+.qchip[aria-pressed="true"] { background: var(--tint); border-color: var(--primary); color: var(--primary-text); }
+.err { display: flex; align-items: center; gap: 6px; color: var(--danger); font-size: 12px; line-height: 16px; }
+.err:empty { display: none; }
+.hint { font-size: 12px; line-height: 16px; color: var(--text-2); }
+
+/* Footer bits */
+.info { display: flex; gap: 8px; padding: 12px; border-radius: 10px; background: var(--surface-2); font-size: 12px; line-height: 16px; color: var(--text-2); text-wrap: pretty; }
+.info svg { flex: none; color: var(--text-2); }
+.info b { color: var(--text); font-variant-numeric: tabular-nums; }
+.fund { display: flex; justify-content: space-between; align-items: center; font-size: 14px; line-height: 20px; }
+.fund .k { color: var(--text-2); }
+.fund > span:last-child { font-weight: 700; font-size: 12px; }
+.tag { display: inline-block; font-size: 10px; line-height: 16px; padding: 0 6px; border-radius: 4px; background: var(--tint); color: var(--primary-text); margin-left: 6px; vertical-align: 1px; }
+.cta { position: relative; height: 48px; width: 100%; border: 0; border-radius: 10px; background: var(--primary); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .16s var(--ease-out), background-color .15s ease-out; }
+.cta:active:not(:disabled) { transform: scale(.97); background: var(--primary-press); }
+.cta:disabled { background: var(--disabled-bg); color: var(--disabled-text); cursor: not-allowed; }
+.cta[data-loading] { background: var(--primary); color: #fff; cursor: progress; }
+.cta.ghost { background: transparent; color: var(--primary-text); }
+.spin { width: 18px; height: 18px; border-radius: 999px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Sheet */
+.overlay { position: absolute; inset: 0; z-index: 10; }
+.backdrop { position: absolute; inset: 0; background: rgba(6,9,13,.42); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 86%; background: #fff; border-radius: 16px 16px 0 0; display: flex; flex-direction: column; }
+.sheet.fit { height: auto; max-height: 86%; }
+.overlay.closing .backdrop { animation: fadeOut .2s ease-in forwards; }
+.overlay.closing .sheet { animation: sheetOut .2s ease-in forwards; }
+.grab { width: 36px; height: 4px; border-radius: 999px; background: rgba(0,0,0,.14); margin: 8px auto 0; flex: none; }
+.sheet-hd { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 8px 16px; flex: none; }
+.sheet-hd h2 { font-size: 18px; line-height: 24px; font-weight: 700; }
+.sheet-body { padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 16px; }
+.preview { font-size: 14px; line-height: 20px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.preview b { color: var(--text); }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes fadeOut { to { opacity: 0; } }
+@keyframes sheetIn { from { transform: translateY(100%); } }
+@keyframes sheetOut { to { transform: translateY(100%); } }
+
+/* Stepper */
+.progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 0 16px 16px; flex: none; }
+.progress span { height: 4px; border-radius: 999px; background: rgba(255,255,255,.25); overflow: hidden; }
+.progress span::after { content: ""; display: block; height: 100%; background: #fff; transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease-out); }
+.progress span[data-on]::after { transform: scaleX(1); }
+.step { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: stepIn .28s var(--ease-out); }
+@keyframes stepIn { from { opacity: 0; transform: translateX(var(--dx, 16px)); } }
+.step-hd { padding: 20px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+.eyebrow { font-size: 12px; line-height: 16px; color: var(--text-2); font-weight: 700; }
+.step-hd h2 { font-size: 20px; line-height: 28px; font-weight: 700; text-wrap: balance; }
+.picked { display: flex; align-items: center; gap: 10px; margin: 0 16px 16px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); }
+.link { position: relative; border: 0; background: transparent; color: var(--primary-text); font-weight: 700; font-size: 14px; cursor: pointer; padding: 0 4px; height: 32px; }
+.link::before { content: ""; position: absolute; inset: -6px -4px; }
+.opts { display: flex; flex-direction: column; gap: 10px; padding: 0 16px 16px; }
+.opt { border: 1px solid var(--border-strong); border-radius: 12px; transition: border-color .15s ease-out, box-shadow .15s ease-out; }
+.opt[data-on] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.opt-btn { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 12px 14px; border: 0; background: transparent; text-align: left; cursor: pointer; border-radius: 12px; }
+.radio { width: 20px; height: 20px; flex: none; border-radius: 999px; border: 2px solid var(--border-strong); display: grid; place-items: center; transition: border-color .15s ease-out; }
+.radio::after { content: ""; width: 10px; height: 10px; border-radius: 999px; background: var(--primary); transform: scale(0); transition: transform .2s var(--ease-out); }
+.opt[data-on] .radio { border-color: var(--primary); }
+.opt[data-on] .radio::after { transform: scale(1); }
+.opt .s { white-space: normal; }
+.opt-sub { padding: 0 14px 14px; animation: fadeIn .2s ease-out; }
+.big-amt { display: flex; align-items: center; justify-content: center; gap: 2px; padding: 8px 16px 4px; font-size: 40px; line-height: 48px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.big-amt input { max-width: 8ch; border: 0; padding: 0; font-size: 40px; font-weight: 700; color: var(--text); background: transparent; font-variant-numeric: tabular-nums; text-align: left; border-bottom: 2px solid var(--border-strong); transition: border-color .15s ease-out; }
+.big-amt input:focus { outline: none; border-bottom-color: var(--primary); }
+.big-amt input[aria-invalid="true"] { border-bottom-color: var(--danger); }
+.center { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 16px 20px; }
+.review { margin: 0 16px 16px; border: 1px solid var(--border); border-radius: 12px; padding: 4px 14px; }
+.review div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; font-size: 14px; line-height: 20px; }
+.review div + div { border-top: 1px solid var(--border); }
+.review dt { color: var(--text-2); flex: none; }
+.review dd { margin: 0; font-weight: 700; text-align: right; min-width: 0; font-variant-numeric: tabular-nums; }
+
+/* Sentence */
+.sentence { padding: 24px 16px 20px; font-size: 24px; line-height: 44px; font-weight: 700; letter-spacing: -.01em; text-wrap: pretty; }
+.tok { display: inline; font: inherit; border: 0; padding: 4px 8px; margin: 0 1px; border-radius: 8px; background: var(--tint); color: var(--primary-text); cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone; font-variant-numeric: tabular-nums; transition: background-color .15s ease-out, color .15s ease-out; }
+.tok[data-empty] { background: transparent; color: var(--text-3); text-decoration: underline 2px dashed; text-underline-offset: 6px; padding: 4px 2px; }
+.tok[aria-expanded="true"] { background: var(--primary); color: #fff; text-decoration: none; padding: 4px 8px; }
+.panel { border-top: 1px solid var(--border); padding: 16px 0 8px; }
+.panel-hd { padding: 0 16px 12px; display: flex; justify-content: space-between; align-items: center; }
+.panel-pad { padding: 0 16px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px; }
+.stat { padding: 12px; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; gap: 2px; }
+.stat .v { font-size: 16px; line-height: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Success + plans */
+.done { flex: 1; display: flex; flex-direction: column; padding: 40px 16px calc(20px + env(safe-area-inset-bottom)); }
+.done-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; margin-bottom: 24px; }
+.done-check { width: 64px; height: 64px; border-radius: 999px; background: #e3f5ec; color: var(--up); display: grid; place-items: center; margin-bottom: 8px; animation: pop .45s var(--ease-out); }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.done-hero h2 { font-size: 20px; line-height: 28px; }
+.done-hero p { font-size: 14px; line-height: 20px; color: var(--text-2); max-width: 30ch; }
+.done .review { margin: 0 0 auto; }
+.done-actions { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; }
+.plans { padding: 8px 0; }
+.plan { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.plan .amtv { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; }
+.empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; padding: 32px; }
+.empty .ic { width: 56px; height: 56px; border-radius: 999px; background: var(--surface-2); display: grid; place-items: center; color: var(--text-2); margin-bottom: 8px; }
+.empty p { font-size: 14px; line-height: 20px; color: var(--text-2); max-width: 28ch; }
+.empty .cta { width: auto; padding: 0 24px; margin-top: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .phone *, .phone *::before, .phone *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+
+/* ---------- Round 2 ---------- */
+.overlay.enter .backdrop { animation: fadeIn .3s ease-out; }
+.overlay.enter .sheet { animation: sheetIn .4s var(--ease-drawer); }
+.page { position: absolute; inset: 0; z-index: 5; background: #fff; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.08); }
+.page.enter { animation: pageIn .4s var(--ease-drawer); }
+.page.leaving { animation: pageOut .24s ease-in forwards; }
+.page.gone { visibility: hidden; }
+@keyframes pageIn { from { transform: translateX(100%); } }
+@keyframes pageOut { to { transform: translateX(100%); } }
+.page-top { background: var(--header); flex: none; padding-bottom: 4px; }
+.page-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 12px; }
+
+.num { width: 32px; height: 32px; flex: none; border-radius: 999px; display: grid; place-items: center; font-size: 14px; font-weight: 700; background: var(--surface-2); color: var(--text-3); font-variant-numeric: tabular-nums; }
+.num[data-state="active"] { background: var(--primary); color: #fff; }
+.num[data-state="done"] { background: #e3f5ec; color: var(--up); }
+.s.cue { color: var(--primary-text); font-weight: 700; }
+
+.basis { display: flex; gap: 6px; align-items: flex-start; margin: 0 16px 12px; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.basis svg { flex: none; }
+.basis b { color: var(--text); }
+.sort { display: flex; gap: 8px; padding: 0 16px 8px; }
+.qchip[aria-checked="true"] { background: var(--tint); border-color: var(--primary); color: var(--primary-text); }
+.gain { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.pct { font-weight: 700; font-size: 16px; line-height: 22px; font-variant-numeric: tabular-nums; }
+.up { color: var(--up); } .down { color: var(--down); }
+.pill { display: inline-block; font-size: 12px; line-height: 16px; padding: 2px 6px; border-radius: 6px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pill.up { background: #e3f5ec; } .pill.down { background: #fdeaea; }
+.disc { padding: 16px 16px 24px; font-size: 12px; line-height: 16px; color: var(--text-3); text-wrap: pretty; }
+
+.cards { display: flex; flex-direction: column; gap: 12px; padding: 0 16px 8px; }
+.card { display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: #fff; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.03); transition: transform .16s var(--ease-out), border-color .15s ease-out; }
+.card:active { transform: scale(.98); }
+@media (hover: hover) and (pointer: fine) { .card:hover { border-color: var(--border-strong); } }
+.card-hd { display: flex; align-items: center; gap: 10px; }
+.card-ft { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.card-ft b { display: block; color: var(--text); font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.card-ft span:last-child { text-align: right; }
+.chart { display: block; width: 100%; height: 72px; overflow: visible; }
+.chart.lg { height: 120px; }
+.legend { display: flex; gap: 16px; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.legend i { display: inline-block; width: 14px; height: 0; border-top: 2px solid var(--up); vertical-align: middle; margin-right: 6px; }
+.legend i.inv { border-top: 2px dashed rgba(6,9,13,.4); }
+
+.proj { display: flex; flex-direction: column; gap: 12px; font-size: 14px; line-height: 20px; color: var(--text-2); }
+.proj b { color: var(--text); font-variant-numeric: tabular-nums; }
+.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stats3 .stat { padding: 10px; }
+.stats3 .v { font-size: 15px; }
+.hero { display: flex; align-items: center; gap: 12px; padding: 4px 16px 16px; }
+.hero .px { margin-left: auto; }
+.sim { margin: 0 16px; padding: 16px; border: 1px solid var(--border); border-radius: 14px; display: flex; flex-direction: column; gap: 16px; }
+.sim h3 { font-size: 16px; line-height: 22px; }
+.sim-hd { display: flex; flex-direction: column; gap: 2px; }
+
+/* ---------- Round 4 ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sheet-hd.left { justify-content: flex-start; gap: 4px; padding: 4px 16px 8px 4px; }
+.confirm { gap: 16px; }
+.cf-hero { display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 8px; text-align: center; }
+.cf-hero .logo { margin-bottom: 6px; }
+.cf-hero .t { font-size: 16px; line-height: 22px; }
+.cf-amt { font-size: 28px; line-height: 34px; font-weight: 700; margin-top: 12px; font-variant-numeric: tabular-nums; }
+.cf-rows { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.cf-rows div { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 20px; }
+.cf-rows dt { color: var(--text-2); }
+.cf-rows dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.cf-hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
+.cf-agree { display: flex; gap: 12px; align-items: flex-start; font-size: 12px; line-height: 18px; color: var(--text-2); }
+.cf-agree input { position: relative; width: 18px; height: 18px; margin: 9px 0 0; flex: none; accent-color: var(--primary); cursor: pointer; }
+.cf-agree label { cursor: pointer; }
+.tlink { position: relative; border: 0; padding: 0; background: none; font: inherit; color: var(--primary-text); font-weight: 700; cursor: pointer; }
+.tlink::before { content: ""; position: absolute; inset: -12px -4px; }
+.terms { margin: 0; padding: 12px 12px 12px 28px; border-radius: 10px; background: var(--surface-2); font-size: 12px; line-height: 18px; color: var(--text-2); display: flex; flex-direction: column; gap: 6px; animation: fadeIn .2s ease-out; }
+.success { align-items: center; text-align: center; gap: 8px; padding-top: 24px; }
+.success p { font-size: 14px; line-height: 20px; color: var(--text-2); max-width: 34ch; text-wrap: pretty; }
+.success p b { color: var(--text); }
+.burst { margin-bottom: 8px; animation: pop .5s var(--ease-out); }
+.seg.mini { flex: 1; }
+.seg.mini button { height: 32px; font-size: 13px; }
+.sort { align-items: center; }
+.colhd { display: flex; justify-content: space-between; padding: 8px 16px 4px; font-size: 12px; line-height: 16px; color: var(--text-3); border-bottom: 1px solid var(--border); }
+.spark { flex: none; display: block; }
+.cur { padding-bottom: 16px; }
+.cur-hd { padding: 0 16px 10px; display: flex; flex-direction: column; gap: 2px; }
+.cur-hd h3 { font-size: 16px; line-height: 22px; }
+.rail { display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 4px; scroll-snap-type: x mandatory; scroll-padding: 16px; scrollbar-width: none; }
+.rail::-webkit-scrollbar { display: none; }
+.tile { flex: none; width: 128px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: #fff; text-align: left; cursor: pointer; scroll-snap-align: start; transition: transform .16s var(--ease-out), border-color .15s ease-out; }
+.tile:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .tile:hover { border-color: var(--border-strong); } }
+.tile .logo { margin-bottom: 8px; }
+.tile .s { max-width: 100%; }
+.tile .pct { margin-top: 8px; }
+
+/* ---------- Round 6: confirmation summaries ---------- */
+.cf-stock { display: flex; align-items: center; gap: 12px; padding-top: 4px; }
+.cf-stock .t { font-size: 16px; line-height: 22px; }
+.cf-per { display: flex; flex-direction: column; align-items: flex-end; flex: none; font-variant-numeric: tabular-nums; }
+.cf-per b { font-size: 18px; line-height: 24px; }
+.cf-sentence { font-size: 20px; line-height: 30px; letter-spacing: -.01em; text-wrap: pretty; color: var(--text-2); }
+.cf-sentence b { color: var(--text); font-variant-numeric: tabular-nums; }
+.cf-commit { display: flex; gap: 8px; align-items: flex-start; padding: 12px; border-radius: 10px; background: var(--surface-2); font-size: 14px; line-height: 20px; color: var(--text-2); }
+.cf-commit svg { flex: none; margin-top: 2px; }
+.cf-commit b { color: var(--text); font-variant-numeric: tabular-nums; }
+.tl { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.tl-i { position: relative; display: flex; align-items: center; gap: 12px; padding: 8px 0 8px 24px; font-size: 14px; line-height: 20px; }
+.tl-i::before { content: ""; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--border-strong); }
+.tl-i:first-child::before { top: 50%; }
+.tl-i:last-child::before { bottom: 50%; }
+.tl-dot { position: absolute; left: 0; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 999px; background: #fff; border: 2px solid var(--primary); }
+.tl-i.first .tl-dot { background: var(--primary); }
+.tl-i.gap .tl-dot { width: 6px; height: 6px; left: 3px; margin-top: -3px; border: 0; background: var(--border-strong); }
+.tl-i.gap { color: var(--text-2); font-size: 12px; }
+.tl-i.open::before { background: repeating-linear-gradient(to bottom, var(--border-strong) 0 3px, transparent 3px 6px); bottom: 0; }
+.tl-d { flex: 1; color: var(--text-2); }
+.tl-i.first .tl-d, .tl-i.last .tl-d { color: var(--text); font-weight: 700; }
+.tl-v { font-weight: 700; font-variant-numeric: tabular-nums; }
+.cal { border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.cal-hd { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
+.cal-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 12px; line-height: 28px; font-variant-numeric: tabular-nums; }
+.cal-g span { border-radius: 999px; color: var(--text-2); }
+.cal-g .dow { color: var(--text-3); font-weight: 700; line-height: 20px; }
+.cal-g .wkd { color: var(--text-3); }
+.cal-g .hit { background: var(--tint); color: var(--primary-text); font-weight: 700; }
+.cal-g .hit.first { background: var(--primary); color: #fff; }
+
+/* ---------- Round 7: hub info box ---------- */
+.facts { margin: 0; padding: 12px; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px; }
+.facts div { display: flex; justify-content: space-between; gap: 12px; }
+.facts dt { color: var(--text-2); flex: none; }
+.facts dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; align-items: flex-end; }
+.facts dd .hint { font-weight: 400; }
+.facts-total { border-top: 1px solid var(--border); padding-top: 8px; }
+.facts-total dd { font-size: 16px; }
+.oneline { border-radius: 10px; background: var(--surface-2); }
+.oneline-row { display: flex; align-items: center; gap: 8px; padding: 6px 4px 6px 12px; font-size: 13px; line-height: 18px; color: var(--text-2); }
+.oneline-row svg { flex: none; }
+.oneline-t { flex: 1; min-width: 0; font-variant-numeric: tabular-nums; }
+.oneline-t b { color: var(--text); }
+.oneline .link { flex: none; font-size: 13px; }
+.sched-list { list-style: none; margin: 0; padding: 4px 12px 8px; max-height: 168px; overflow: auto; border-top: 1px solid var(--border); animation: fadeIn .2s ease-out; }
+.sched-list li { display: grid; grid-template-columns: 28px 1fr auto; padding: 4px 0; font-size: 13px; line-height: 18px; font-variant-numeric: tabular-nums; }
+.sched-list li span:first-child { color: var(--text-3); }
+.sched-list li span:last-child { font-weight: 700; }
+.sched-list li.more { color: var(--text-2); }
+.rng { padding: 12px; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+.rng-top { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; }
+.rng-top > span { display: flex; flex-direction: column; font-variant-numeric: tabular-nums; }
+.rng-e { text-align: right; align-items: flex-end; }
+.rng-bar { position: relative; height: 12px; margin: 0 4px; }
+.rng-bar::before { content: ""; position: absolute; left: 0; right: 0; top: 5px; height: 2px; border-radius: 999px; background: color-mix(in oklch, var(--primary) 30%, transparent); }
+.rng-bar.open::before { background: linear-gradient(to right, color-mix(in oklch, var(--primary) 30%, transparent) 70%, transparent); }
+.rng-bar i { position: absolute; top: 2px; width: 2px; height: 8px; margin-left: -1px; border-radius: 999px; background: var(--primary); }
+.rng-bar i.first { top: 0; width: 12px; height: 12px; margin-left: -6px; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--primary); }
+.rng-ft { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.rng-ft b { color: var(--text); }
+
+/* ---------- Round 8: key facts riffs ---------- */
+.kf { padding: 12px; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 20px; }
+.kf b { font-variant-numeric: tabular-nums; }
+.kf-note { display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 16px; color: var(--text-3); }
+.kf-note svg { flex: none; }
+.kf-money { display: flex; flex-direction: column; }
+.kf-money b { font-size: 24px; line-height: 30px; letter-spacing: -.01em; }
+.kf-span { display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
+.kf-span > span:not(.kf-arrow) { flex: 1; display: flex; flex-direction: column; }
+.kf-span .r { text-align: right; align-items: flex-end; }
+.kf-arrow { color: var(--text-3); }
+.kf-span:first-child { border-top: 0; padding-top: 0; }
+.kf-next { display: flex; align-items: center; gap: 12px; }
+.kf-badge { width: 40px; height: 40px; flex: none; border-radius: 10px; background: var(--tint); color: var(--primary-text); display: grid; place-items: center; }
+.kf-rel { font-size: 12px; line-height: 16px; color: var(--primary-text); font-weight: 700; }
+.kf-amt { font-size: 18px; line-height: 24px; flex: none; }
+.kf-list { margin: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border); }
+.kf-list div { display: flex; justify-content: space-between; gap: 12px; }
+.kf-list dt { color: var(--text-2); }
+.kf-list dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.kf-list dd .hint { font-weight: 400; }
+.kf-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; color: var(--text-2); }
+.kf-steps li { display: flex; gap: 10px; align-items: flex-start; }
+.kf-steps b { color: var(--text); }
+.kf-ic { width: 28px; height: 28px; flex: none; border-radius: 999px; background: #fff; color: var(--primary-text); display: grid; place-items: center; margin-top: -4px; box-shadow: 0 0 0 1px var(--border); }
+.kf-steps .kf-rel { margin-left: 4px; }
+
+/* ---------- Round 14: Figma 13959:20993 ---------- */
+.stock-blk { border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.stock-blk .row { border-bottom: 0; }
+.pot-pill { display: flex; align-items: center; gap: 6px; margin: -4px 16px 0; padding: 8px 10px; border-radius: 8px; font-size: 14px; line-height: 20px; color: var(--text); }
+.pot-pill.up { background: #e3f5ec; } .pot-pill.down { background: #fdeaea; }
+.pot-pill svg { flex: none; }
+.pot-pill.up svg, .pot-pill.up b { color: var(--up); }
+.pot-pill.down svg, .pot-pill.down b { color: var(--down); }
+.pot-pill b { font-variant-numeric: tabular-nums; }
+.hl { color: var(--primary-text); }
+.info-ul { margin: 0; padding: 12px 12px 12px 28px; border-radius: 10px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border); font-size: 12px; line-height: 18px; color: var(--text-2); display: flex; flex-direction: column; gap: 2px; }
+.info-ul b { color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* ---------- Round 15: initial state ---------- */
+.start-card { display: flex; align-items: center; gap: 12px; width: calc(100% - 32px); margin: 16px; padding: 16px 14px; border: 1.5px dashed color-mix(in oklch, var(--primary) 45%, transparent); border-radius: 14px; background: var(--tint); text-align: left; cursor: pointer; transition: transform .16s var(--ease-out); }
+.start-card:active { transform: scale(.98); }
+.start-card > svg { color: var(--primary-text); flex: none; }
+.start-card .s { white-space: normal; }
+.qp { padding: 12px 0 8px; }
+.qp-hd { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 16px 4px; font-size: 14px; }
+.qp-all { display: block; margin: 4px 12px 0; height: 40px; }
+
+/* ---------- Round 16: stock list ---------- */
+.page-top.light { background: #fff; padding-bottom: 0; }
+.page-top.light .sb, .page-top.light .hd { color: var(--text); }
+.page-top.light .sb svg[fill="#fff"], .page-top.light .sb svg [fill="#fff"] { fill: var(--text); }
+.page-top.light .sb svg [stroke="#fff"] { stroke: var(--text); }
+.page-top.light :focus-visible { outline-color: var(--text); }
+.page-top.light + .page-body { padding-top: 4px; }
+.fig-head { flex: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.search.fig { margin-bottom: 0; }
+.fchips { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
+.fchip { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--surface-2); font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background-color .15s ease-out; }
+.fchip svg { flex: none; }
+.fchip:active { background: color-mix(in oklch, var(--surface-2) 85%, black); }
+.retnote { display: flex; align-items: center; gap: 8px; margin: 0 16px; font-size: 12px; line-height: 16px; color: var(--text); }
+.retnote-ic { width: 24px; height: 24px; flex: none; border-radius: 999px; background: #e3f5ec; color: var(--up); display: grid; place-items: center; }
+.fig-row { min-height: 72px; padding: 12px 8px 12px 16px; border-bottom: 1px solid var(--border); }
+.fig-row .t { font-size: 16px; line-height: 20px; }
+.fig-ret { flex: none; display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.fig-ret b { font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.fig-row .spark { margin-right: 4px; }
+.ctabs { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px; scrollbar-width: none; }
+.ctabs::-webkit-scrollbar { display: none; }
+.ctab { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--border-strong); background: #fff; font-size: 14px; color: var(--text-2); cursor: pointer; transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out; }
+.ctab[aria-selected="true"] { background: var(--text); border-color: var(--text); color: #fff; font-weight: 700; }
+.tabs-sub { display: flex; align-items: center; justify-content: space-between; }
+.tabs-sub .retnote { margin-right: 0; }
+.tabs-sub .link { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; font-size: 13px; }
+.sec { padding-top: 12px; }
+.sec + .sec { border-top: 8px solid var(--surface-2); }
+.sec-hd { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 4px 16px; }
+.sec-hd b { font-size: 16px; line-height: 22px; }
+.sec-back { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+.sec-back .link { display: inline-flex; align-items: center; gap: 2px; padding-left: 0; }
+
+/* ---------- Round 17: return period ---------- */
+.per-row { display: flex; align-items: center; gap: 8px; margin-left: 16px; }
+.per-l { font-size: 13px; font-weight: 700; }
+.seg.per { display: inline-grid; grid-template-columns: repeat(3, 40px); padding: 3px; }
+.seg.per button { height: 28px; font-size: 13px; }
+.per-hint { margin: -6px 16px 0; font-size: 12px; line-height: 16px; color: var(--text-2); }
+.per-u { font-size: 12px; font-weight: 700; margin-left: 1px; }
+.fig-ret b.na { color: var(--text-3); }
+
+/* ---------- Round 18: Figma sheets ---------- */
+.pchips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.pchip { position: relative; height: 32px; border-radius: 6px; border: 1px solid transparent; background: var(--surface-2); font-size: 12px; color: var(--text-2); cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out, transform .16s var(--ease-out); }
+.pchip::before { content: ""; position: absolute; inset: -8px -2px; }
+.pchip:active { transform: scale(.96); }
+.pchip[aria-pressed="true"] { background: var(--tint); border-color: var(--primary); color: var(--primary-text); }
+
+.nom { gap: 12px; }
+.nom-l { font-size: 12px; line-height: 16px; color: var(--text); }
+.nom-in input { background: var(--surface-2); border-color: var(--primary); font-weight: 400; font-size: 18px; }
+.nom .pchips .pchip { height: 24px; font-size: 12px; }
+.nom .cta { margin-top: 4px; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); margin: 8px -16px 0; }
+.key { height: 60px; border: 0; background: transparent; font-size: 22px; font-weight: 700; color: var(--text); cursor: pointer; display: grid; place-items: center; border-radius: 12px; transition: background-color .1s ease-out; }
+.key:active { background: var(--surface-2); }
+.ochips { display: grid; gap: 8px; }
+.ochips.three { grid-template-columns: repeat(3, 1fr); }
+.ochips.five { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.ochip { height: 32px; border-radius: 6px; border: 1px solid transparent; background: var(--surface-2); font-size: 13px; color: var(--text-2); cursor: pointer; transition: background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out; }
+.ochip[aria-checked="true"] { background: var(--tint); border-color: var(--primary); color: var(--primary-text); }
+.dgrid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 4px; }
+.dcell { height: 36px; width: 36px; justify-self: center; border: 0; border-radius: 999px; background: transparent; font-size: 14px; color: var(--text); cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color .15s ease-out, color .15s ease-out; }
+@media (hover: hover) and (pointer: fine) { .dcell:hover { background: var(--surface-2); } }
+.dcell[aria-checked="true"] { background: var(--primary-press); color: #fff; font-weight: 700; }
+.snote { padding: 10px 12px; border-radius: 8px; background: var(--surface-2); font-size: 13px; line-height: 18px; color: var(--text-2); }
+.snote b { font-weight: 400; color: var(--text); }
+.eopt { display: flex; align-items: center; gap: 16px; width: 100%; padding: 10px 16px; border: 0; background: transparent; text-align: left; cursor: pointer; }
+.eopt .radio { border-width: 2px; }
+.eopt[aria-checked="true"] .radio { border-color: var(--primary); }
+.eopt[aria-checked="true"] .radio::after { transform: scale(1); }
+.eopt .t { font-size: 14px; }
+
+/* ---------- Round 19: filled rows (Figma 14003:19054) ---------- */
+.row.filled { min-height: 72px; }
+.row.filled .row-meta { gap: 4px; }
+.row.filled .rl { font-size: 12px; line-height: 16px; color: var(--text-2); }
+.row.filled .t { font-size: 16px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.num[data-state="done"] { background: var(--tint); color: var(--primary); }
+
+/* ---------- Picker (verbatim from PICKER.md) ---------- */
+.proto-picker {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.82);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 8px 24px rgba(0, 0, 0, 0.24),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.proto-picker-highlight {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  will-change: transform;
+}
+.proto-picker[data-ready] .proto-picker-highlight {
+  transition:
+    transform 250ms cubic-bezier(0.23, 1, 0.32, 1),
+    width 250ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .proto-picker[data-ready] .proto-picker-highlight { transition: none; }
+}
+.proto-picker-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  cursor: pointer;
+  transition: color 150ms ease-out;
+}
+.proto-picker-item:hover { color: rgba(255, 255, 255, 0.85); }
+.proto-picker-item:active { transform: scale(0.97); }
+.proto-picker-item:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.4); outline-offset: 2px; }
+.proto-picker-item[data-active] { color: #fff; }
+.proto-picker-divider { width: 1px; height: 16px; margin: 0 4px; background: rgba(255, 255, 255, 0.12); }
+.proto-picker-replay { padding: 0 10px; font-size: 14px; }
+.proto-picker[data-position="top"] { bottom: auto; top: 24px; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+
+<nav class="proto-picker" data-position="top" aria-label="Prototype variants">
+  <span class="proto-picker-highlight" aria-hidden="true"></span>
+  <button class="proto-picker-item" data-active aria-current="true">Figma 13950:15951</button>
+</nav>
+
+<script>
+/* ================= Data & helpers ================= */
+const STOCKS = [
+  { t: 'AAPL', n: 'Apple Inc.', p: 271.42, ch: 1.24, c: '#1d1d1f' },
+  { t: 'NVDA', n: 'NVIDIA Corporation', p: 186.26, ch: -0.87, c: '#4f8a12' },
+  { t: 'TSM', n: 'Taiwan Semiconductor Manufacturing Company Limited ADR', p: 303.1, ch: 2.05, c: '#c8102e' },
+  { t: 'MSFT', n: 'Microsoft Corporation', p: 523.61, ch: 0.42, c: '#0067b8' },
+  { t: 'GOOGL', n: 'Alphabet Inc. Class A', p: 259.92, ch: -1.12, c: '#3b6fd8' },
+  { t: 'AMZN', n: 'Amazon.com, Inc.', p: 224.21, ch: 0.31, c: '#232f3e' },
+  { t: 'BRK.B', n: 'Berkshire Hathaway Inc. Class B', p: 489.75, ch: -0.18, c: '#3e2f86' },
+  { t: 'VOO', n: 'Vanguard S&P 500 ETF', p: 617.3, ch: 0.55, c: '#96151d', etf: true },
+  { t: 'META', n: 'Meta Platforms, Inc.', p: 738.36, ch: -2.4, c: '#0866ff' },
+  { t: 'TSLA', n: 'Tesla, Inc.', p: 433.72, ch: 3.12, c: '#b80000' },
+  { t: 'KO', n: 'The Coca-Cola Company', p: 69.85, ch: 0.08, c: '#c4161c' },
+  { t: 'QQQ', n: 'Invesco QQQ Trust, Series 1', p: 612.48, ch: 0.71, c: '#1f5fa8', etf: true },
+  { t: 'NFLX', n: 'Netflix, Inc.', p: 1184.6, ch: 1.08, c: '#b1060f' },
+  { t: 'PG', n: 'The Procter & Gamble Company', p: 152.4, ch: -0.21, c: '#0b4ea2' },
+  { t: 'RDDT', n: 'Reddit, Inc.', p: 214.5, ch: 2.31, c: '#e03d00' },
+];
+const byT = t => STOCKS.find(s => s.t === t);
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const MONTHS_LONG = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const fmtLong = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
+const DAY_S = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+const DAY_L = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const TODAY = new Date(2026, 9, 27); // Selasa, 27 Okt 2026
+const PER_MONTH = { daily: 21, weekly: 4.33, monthly: 1 };
+const isTouch = matchMedia('(pointer: coarse)').matches;
+let PLANS = [];
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmtDate = d => `${DAY_S[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+const usd = n => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+const parseAmt = v => { const n = parseFloat(String(v).replace(',', '.').replace(/[^0-9.]/g, '')); return isFinite(n) ? n : NaN; };
+function amtError(v) {
+  const n = parseAmt(v);
+  if (String(v).trim() === '') return 'Masukkan nominal per pembelian';
+  if (isNaN(n) || n < 1) return 'Minimal $1 per pembelian';
+  if (n > 10000) return 'Maksimal $10,000 per pembelian';
+  return '';
+}
+const schedDone = s => !!s && (s.freq === 'daily' || (s.freq === 'weekly' && s.day) || (s.freq === 'monthly' && s.date));
+function schedText(s) {
+  if (!s || !s.freq) return '';
+  if (s.freq === 'daily') return 'Setiap hari bursa';
+  if (s.freq === 'weekly') return s.day ? 'Setiap hari ' + DAY_L[s.day] : 'Setiap minggu';
+  return s.date ? 'Setiap tanggal ' + s.date : 'Setiap bulan';
+}
+function nextTrading(d) { while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return d; }
+function firstDebit(s) {
+  const d = new Date(TODAY); d.setDate(d.getDate() + 1);
+  if (s.freq === 'daily') return nextTrading(d);
+  if (s.freq === 'weekly') { while (d.getDay() !== s.day) d.setDate(d.getDate() + 1); return d; }
+  for (let m = d.getMonth(); ; m++) {
+    const last = new Date(d.getFullYear(), m + 1, 0).getDate();
+    const cand = new Date(d.getFullYear(), m, Math.min(s.date, last));
+    if (cand >= d) return nextTrading(cand);
+  }
+}
+const perMonth = (s, amt) => usd(Math.round(parseAmt(amt) * PER_MONTH[s.freq]));
+const ready = (stock, s, amt) => !!stock && schedDone(s) && s.end != null && !amtError(amt);
+
+/* ================= Icons ================= */
+const P = {
+  back: '<path d="M15 18l-6-6 6-6"/>',
+  chev: '<path d="M9 18l6-6-6-6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  stock: '<path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/>',
+  sort: '<path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/>',
+  filter: '<path d="M6 4v6M6 14v6M12 4v2M12 10v10M18 4v10M18 18v2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18" cy="16" r="2"/>',
+};
+const svg = (k, size = 20, sw = 1.75) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+/* ================= Shared pieces ================= */
+const statusBar = () => `<div class="sb" aria-hidden="true"><span>12:30</span><span style="display:flex;gap:6px;align-items:center">
+  <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="1"/><rect x="9" y="3" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+  <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 11.5L.6 3.4a10.5 10.5 0 0114.8 0z"/></svg>
+  <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#fff"/><rect x="21.5" y="4" width="1.5" height="4" rx=".75" fill="#fff" opacity=".5"/></svg></span></div>`;
+
+const header = (title, back = true) => `<div class="hd"><button type="button" class="icon-btn" data-a="back" data-k="back" aria-label="Kembali" ${back ? '' : 'hidden'}>${svg('back', 24, 2)}</button><h1>${title}</h1></div>`;
+
+const tabs = tab => `<div class="tabs" role="tablist" aria-label="SIP">
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">Mulai Nabung</button>
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">Rencana SIP${PLANS.length ? ` (${PLANS.length})` : ''}</button></div>`;
+
+const intro = tab => `<div class="intro">Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).${tabs(tab)}</div>`;
+
+const logo = (s, cls = '') => `<span class="logo ${cls}" style="background:${s.c}${s.t.length > 4 ? ';font-size:7.5px;letter-spacing:-.02em' : s.t.length > 3 ? ';font-size:8.5px' : ''}" aria-hidden="true">${esc(s.t)}</span>`;
+
+function stockItems(q, sel) {
+  const query = q.trim().toLowerCase();
+  const list = STOCKS.filter(s => !query || s.t.toLowerCase().includes(query) || s.n.toLowerCase().includes(query));
+  if (!list.length) return `<div class="list-empty"><b>Saham “${esc(q.trim())}” tidak ditemukan</b>Coba cari pakai kode saham, misalnya AAPL atau VOO.</div>`;
+  return list.map(s => `<button type="button" class="stock" data-a="pick" data-v="${s.t}" data-k="pick-${s.t}" aria-pressed="${sel === s.t}">
+    ${logo(s)}<span class="row-meta"><span class="t">${s.t}</span><span class="s">${esc(s.n)}</span></span>
+    <span class="px">${usd(s.p)}<span class="chg ${s.ch >= 0 ? 'up' : 'down'}">${s.ch >= 0 ? '+' : '−'}${Math.abs(s.ch).toFixed(2)}%</span></span>
+    <span class="tick">${sel === s.t ? svg('check', 20, 2.25) : ''}</span></button>`).join('');
+}
+const searchBox = (q, id) => `<div class="search">${svg('search')}<input id="${id}" type="search" data-search placeholder="Cari kode atau nama saham" value="${esc(q)}" autocomplete="off" spellcheck="false" aria-label="Cari saham" data-1p-ignore></div>`;
+
+function freqSeg(s) {
+  const o = [['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']];
+  return `<div class="seg" role="radiogroup" aria-label="Frekuensi">${o.map(([v, l]) =>
+    `<button type="button" role="radio" aria-checked="${s.freq === v}" data-a="freq" data-v="${v}" data-k="freq-${v}">${l}</button>`).join('')}</div>`;
+}
+function freqSub(s) {
+  if (s.freq === 'daily') return `<div class="desc">Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat. Sekitar 21 kali pembelian per bulan.</div>`;
+  if (s.freq === 'weekly') return `<div class="sub"><span class="lbl" id="day-l">Beli setiap hari</span>
+    <div class="days" role="radiogroup" aria-labelledby="day-l">${[1, 2, 3, 4, 5].map(d =>
+      `<button type="button" class="chip" role="radio" aria-checked="${s.day === d}" aria-label="${DAY_L[d]}" data-a="day" data-v="${d}" data-k="day-${d}">${DAY_S[d]}</button>`).join('')}</div>
+    <span class="note">${svg('info', 16)}Bursa AS hanya buka Senin–Jumat.</span></div>`;
+  if (s.freq === 'monthly') return `<div class="sub"><span class="lbl" id="date-l">Beli setiap tanggal</span>
+    <div class="dates" role="radiogroup" aria-labelledby="date-l">${Array.from({ length: 31 }, (_, i) => i + 1).map(d =>
+      `<button type="button" class="chip" role="radio" aria-checked="${s.date === d}" data-a="date" data-v="${d}" data-k="date-${d}">${d}</button>`).join('')}</div>
+    <span class="note">${svg('info', 16)}${s.date >= 29 ? `Di bulan tanpa tanggal ${s.date}, pembelian dilakukan di hari terakhir bulan itu.` : 'Kalau jatuh di hari libur bursa, dibeli di hari bursa berikutnya.'}</span></div>`;
+  return '';
+}
+const schedEditor = s => `<div class="editor">${freqSeg(s)}${freqSub(s)}</div>`;
+const firstLine = s => schedDone(s) ? `Pembelian pertama <b>${fmtDate(firstDebit(s))}</b>` : (s.freq === 'weekly' ? 'Pilih hari pembelian' : s.freq === 'monthly' ? 'Pilih tanggal pembelian' : 'Pilih frekuensi pembelian');
+
+function amountField(id, val, err, label = 'Nominal per pembelian') {
+  const n = parseAmt(val);
+  return `<div class="field"><label for="${id}">${label}</label>
+    <div class="amt"><span class="pre" aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(val)}" aria-invalid="${!!err}" aria-describedby="${id}-err ${id}-hint"></div>
+    <p class="err" id="${id}-err" data-err>${err ? svg('info', 16) + err : ''}</p>
+    ${quickChips(n)}<p class="hint" id="${id}-hint">Bisa beli pecahan saham, minimal $1.</p></div>`;
+}
+const quickChips = n => `<div class="pchips" data-quick>${[5, 10, 25, 50].map(v => `<button type="button" class="pchip" data-a="quick" data-v="${v}" data-k="q-${v}" aria-pressed="${n === v}">${usd(v)}</button>`).join('')}</div>`;
+
+function infoBox(stock, s, amt) {
+  let txt = 'Pilih saham dan jadwal untuk melihat tanggal pembelian pertama.';
+  if (stock && schedDone(s)) {
+    txt = `Rekening Saham AS akan didebit pertama kali pada <b>${fmtDate(firstDebit(s))}</b> atau hari bursa berikutnya, lalu ${schedText(s).replace(/^Setiap/, 'setiap')}.`;
+    if (s.end === 'forever') txt += ' Berjalan sampai kamu hapus.';
+    else if (s.end) { const d = buyDates(s); txt += ` Berakhir setelah ${d.length} pembelian pada <b>${fmtDate(d[d.length - 1])}</b>.`; }
+    if (!amtError(amt) && s.end === 'forever') txt += ` Estimasi <b>${perMonth(s, amt)}</b> per bulan.`;
+    if (!amtError(amt) && s.end && s.end !== 'forever') txt += ` Total <b>${usd(buyDates(s).length * parseAmt(amt))}</b>.`;
+  }
+  return `<div class="info">${svg('cal', 16)}<span>${txt}</span></div>`;
+}
+const fund = () => `<div class="fund"><span class="k">Sumber Dana</span><span>Rekening Saham AS<span class="tag">Autodebit</span></span></div>`;
+const cta = (ok, loading, label = 'Mulai Nabung Rutin') => loading
+  ? `<button type="submit" class="cta" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Membuat rencana…</button>`
+  : `<button type="submit" class="cta" data-k="cta" ${ok ? '' : 'disabled'}>${label}</button>`;
+
+function reviewList(plan) {
+  return `<dl class="review">
+    <div><dt>Saham</dt><dd>${plan.stock.t}</dd></div>
+    <div><dt>Nominal</dt><dd>${usd(parseAmt(plan.amount))} / pembelian</dd></div>
+    <div><dt>Jadwal</dt><dd>${schedText(plan.s)}</dd></div>
+    <div><dt>Pembelian pertama</dt><dd>${fmtDate(firstDebit(plan.s))}</dd></div>
+    <div><dt>Durasi</dt><dd>${endLong(plan.s)}</dd></div>
+    ${plan.s.end === 'forever' ? `<div><dt>Estimasi per bulan</dt><dd>${perMonth(plan.s, plan.amount)}</dd></div>`
+      : `<div><dt>Total ${buyDates(plan.s).length} pembelian</dt><dd>${usd(buyDates(plan.s).length * parseAmt(plan.amount))}</dd></div>`}</dl>`;
+}
+function successView(plan, primary) {
+  return `<div class="done"><div class="done-hero"><div class="done-check">${svg('check', 32, 2.5)}</div>
+    <h2>Rencana SIP aktif</h2><p>Kami akan membeli ${plan.stock.t} otomatis. Kamu bisa ubah atau hentikan kapan saja.</p></div>
+    ${reviewList(plan)}
+    <div class="done-actions"><button type="button" class="cta" data-a="${primary.a}" data-v="${primary.v || ''}" data-k="done-primary">${primary.label}</button>
+    <button type="button" class="cta ghost" data-a="reset" data-k="reset">Buat rencana lain</button></div></div>`;
+}
+function plansView() {
+  if (!PLANS.length) return `<div class="empty"><div class="ic">${svg('cal', 24)}</div><b>Belum ada rencana SIP</b>
+    <p>Rencana nabung rutin yang kamu buat akan muncul di sini.</p><button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">Buat rencana</button></div>`;
+  return `<div class="scroll plans">${PLANS.map(p => `<div class="plan">${logo(p.stock)}<span class="row-meta"><span class="t">${p.stock.t}</span>
+    <span class="s">${schedText(p.s)} · ${endShort(p.s.end)}</span><span class="s">Berikutnya ${fmtDate(firstDebit(p.s))}</span></span><span class="amtv">${usd(parseAmt(p.amount))}</span></div>`).join('')}</div>`;
+}
+
+const baseState = () => ({ stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
+
+/* ================= 1-year recurring-buy simulation ================= */
+const RISK = { AAPL: [.14, .035], NVDA: [.42, .06], TSM: [.38, .05], MSFT: [.11, .03], GOOGL: [.29, .045], AMZN: [.08, .04], 'BRK.B': [.05, .022], VOO: [.15, .022], META: [.21, .05], TSLA: [.33, .08], KO: [-.04, .02], QQQ: [.19, .03], NFLX: [.36, .055], PG: [-.07, .02], RDDT: [.85, .09] };
+// Annualized 3- and 5-year returns (simulated). null = not listed long enough.
+const LONG = { AAPL: [.18, .22], NVDA: [.62, .58], TSM: [.35, .27], MSFT: [.19, .20], GOOGL: [.24, .19], AMZN: [.16, .12], 'BRK.B': [.14, .13], VOO: [.16, .14], META: [.45, .21], TSLA: [.08, .34], KO: [.04, .06], QQQ: [.21, .18], NFLX: [.38, .17], PG: [.02, .05], RDDT: [null, null] };
+const retP = (s, y = 1) => y === 1 ? ret(s) : LONG[s.t][y === 3 ? 0 : 1] == null ? null : LONG[s.t][y === 3 ? 0 : 1] * 100;
+function seedOf(t) { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function gauss(r) { let u = 0, v = 0; while (!u) u = r(); while (!v) v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+const SERIES = {};
+// 53 weekly closes ending at today's price; a Brownian bridge pins the 1-year return.
+function series(s) {
+  if (SERIES[s.t]) return SERIES[s.t];
+  const [r1, vol] = RISK[s.t], r = rng(seedOf(s.t)), N = 52, w = [0];
+  for (let i = 1; i <= N; i++) w.push(w[i - 1] + gauss(r) * vol);
+  const p0 = s.p / (1 + r1);
+  return SERIES[s.t] = w.map((x, i) => p0 * Math.exp(i / N * Math.log(1 + r1) + x - i / N * w[N]));
+}
+const BUYS_PER_WEEK = { daily: 5, weekly: 1, monthly: 1 };
+// Backtest over the last `months` months (max 12) of the weekly series.
+function sim(s, amt, freq = 'weekly', months = 12) {
+  const px = series(s), start = 52 - Math.round(months * 52 / 12);
+  const buys = new Set(freq === 'monthly' ? Array.from({ length: months }, (_, i) => start + Math.round(i * 52 / 12)) : Array.from({ length: 52 - start }, (_, i) => start + i));
+  let sh = 0, inv = 0; const curve = [];
+  for (let i = start; i <= 52; i++) {
+    if (buys.has(i)) { const a = amt * BUYS_PER_WEEK[freq]; sh += a / px[i]; inv += a; }
+    curve.push({ inv, val: sh * px[i] });
+  }
+  const val = sh * px[52];
+  return { inv, val, gain: val - inv, pct: inv ? (val / inv - 1) * 100 : 0, curve };
+}
+const BASIS = 10;
+const usd0 = n => '$' + Math.round(n).toLocaleString('en-US');
+const pctTxt = p => (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(1) + '%';
+const gainTxt = g => (g >= 0 ? '+' : '−') + usd0(Math.abs(g));
+const dir = n => n >= 0 ? 'up' : 'down';
+const FREQ_PER = { daily: 'tiap hari bursa', weekly: 'tiap minggu', monthly: 'tiap bulan' };
+const START = `${MONTHS[TODAY.getMonth()]} ${TODAY.getFullYear() - 1}`;
+const END_OPTS = [['forever', 'Sampai dihapus'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [12, '12 bulan']];
+const endVal = v => v === 'forever' ? 'forever' : +v;
+const endShort = e => e === 'forever' ? 'sampai dihapus' : e + ' bulan';
+const endLong = s => s.end === 'forever' ? 'Sampai dihapus' : `${s.end} bulan · s.d. ${fmtDate(buyDates(s).at(-1))}`;
+function addMonths(d, n) { const r = new Date(d.getFullYear(), d.getMonth() + n, 1); r.setDate(Math.min(d.getDate(), new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate())); return r; }
+// Every purchase date of a finite plan, starting at the first debit.
+function buyDates(s) {
+  const first = firstDebit(s), stop = addMonths(first, s.end), out = [];
+  if (s.freq === 'monthly') {
+    // Start from the month of the scheduled (un-rolled) date, so a 31 Okt → 2 Nov roll still counts as October's buy.
+    const tmr = new Date(TODAY); tmr.setDate(tmr.getDate() + 1);
+    const on = (y, m) => new Date(y, m, Math.min(s.date, new Date(y, m + 1, 0).getDate()));
+    let m0 = tmr.getMonth(); while (on(tmr.getFullYear(), m0) < tmr) m0++;
+    for (let i = 0; i < s.end; i++) out.push(nextTrading(on(tmr.getFullYear(), m0 + i)));
+    return out;
+  }
+  const step = s.freq === 'weekly' ? 7 : 1;
+  for (const d = new Date(first); d < stop; d.setDate(d.getDate() + step)) if (d.getDay() % 6) out.push(new Date(d));
+  return out;
+}
+function endPreview(s, amt) {
+  if (!schedDone(s) || s.end == null) return '';
+  if (s.end === 'forever') return 'Berjalan terus sampai kamu hapus rencananya.';
+  const d = buyDates(s), a = parseAmt(amt);
+  return `<b>${d.length} pembelian</b>, terakhir <b>${fmtDate(d.at(-1))}</b>${isNaN(a) ? '' : ` · total <b>${usd(d.length * a)}</b>`}`;
+}
+const endChips = (sel, action) => `<div class="quick" role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) =>
+  `<button type="button" class="qchip" role="radio" aria-checked="${sel === v}" data-a="${action}" data-v="${v}" data-k="${action}-${v}">${l}</button>`).join('')}</div>`;
+const startLabel = months => { const d = addMonths(TODAY, -months); return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`; };
+const DISC = 'Simulasi memakai harga historis 1 tahun terakhir dan belum termasuk biaya transaksi. Kinerja masa lalu tidak menjamin hasil di masa depan.';
+
+function chart(res, lg) {
+  const W = 300, H = lg ? 120 : 72, c = res.curve;
+  const max = Math.max(...c.map(p => Math.max(p.val, p.inv))) * 1.06 || 1;
+  const X = i => (i / (c.length - 1) * W).toFixed(1), Y = v => (H - v / max * H).toFixed(1);
+  const val = c.map((p, i) => `${i ? 'L' : 'M'}${X(i)},${Y(p.val)}`).join('');
+  const inv = c.map((p, i) => `${i ? 'L' : 'M'}${X(i)},${Y(p.inv)}`).join('');
+  const col = res.gain >= 0 ? 'var(--up)' : 'var(--down)';
+  return `<svg class="chart ${lg ? 'lg' : ''}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Nilai ${usd0(res.val)} dari modal ${usd0(res.inv)}, ${pctTxt(res.pct)}">
+    <path d="${val}L${W},${H}L0,${H}Z" style="fill:${col};opacity:.1"/>
+    <path d="${inv}" fill="none" style="stroke:rgba(6,9,13,.4)" stroke-width="1.5" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
+    <path d="${val}" fill="none" style="stroke:${col}" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+const legend = res => `<div class="legend" aria-hidden="true"><span><i style="border-top-color:var(--${dir(res.gain)})"></i>Nilai investasi</span><span><i class="inv"></i>Total modal</span></div>`;
+const stats3 = res => `<div class="stats3">
+  <div class="stat"><span class="hint">Total modal</span><span class="v">${usd0(res.inv)}</span></div>
+  <div class="stat"><span class="hint">Nilai sekarang</span><span class="v">${usd0(res.val)}</span></div>
+  <div class="stat"><span class="hint">Hasil</span><span class="v ${dir(res.gain)}">${pctTxt(res.pct)}</span></div></div>`;
+function filtered(q) {
+  const query = q.trim().toLowerCase();
+  return STOCKS.filter(s => !query || s.t.toLowerCase().includes(query) || s.n.toLowerCase().includes(query));
+}
+const noResult = q => `<div class="list-empty"><b>Saham “${esc(q.trim())}” tidak ditemukan</b>Coba cari pakai kode saham, misalnya AAPL atau VOO.</div>`;
+const basisLine = () => `<p class="basis">${svg('info', 16)}<span>Hasil simulasi kalau kamu nabung <b>${usd(BASIS)} tiap minggu</b> sejak ${START}.</span></p>`;
+function amtSeg(freq) {
+  const o = [['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']];
+  return `<div class="seg" role="radiogroup" aria-label="Frekuensi simulasi">${o.map(([v, l]) =>
+    `<button type="button" role="radio" aria-checked="${freq === v}" data-a="simfreq" data-v="${v}" data-k="simfreq-${v}">${l}</button>`).join('')}</div>`;
+}
+const confirmBtn = (st, label) => `<button type="button" class="cta" data-a="confirmAmt" data-k="confirmAmt" ${amtError(st.draftAmt) ? 'disabled' : ''}>${label}</button>`;
+
+/* ================= Shared hub ================= */
+/* Hub rows — Figma 13959:20993 */
+const schedShort = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Setiap tanggal ' + s.date;
+const DAY_LONG_DATE = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+function potensiPill(s, st) {
+  let y = st?.period || 1, v = retP(s, y), fallback = '';
+  if (v == null) { fallback = ` · belum ada data ${y} tahun`; y = 1; v = ret(s); }
+  const up = v >= 0, lead = (up ? 'Potensi kenaikan' : 'Perubahan harga') + (y > 1 ? ' rata-rata' : '');
+  return `<p class="pot-pill ${up ? 'up' : 'down'}">${svg('stock', 16)}<span>${lead} <b>${pctTxt(v)}${y > 1 ? '/thn' : ''}</b> dalam ${y} tahun terakhir${fallback}.</span></p>`;
+}
+function hubBody(st) {
+  if (st.tab === 'plans') return plansView();
+  if (st.done) return successView(st.done, { a: 'tab', v: 'plans', label: 'Lihat Rencana SIP' });
+  const stock = byT(st.stock), amtOk = !!st.amount && !amtError(st.amount), sd = schedDone(st.s);
+  const endOk = st.s.end != null;
+  const step = !stock ? 1 : !amtOk ? 2 : !sd ? 3 : !endOk ? 4 : 5;
+  const num = (n, done) => `<span class="num" data-state="${done ? 'done' : step === n ? 'active' : 'todo'}" aria-hidden="true">${done ? svg('check', 16, 2.5) : n}</span>`;
+  const sub = (n, text) => text ? `<span class="s ${step === n ? 'cue' : ''}">${text}</span>` : '';
+  const row = (k, a, on, n, done, title, subText, label) => `<button type="button" class="row ${done ? 'filled' : ''}" data-a="${a}" data-k="row-${k}" ${on ? '' : 'disabled'}>
+      ${num(n, done)}<span class="row-meta">${done && label ? `<span class="rl">${label}</span><span class="t">${title}</span>` : `<span class="t">${title}</span>${sub(n, subText)}`}</span>${svg('chev', 24, 2)}</button>`;
+  const stockBlock = stock
+    ? `<div class="stock-blk"><button type="button" class="row" data-a="openStock" data-k="row-stock">${logo(stock)}
+        <span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>${svg('chev', 24, 2)}</button>${potensiPill(stock, st)}</div>`
+    : row('stock', 'openStock', true, 1, false, 'Pilih Saham', 'Lihat return tiap saham');
+  const last = endOk && st.s.end !== 'forever' ? buyDates(st.s).at(-1) : null;
+  const mode = st.initMode;
+  if (!stock && mode === 'reveal') return `<form class="form" novalidate><div class="scroll">
+    <button type="button" class="start-card" data-a="openStock" data-k="row-stock"><span class="logo ph lg">${svg('stock', 20)}</span>
+      <span class="row-meta"><span class="t">Pilih saham untuk mulai</span><span class="s">Saham atau ETF Amerika, mulai $1 per pembelian</span></span>${svg('chev', 24, 2)}</button>
+    </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
+  if (!stock && mode === 'quick') return `<form class="form" novalidate><div class="scroll">
+    ${row('stock', 'openStock', true, 1, false, 'Pilih Saham', 'Cari dari semua saham dan ETF')}
+    <div class="qp"><div class="qp-hd"><b>Populer untuk SIP</b><span class="hint">Return 1 tahun terakhir</span></div>
+    ${['VOO', 'QQQ', 'AAPL', 'NVDA'].map(byT).map(s => `<button type="button" class="stock" data-a="pcPick" data-v="${s.t}" data-k="pcPick-${s.t}">${logo(s)}
+      <span class="row-meta"><span class="t">${s.t}${s.etf ? ' <span class="tag" style="vertical-align:1px">ETF</span>' : ''}</span><span class="s">${esc(s.n)}</span></span>
+      <span class="pill ${dir(ret(s))}">${pctTxt(ret(s))}</span></button>`).join('')}
+    <button type="button" class="link qp-all" data-a="openStock" data-k="qp-all">Lihat semua saham</button></div>
+    </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
+  const show = n => mode !== 'reveal' || n <= step;
+  return `<form class="form" novalidate><div class="scroll">${stockBlock}
+    ${!show(2) ? '' : row('nominal', 'openNominal', !!stock, 2, amtOk, amtOk ? usd(parseAmt(st.amount)) : 'Nominal per Pembelian',
+      !stock ? 'Pilih saham terlebih dahulu' : 'Tentukan nominal tiap pembelian', 'Nominal pembelian')}
+    ${!show(3) ? '' : row('sched', 'openSched', amtOk, 3, sd, sd ? schedShort(st.s) : 'Jadwal Pembelian', !amtOk ? 'Isi nominal terlebih dahulu' : 'Harian, mingguan, atau bulanan', 'Jadwal nabung rutin')}
+    ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Durasi Nabung',
+      !sd ? 'Atur jadwal terlebih dahulu' : 'Sampai dihapus, atau 1–12 bulan', 'Durasi')}
+    </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
+}
+// Bullet info box (Figma 13974:26541)
+function infoBullets(st) {
+  const p = st.s, d = upcoming(p), finite = p.end !== 'forever';
+  const next = p.freq === 'daily' ? 'setiap <b>hari bursa</b>' : p.freq === 'weekly' ? `setiap <b>${DAY_L[p.day]}</b>` : `setiap <b>tanggal ${p.date}</b>`;
+  const last = d.at(-1), single = finite && d.length === 1;
+  const items = [`Pembelian pertama pada <b>${fmtDate(d[0])}</b> atau hari bursa berikutnya jika bursa libur${single ? '.' : ','}`];
+  if (!single) {
+    items.push(`Pembelian selanjutnya ${next}.`);
+    items.push(finite ? `Pembelian terakhir <b>${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}</b>.` : 'Berjalan terus sampai dihapus.');
+  }
+  return `<ul class="info-ul">${items.map(x => `<li>${x}</li>`).join('')}</ul>`;
+}
+// Info box and Sumber Dana only appear once the plan is complete; the button is always there.
+const NEXT_STEP = [['openStock', 'Pilih Saham'], ['openNominal', 'Atur Nominal'], ['openSched', 'Atur Jadwal'], ['openEnd', 'Pilih Durasi']];
+const hubFooter = st => {
+  const ok = ready(st.stock, st.s, st.amount);
+  if (!ok && st.initMode === 'guided') {
+    const i = !st.stock ? 0 : (!st.amount || amtError(st.amount)) ? 1 : !schedDone(st.s) ? 2 : 3;
+    return `<button type="button" class="cta" data-a="${NEXT_STEP[i][0]}" data-k="cta">${NEXT_STEP[i][1]}</button>`;
+  }
+  return `${ok ? (st.infoView || infoBullets)(st) + fund() : ''}${cta(ok, st.submitting)}`;
+};
+
+function schedSheet(st) {
+  const d = st.draft;
+  return { title: 'Jadwal Pembelian', fit: true, body: `<div class="sheet-body" data-sched>${schedBody(d, st)}</div>
+    <div class="footer" style="padding-top:4px" data-sched-ft>${saveBtn(d)}</div>` };
+}
+const schedBody = (d, st) => {
+  const opt = (a, v, l, on) => `<button type="button" class="ochip" role="radio" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
+  let sub = '', note = '';
+  if (d.freq === 'daily') note = `Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.`;
+  if (d.freq === 'weekly') {
+    sub = `<span class="lbl" id="day-l">Setiap hari</span><div class="ochips five" role="radiogroup" aria-labelledby="day-l">${[1, 2, 3, 4, 5].map(x => opt('day', x, DAY_L[x], d.day === x)).join('')}</div>`;
+    note = d.day ? `Dibeli otomatis <b>setiap hari ${DAY_L[d.day]}</b>.` : 'Pilih hari pembelian.';
+  }
+  if (d.freq === 'monthly') {
+    sub = `<span class="lbl" id="date-l">Beli setiap tanggal</span><div class="dgrid" role="radiogroup" aria-labelledby="date-l">${Array.from({ length: 28 }, (_, i) => i + 1).map(x =>
+      `<button type="button" class="dcell" role="radio" aria-checked="${d.date === x}" data-a="date" data-v="${x}" data-k="date-${x}">${x}</button>`).join('')}</div>`;
+    note = d.date ? `Dibeli otomatis <b>setiap tanggal ${d.date}</b>.` : 'Pilih tanggal pembelian.';
+  }
+  const first = schedDone(d) ? firstDebit(d) : null;
+  return `<span class="lbl" id="freq-l">Atur Jadwal</span><div class="ochips three" role="radiogroup" aria-labelledby="freq-l">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('freq', v, l, d.freq === v)).join('')}</div>
+    ${sub}${note ? `<p class="snote">${note}</p>` : ''}<hr class="cf-hr">
+    <p class="preview" aria-live="polite">Pembelian pertama ${first ? `<b>${DAY_L[first.getDay()]} ${first.getDate()} ${MONTHS[first.getMonth()]} ${first.getFullYear()}</b>` : '—'}</p>`;
+};
+function endSheet(st) {
+  const cur = st.draftEnd ?? 'forever';
+  return { title: 'Durasi Nabung', fit: true, body: `<div class="sheet-body" style="padding:0" data-endlist>${endList(st, cur)}</div>
+    <div class="footer" style="padding-top:8px"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Selesai</button></div>` };
+}
+const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) => {
+  const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : (() => { const last = buyDates({ ...st.s, end: v }).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; })();
+  return `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span>
+    <span class="row-meta"><span class="t">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</span><span class="s">${sub}</span></span></button>`;
+}).join('')}</div>`;
+const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-k="saveSched" ${schedDone(d) ? '' : 'disabled'}>Selanjutnya</button>`;
+
+/* ================= App engine ================= */
+function app(V) {
+  return function (stage) {
+    const freshS = () => ({ freq: null, day: null, date: null, end: V.endIn === 'row' ? null : 'forever' });
+    const st = { ...baseState(), s: freshS(), endIn: V.endIn, amount: '', pages: [], sheet: null, enter: null, draft: null, draftAmt: '10', simFreq: 'weekly', simEnd: 'forever', sort: 'pop', detail: null };
+    const phone = document.createElement('div');
+    phone.className = 'phone';
+    stage.appendChild(phone);
+    const keep = () => document.activeElement && phone.contains(document.activeElement) ? document.activeElement.dataset.k : null;
+    const refocus = k => { if (!k) return; const el = phone.querySelector(`[data-k="${CSS.escape(k)}"]`); if (el && !el.disabled) el.focus({ preventScroll: true }); };
+
+    function view() {
+      const top = st.pages.length - 1;
+      let html = `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${statusBar()}${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
+      html += st.pages.map((p, i) => {
+        const pg = V.page(p, st);
+        return `<div class="page ${st.enter === 'page' && i === top ? 'enter' : ''}" ${i < top || st.sheet ? 'inert' : ''} role="dialog" aria-label="${esc(pg.title)}">
+          <div class="page-top ${V.lightPage ? 'light' : ''}">${statusBar()}<div class="hd"><button type="button" class="icon-btn" data-a="pop" data-k="pop-${i}" aria-label="Kembali">${svg('back', 24, 2)}</button><h1>${esc(pg.title)}</h1></div></div>
+          <div class="page-body">${pg.body}</div></div>`;
+      }).join('');
+      if (st.sheet) {
+        const sh = st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
+        html += `<div class="overlay ${st.enter === 'sheet' ? 'enter' : ''}"><div class="backdrop" data-a="close" aria-hidden="true"></div>
+          <div class="sheet ${sh.fit ? 'fit' : ''}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab" aria-hidden="true"></div>
+          ${sh.bare ? `<h2 id="sh-t" class="sr-only">${sh.title}</h2>` : sh.closeLeft
+            ? `<div class="sheet-hd left"><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', 22, 2)}</button><h2 id="sh-t">${sh.title}</h2></div>`
+            : `<div class="sheet-hd"><h2 id="sh-t">${sh.title}</h2><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', 22, 2)}</button></div>`}${sh.body}</div></div>`;
+      }
+      return html;
+    }
+
+    const ctx = {
+      st, phone,
+      render() { const k = keep(); phone.innerHTML = view(); st.enter = null; refocus(k); },
+      patch(sel, html) { const el = phone.querySelector(sel); if (!el) return; const k = keep(); el.innerHTML = html; refocus(k); },
+      focus(sel) { const el = phone.querySelector(sel); if (el && !el.disabled) el.focus({ preventScroll: true }); },
+      push(p) { st.pages.push(p); st.enter = 'page'; ctx.render(); ctx.focus(!isTouch && phone.querySelector('.page:last-of-type [data-search]') ? '.page:last-of-type [data-search]' : `[data-k="pop-${st.pages.length - 1}"]`); },
+      pop(then) {
+        const els = phone.querySelectorAll('.page'); const el = els[els.length - 1];
+        if (!el || el.classList.contains('leaving')) return;
+        el.classList.add('leaving');
+        setTimeout(() => { st.pages.pop(); ctx.render(); then ? then() : ctx.focus(st.pages.length ? `[data-k="pop-${st.pages.length - 1}"]` : '[data-k="row-stock"]'); }, 240);
+      },
+      popAll(then) {
+        const els = [...phone.querySelectorAll('.page')]; if (!els.length) return then?.();
+        els.slice(0, -1).forEach(e => e.classList.add('gone'));
+        els[els.length - 1].classList.add('leaving');
+        setTimeout(() => { st.pages = []; ctx.render(); then?.(); }, 240);
+      },
+      openSheet(name) {
+        st.sheet = name; st.enter = 'sheet';
+        if (name === 'sched') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; }
+        if (name === 'end') st.draftEnd = st.s.end ?? 'forever';
+        else if (name === 'nominal') { st.draftAmt = st.amount || '10'; st.amtErr = ''; }
+        ctx.render();
+        ctx.focus(name === 'nominal' && !isTouch ? '[data-amt]' : name === 'success' ? '[data-k="see-plans"]' : '[data-k="close"]');
+      },
+      closeSheet(then) {
+        const ov = phone.querySelector('.overlay'); if (!ov || ov.classList.contains('closing')) return;
+        const from = st.sheet; ov.classList.add('closing');
+        setTimeout(() => { st.sheet = null; ctx.render(); then ? then() : ctx.focus(from === 'confirm' ? '[data-k="cta"]' : `[data-k="row-${from === 'sched' ? 'sched' : from === 'end' ? 'end' : 'nominal'}"]`); }, 200);
+      },
+      next() { !schedDone(st.s) ? ctx.openSheet('sched') : st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]'); },
+    };
+
+    const H = {
+      back() {}, // hub back would leave the SIP feature entirely
+      tab(v) { Object.assign(st, baseState(), { s: freshS(), amount: '', tab: v, pages: [], sheet: null }); ctx.render(); },
+      reset() { Object.assign(st, baseState(), { s: freshS(), amount: '', pages: [], sheet: null }); ctx.render(); },
+      pop() { ctx.pop(); },
+      close() { st.sheet === 'success' ? H.seePlans() : ctx.closeSheet(); },
+      agree(v, el) { st.agree = el.checked; const b = phone.querySelector('[data-k="buy"]'); if (b) b.disabled = !st.agree; },
+      infoToggle() { st.infoOpen = !st.infoOpen; ctx.patch('[data-footer]', hubFooter(st)); },
+      terms() { st.terms = !st.terms; ctx.patch('[data-terms]', termsBox(st)); },
+      buy() {
+        if (!st.agree || st.submitting) return;
+        st.submitting = true; ctx.patch('[data-buy]', buyBtn(st));
+        setTimeout(() => {
+          PLANS.unshift({ stock: byT(st.stock), s: { ...st.s }, amount: st.amount });
+          st.submitting = false; st.created = PLANS[0];
+          ctx.closeSheet(() => ctx.openSheet('success'));
+        }, 900);
+      },
+      seePlans() { ctx.closeSheet(() => { Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null }); ctx.render(); ctx.focus('[data-k="tab-plans"]'); }); },
+      openStock() { st.q = ''; ctx.push({ id: 'stock' }); },
+      openNominal() { V.openNominal(ctx); },
+      openSched() { ctx.openSheet('sched'); },
+      freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
+      day(v) { st.draft.day = +v; patchSched(); },
+      date(v) { st.draft.date = +v; patchSched(); },
+      saveSched() { st.s = { ...st.draft }; ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
+      end(v) { st.draft.end = endVal(v); patchSched(); },
+      openEnd() { ctx.openSheet('end'); },
+      endpick(v) { st.draftEnd = endVal(v); ctx.patch('[data-endlist]', endList(st, st.draftEnd)); },
+      saveEnd() { st.s.end = st.draftEnd ?? 'forever'; ctx.closeSheet(() => ctx.focus('[data-k="cta"]')); },
+      key(v) {
+        let a = st.draftAmt;
+        if (v === 'del') a = a.slice(0, -1);
+        else if (v === ',') { if (!a.includes(',') && !a.includes('.')) a = (a || '0') + ','; }
+        else { const dec = a.split(/[.,]/)[1]; if (dec != null && dec.length >= 2) return; a = a === '0' ? v : a + v; if (a.replace(/[.,].*/, '').length > 5) return; }
+        st.draftAmt = a; if (st.amtErr) st.amtErr = amtError(a);
+        const i = phone.querySelector('[data-amt]'); if (i) i.value = a;
+        syncAmt();
+      },
+      simend(v) { st.simEnd = endVal(v); ctx.patch('[data-simend]', endChips(st.simEnd, 'simend')); ctx.patch('[data-simhint]', simHint(st, true)); ctx.patch('[data-proj]', V.proj(st)); },
+      quick(v) { st.draftAmt = v; st.amtErr = ''; const i = phone.querySelector('[data-amt]'); if (i) { i.value = v; if (i.closest('.big-amt')) i.style.width = Math.max(2, v.length) + 0.6 + 'ch'; } syncAmt(); },
+      pick(v) { V.pick(v, ctx); },
+      period(v) { st.period = +v; ctx.patch('[data-sort]', V.sortChips(st)); ctx.patch('[data-colhd]', 'Harga · Return ' + PERIOD_LONG[st.period]); ctx.patch('[data-list]', V.list(st)); },
+      sort(v) { st.sort = v; ctx.patch('[data-sort]', V.sortChips(st)); ctx.patch('[data-list]', V.list(st)); },
+      simfreq(v) { st.simFreq = v; ctx.patch('[data-simseg]', amtSeg(v)); ctx.patch('[data-proj]', V.proj(st)); },
+      confirmAmt() { if (!amtError(st.draftAmt)) V.confirm(ctx); },
+      pcPick(v) { st.stock = v; ctx.openSheet('nominal'); },
+      openSort() { ctx.openSheet('sort'); },
+      openCat() { ctx.openSheet('cat'); },
+      setSort(v) { st.sort = v; ctx.closeSheet(() => ctx.focus('[data-k="chip-sort"]')); },
+      setCat(v) { st.cat = v; ctx.closeSheet(() => ctx.focus('[data-k="chip-cat"]')); },
+      openPeriod() { ctx.openSheet('period'); },
+      setPeriodSheet(v) { st.period = +v; ctx.closeSheet(() => ctx.focus('[data-k="chip-period"]')); },
+      setPeriod(v) { st.period = +v; ctx.patch('[data-head]', V.head(st)); ctx.patch('[data-list]', V.list(st)); phone.querySelector('[data-list]').scrollTop = 0; },
+      setCatInline(v) { st.cat = v; ctx.patch('[data-head]', V.head(st)); ctx.patch('[data-list]', V.list(st)); phone.querySelector('[data-list]').scrollTop = 0; },
+      changeStock() { if (st.pages.length > 1) ctx.pop(); else { st.pages = [{ id: 'stock' }]; st.enter = 'page'; ctx.render(); } },
+    };
+    function patchSched() { ctx.patch('[data-sched]', schedBody(st.draft, st)); ctx.patch('[data-sched-ft]', saveBtn(st.draft)); }
+    function syncAmt() {
+      const input = phone.querySelector('[data-amt]');
+      if (input) { input.setAttribute('aria-invalid', String(!!st.amtErr)); const err = phone.querySelector('[data-err]'); if (err) err.innerHTML = st.amtErr ? svg('info', 16) + st.amtErr : ''; }
+      ctx.patch('[data-quick]', quickChips(parseAmt(st.draftAmt)));
+      ctx.patch('[data-proj]', V.proj(st));
+      const c = phone.querySelector('[data-k="confirmAmt"]'); if (c) c.disabled = !!amtError(st.draftAmt);
+    }
+    ctx.submit = () => { st.agree = false; st.terms = false; ctx.openSheet('confirm'); };
+
+    phone.addEventListener('click', e => {
+      const b = e.target.closest('[data-a]');
+      if (!b || !phone.contains(b) || b.disabled) return;
+      H[b.dataset.a]?.(b.dataset.v, b);
+    });
+    phone.addEventListener('submit', e => { e.preventDefault(); if (ready(st.stock, st.s, st.amount)) ctx.submit(); });
+    phone.addEventListener('input', e => {
+      if (e.target.matches('[data-search]')) { st.q = e.target.value; ctx.patch('[data-list]', V.list(st)); }
+      if (e.target.matches('[data-amt]')) {
+        st.draftAmt = e.target.value; if (st.amtErr) st.amtErr = amtError(st.draftAmt);
+        if (e.target.closest('.big-amt')) e.target.style.width = Math.max(2, e.target.value.length) + 0.6 + 'ch';
+        syncAmt();
+      }
+    });
+    phone.addEventListener('focusout', e => { if (e.target.matches('[data-amt]')) { st.amtErr = amtError(st.draftAmt); syncAmt(); } });
+    phone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.matches('[data-search]')) {
+        e.preventDefault(); const first = phone.querySelector('[data-list] [data-a="pick"]'); if (first) H.pick(first.dataset.v);
+      }
+      if (e.key === 'Enter' && e.target.matches('[data-amt]')) { e.preventDefault(); H.confirmAmt(); }
+      if (e.key === 'Escape') { if (st.sheet) H.close(); else if (st.pages.length) ctx.pop(); }
+    });
+    V.init?.(st);
+    ctx.render();
+    if (V.autoConfirm) ctx.submit();
+    if (V.autoStock) { st.pages = [{ id: 'stock' }]; ctx.render(); }
+  };
+}
+
+/* ================= Confirmation + success (Figma 13945:15637) ================= */
+const FREQ_NAME = { daily: 'Setiap Hari', weekly: 'Setiap Minggu', monthly: 'Setiap Bulan' };
+const routine = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Tanggal ' + s.date;
+const term = s => s.end === 'forever' ? 'Sampai dihapus' : `${s.end} bulan`;
+const buyBtn = st => st.submitting
+  ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
+  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>Beli Otomatis</button>`;
+const termsBox = st => st.terms ? `<ul class="terms">
+  <li>Rekening Saham AS didebit otomatis sesuai jadwal. Pastikan saldo cukup sebelum hari pembelian.</li>
+  <li>Pembelian memakai harga pasar saat order dieksekusi, jadi jumlah lembar bisa berbeda tiap pembelian.</li>
+  <li>Kalau saldo kurang atau bursa libur, pembelian dilewati atau digeser ke hari bursa berikutnya.</li>
+  <li>Kamu bisa ubah atau hapus rencana SIP kapan saja di tab Rencana SIP.</li></ul>` : '';
+function confirmSheet(st) {
+  const s = byT(st.stock), plan = st.s;
+  const rows = [['Jadwal Pembelian', FREQ_NAME[plan.freq]], ['Tanggal Mulai', fmtLong(firstDebit(plan))], ['Jadwal Rutin', routine(plan)],
+    ['Jangka Waktu', term(plan)], ['Sumber Dana', 'Rekening Saham AS']];
+  return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
+    <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(parseAmt(st.amount))}</span></div>
+    <dl class="cf-rows">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <hr class="cf-hr">
+    <div class="cf-agree"><input type="checkbox" id="agree" data-a="agree" ${st.agree ? 'checked' : ''}>
+      <span><label for="agree">Saya telah membaca dan memahami </label><button type="button" class="tlink" data-a="terms" data-k="terms" aria-expanded="${!!st.terms}">Syarat dan Ketentuan</button><label for="agree"> Systematic Investment Plan (SIP), serta menyetujui untuk memilih portofolio yang mungkin mengandung risiko.</label></span></div>
+    <div data-terms>${termsBox(st)}</div></div>
+    <div class="footer" style="padding-top:4px" data-buy>${buyBtn(st)}</div>` };
+}
+function successSheet(st) {
+  const plan = st.created;
+  return { title: 'SIP berhasil diaktifkan', fit: true, bare: true, body: `<div class="sheet-body success">
+    <svg class="burst" width="120" height="104" viewBox="0 0 120 104" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs>
+      <circle cx="60" cy="56" r="34" fill="url(#g)"/><circle cx="60" cy="56" r="34" fill="none" stroke="#0f766e" stroke-opacity=".25" stroke-width="2"/>
+      <ellipse cx="50" cy="42" rx="12" ry="7" fill="#fff" opacity=".25" transform="rotate(-30 50 42)"/>
+      <path d="M45 57l10 10 21-22" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M98 10l-8 10" stroke="#3278f0" stroke-width="3" stroke-linecap="round"/><rect x="83" y="14" width="6" height="6" fill="#e5484d" transform="rotate(20 86 17)"/>
+      <circle cx="101" cy="30" r="3.5" fill="#3278f0"/><path d="M106 48l3 3-3 3-3-3z" fill="#6e56cf"/>
+      <path d="M14 66l9 0-4.5-8z" fill="#3278f0"/><path d="M18 86l7-7" stroke="#3278f0" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="92" r="3" fill="#e5484d"/><path d="M16 52l3 3-3 3-3-3z" fill="#6e56cf"/></svg>
+    <h2 class="t" style="font-size:16px">SIP berhasil diaktifkan</h2>
+    <p>Pembelian pertama akan dilakukan pada <b>${fmtLong(firstDebit(plan.s))}</b> atau hari bursa berikutnya (jika tanggal tersebut hari libur AS). Satu langkah menuju tujuan finansialmu!</p></div>
+    <div class="footer" style="padding-top:4px"><button type="button" class="cta" data-a="seePlans" data-k="see-plans">Lihat SIP</button></div>` };
+}
+
+/* ================= Price-return helpers (no recurring simulation) ================= */
+const PERIODS = [[4, '1B'], [13, '3B'], [26, '6B'], [52, '1T']];
+const PERIOD_LONG = { 4: '1 bulan', 13: '3 bulan', 26: '6 bulan', 52: '1 tahun' };
+const ret = (s, weeks = 52) => { const px = series(s); return (px[52] / px[52 - weeks] - 1) * 100; };
+const RET_DISC = 'Return adalah perubahan harga saham pada periode tersebut. Kinerja masa lalu tidak menjamin hasil di masa depan.';
+function spark(s, w = 64, h = 28) {
+  const px = series(s), lo = Math.min(...px), hi = Math.max(...px);
+  const d = px.map((p, i) => `${i ? 'L' : 'M'}${(i / 52 * w).toFixed(1)},${(h - 2 - (p - lo) / (hi - lo || 1) * (h - 4)).toFixed(1)}`).join('');
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" style="stroke:var(--${dir(ret(s))})" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+}
+const retRow = (st, s, right) => `<button type="button" class="stock" data-a="pick" data-v="${s.t}" data-k="pick-${s.t}" aria-pressed="${st.stock === s.t}">
+  ${logo(s)}<span class="row-meta"><span class="t">${s.t}${s.etf ? ' <span class="tag" style="vertical-align:1px">ETF</span>' : ''}</span><span class="s">${esc(s.n)}</span></span>${right}</button>`;
+const lots = (s, amt) => (amt / s.p).toLocaleString('id-ID', { maximumFractionDigits: 4 });
+
+const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'del'];
+const nominalSheet = st => ({ title: 'Nominal Pembelian', fit: true, body: `<div class="sheet-body nom">
+  <label for="amt-n" class="nom-l">Nominal beli ${st.stock}</label>
+  <div class="amt nom-in"><span class="pre" aria-hidden="true">$</span><input id="amt-n" data-amt type="text" inputmode="none" autocomplete="off" spellcheck="false" value="${esc(st.draftAmt)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-n-err"></div>
+  <p class="err" id="amt-n-err" data-err>${st.amtErr ? svg('info', 16) + st.amtErr : ''}</p>
+  ${quickChips(parseAmt(st.draftAmt))}
+  ${confirmBtn(st, 'Selanjutnya')}
+  <div class="keypad" aria-label="Papan angka">${KEYS.map(k => `<button type="button" class="key" data-a="key" data-v="${k}" data-k="key-${k}" ${k === 'del' ? 'aria-label="Hapus"' : k === ',' ? 'aria-label="Koma"' : ''}>${k === 'del' ? `<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M8 2h15a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 0123 18H8l-6.5-8z"/><path d="M12 7l6 6M18 7l-6 6" stroke-linecap="round"/></svg>` : k}</button>`).join('')}</div></div>` });
+function nominalProj(st) {
+  const s = byT(st.stock);
+  if (amtError(st.draftAmt)) return '';
+  return `<div class="desc">${usd(parseAmt(st.draftAmt))} ≈ <b>${lots(s, parseAmt(st.draftAmt))} lembar ${s.t}</b> per pembelian, dengan harga sekarang ${usd(s.p)}.</div>`;
+}
+const listBase = {
+  endIn: 'row',
+  pick(v, ctx) { ctx.st.stock = v; ctx.pop(() => ctx.openSheet('nominal')); },
+  openNominal(ctx) { ctx.openSheet('nominal'); },
+  sheet: nominalSheet,
+  proj: nominalProj,
+  confirm(ctx) { ctx.st.amount = ctx.st.draftAmt; ctx.closeSheet(() => ctx.next()); },
+};
+
+/* ================= 1 · Return list (period toggle) ================= */
+const returnList = app({
+  ...listBase,
+  page(p, st) {
+    return { title: 'Pilih Saham', body: `${searchBox(st.q, 'q1')}
+      <div class="sort" data-sort>${this.sortChips(st)}</div>
+      <div class="colhd" aria-hidden="true"><span>Saham</span><span data-colhd>Harga · Return ${PERIOD_LONG[st.period || 52]}</span></div>
+      <div class="scroll" data-list>${this.list(st)}</div>` };
+  },
+  sortChips: st => `<div class="seg mini" role="radiogroup" aria-label="Periode return">${PERIODS.map(([w, l]) =>
+      `<button type="button" role="radio" aria-checked="${(st.period || 52) === w}" data-a="period" data-v="${w}" data-k="period-${w}">${l}</button>`).join('')}</div>
+    <button type="button" class="qchip" aria-pressed="${st.sort === 'top'}" data-a="sort" data-v="${st.sort === 'top' ? 'pop' : 'top'}" data-k="sort-toggle">${st.sort === 'top' ? 'Urut: Return ↓' : 'Urut: Populer'}</button>`,
+  list(st) {
+    const w = st.period || 52;
+    let list = filtered(st.q);
+    if (!list.length) return noResult(st.q);
+    if (st.sort === 'top') list = [...list].sort((a, b) => ret(b, w) - ret(a, w));
+    return list.map(s => retRow(st, s, `<span class="gain">${usd(s.p)}<span class="pct ${dir(ret(s, w))}" style="font-size:14px;line-height:20px">${pctTxt(ret(s, w))}</span></span>`)).join('') + `<p class="disc">${RET_DISC}</p>`;
+  },
+});
+
+/* ================= 2 · Sparkline (filter by type) ================= */
+const sparkCfg = ({
+  ...listBase,
+  page(p, st) {
+    return { title: 'Pilih Saham', body: `${searchBox(st.q, 'q2')}<div class="sort" role="radiogroup" aria-label="Jenis" data-sort>${this.sortChips(st)}</div>
+      <p class="basis" style="margin-top:4px">${svg('info', 16)}<span>Grafik dan return harga <b>1 tahun terakhir</b>.</span></p>
+      <div class="scroll" data-list>${this.list(st)}</div>` };
+  },
+  sortChips: st => [['pop', 'Semua'], ['stock', 'Saham'], ['etf', 'ETF']].map(([v, l]) =>
+    `<button type="button" class="qchip" role="radio" aria-checked="${(st.sort || 'pop') === v}" data-a="sort" data-v="${v}" data-k="sort-${v}">${l}</button>`).join(''),
+  list(st) {
+    const list = filtered(st.q).filter(s => st.sort === 'etf' ? s.etf : st.sort === 'stock' ? !s.etf : true);
+    if (!list.length) return st.q.trim() ? noResult(st.q) : `<div class="list-empty"><b>Belum ada ETF di daftar ini</b>Coba lihat kategori Semua.</div>`;
+    return list.map(s => retRow(st, s, `${spark(s)}<span class="gain" style="min-width:64px"><span class="pill ${dir(ret(s))}">${pctTxt(ret(s))}</span><span class="s">1 thn</span></span>`)).join('') + `<p class="disc">${RET_DISC}</p>`;
+  },
+});
+
+/* ================= 3 · Curated sections ================= */
+const CURATED = [
+  ['Populer untuk SIP', 'Paling sering dipilih pengguna Ajaib', ['VOO', 'QQQ', 'AAPL', 'NVDA', 'MSFT']],
+  ['Return tertinggi 1 tahun', 'Kenaikan harga terbesar 12 bulan terakhir', null],
+  ['ETF untuk pemula', 'Satu produk, isinya ratusan saham', ['VOO', 'QQQ']],
+];
+const curated = app({
+  ...listBase,
+  page(p, st) {
+    return { title: 'Pilih Saham', body: `${searchBox(st.q, 'q3')}<div class="scroll" data-list>${this.list(st)}</div>` };
+  },
+  list(st) {
+    const row = s => retRow(st, s, `<span class="gain">${usd(s.p)}<span class="pct ${dir(ret(s))}" style="font-size:14px;line-height:20px">${pctTxt(ret(s))}</span></span>`);
+    if (st.q.trim()) { const l = filtered(st.q); return l.length ? l.map(row).join('') : noResult(st.q); }
+    const top = [...STOCKS].sort((a, b) => ret(b) - ret(a)).slice(0, 5).map(s => s.t);
+    const sections = CURATED.map(([title, sub, tickers]) => `<section class="cur" aria-label="${title}"><div class="cur-hd"><h3>${title}</h3><span class="hint">${sub}</span></div>
+      <div class="rail">${(tickers || top).map(byT).map(s => `<button type="button" class="tile" data-a="pick" data-v="${s.t}" data-k="tile-${title.length}-${s.t}">
+        ${logo(s)}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="pct ${dir(ret(s))}" style="font-size:14px;line-height:20px">${pctTxt(ret(s))}</span><span class="hint">1 tahun</span></button>`).join('')}</div></section>`).join('');
+    return sections + `<div class="cur-hd" style="padding-top:8px"><h3>Semua saham</h3><span class="hint">Harga · return 1 tahun</span></div>${STOCKS.map(row).join('')}<p class="disc">${RET_DISC}</p>`;
+  },
+});
+
+/* ================= Picker wiring (PICKER.md reference, adapted to DOM-mounting variants) ================= */
+/* ================= Confirmation summary explorations ================= */
+const cfAgree = st => `<hr class="cf-hr">
+  <div class="cf-agree"><input type="checkbox" id="agree" data-a="agree" ${st.agree ? 'checked' : ''}>
+    <span><label for="agree">Saya telah membaca dan memahami </label><button type="button" class="tlink" data-a="terms" data-k="terms" aria-expanded="${!!st.terms}">Syarat dan Ketentuan</button><label for="agree"> Systematic Investment Plan (SIP), serta menyetujui untuk memilih portofolio yang mungkin mengandung risiko.</label></span></div>
+  <div data-terms>${termsBox(st)}</div>`;
+const cfFoot = st => `<div class="footer" style="padding-top:4px" data-buy>${buyBtn(st)}</div>`;
+const cfStock = (s, right) => `<div class="cf-stock">${logo(s, 'lg')}<span class="row-meta"><span class="t">${s.t}</span><span class="s">${esc(s.n)}</span></span>${right || ''}</div>`;
+// Upcoming purchase dates; "until deleted" plans are projected 12 months out.
+const upcoming = s => buyDates({ ...s, end: s.end === 'forever' ? 12 : s.end });
+const perMonthNum = (s, amt) => parseAmt(amt) * PER_MONTH[s.freq];
+const when = s => s.freq === 'daily' ? 'setiap hari bursa' : s.freq === 'weekly' ? 'setiap ' + DAY_L[s.day] : 'setiap tanggal ' + s.date;
+
+// 2 · Sentence
+function confirmSentence(st) {
+  const s = byT(st.stock), p = st.s, a = parseAmt(st.amount), d = upcoming(p);
+  const dur = p.end === 'forever' ? 'sampai kamu hapus' : `selama <b>${p.end} bulan</b>`;
+  const commit = p.end === 'forever'
+    ? `≈ <b>${usd(Math.round(perMonthNum(p, a)))}</b> per bulan · berjalan terus sampai rencana dihapus`
+    : `<b>${d.length} pembelian</b> · total <b>${usd(d.length * a)}</b> · terakhir ${fmtDate(d.at(-1))}`;
+  return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
+    ${cfStock(s)}
+    <p class="cf-sentence">Beli <b>${usd(a)}</b> saham ${s.t} ${when(p).replace(/^setiap (.*)$/, 'setiap <b>$1</b>')}, mulai <b>${fmtLong(firstDebit(p))}</b>, ${dur}.</p>
+    <div class="cf-commit">${svg('cal', 16)}<span>${commit}</span></div>
+    <div class="cf-rows"><div><dt>Sumber Dana</dt><dd>Rekening Saham AS<span class="tag">Autodebit</span></dd></div></div>
+    ${cfAgree(st)}</div>${cfFoot(st)}` };
+}
+
+// 3 · Timeline
+function confirmTimeline(st) {
+  const s = byT(st.stock), p = st.s, a = parseAmt(st.amount), d = upcoming(p);
+  const head = d.slice(0, 3), finite = p.end !== 'forever';
+  const rest = finite ? d.length - 4 : 0;
+  const item = (date, label, cls = '') => `<li class="tl-i ${cls}"><span class="tl-dot" aria-hidden="true"></span><span class="tl-d">${label}</span><span class="tl-v">${date}</span></li>`;
+  const lbl = i => finite && d.length === 1 ? 'Satu-satunya pembelian' : i === 0 ? 'Pembelian pertama' : finite && i === d.length - 1 ? `Pembelian terakhir (ke-${i + 1})` : `Pembelian ke-${i + 1}`;
+  let items = head.map((x, i) => item(fmtDate(x), lbl(i), i === 0 ? 'first' : finite && i === d.length - 1 ? 'last' : '')).join('');
+  if (finite && d.length > 3) {
+    if (rest > 0) items += `<li class="tl-i gap"><span class="tl-dot" aria-hidden="true"></span><span class="tl-d">${rest} pembelian lagi, ${when(p)}</span></li>`;
+    items += item(fmtDate(d.at(-1)), `Pembelian terakhir (ke-${d.length})`, 'last');
+  } else if (!finite) items += `<li class="tl-i gap open"><span class="tl-dot" aria-hidden="true"></span><span class="tl-d">Berlanjut ${when(p)} sampai kamu hapus</span></li>`;
+  return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
+    ${cfStock(s, `<span class="cf-per"><b>${usd(a)}</b><span class="s">per pembelian</span></span>`)}
+    <ol class="tl" aria-label="Jadwal pembelian">${items}</ol>
+    <dl class="cf-rows">
+      <div><dt>${finite ? 'Total dana' : 'Estimasi per bulan'}</dt><dd>${finite ? usd(d.length * a) : '≈ ' + usd(Math.round(perMonthNum(p, a)))}</dd></div>
+      <div><dt>Sumber Dana</dt><dd>Rekening Saham AS</dd></div></dl>
+    ${cfAgree(st)}</div>${cfFoot(st)}` };
+}
+
+// 4 · Stats + calendar
+function miniCal(p) {
+  // Late-month starts would show a near-empty month, so jump to the next full month when possible.
+  const d = upcoming(p), first = d[0], late = first.getDate() > 21 && d.some(x => x.getMonth() !== first.getMonth());
+  const ref = late ? d.find(x => x.getMonth() !== first.getMonth()) : first, y = ref.getFullYear(), m = ref.getMonth();
+  const days = new Date(y, m + 1, 0).getDate(), lead = new Date(y, m, 1).getDay();
+  const hits = new Set(d.filter(x => x.getMonth() === m && x.getFullYear() === y).map(x => x.getDate()));
+  const cells = Array.from({ length: lead }, () => '<span></span>').join('') + Array.from({ length: days }, (_, i) => {
+    const n = i + 1, dow = (lead + i) % 7;
+    return `<span class="${hits.has(n) ? 'hit' : ''} ${dow === 0 || dow === 6 ? 'wkd' : ''} ${n === first.getDate() ? 'first' : ''}">${n}</span>`;
+  }).join('');
+  return `<div class="cal" role="img" aria-label="${hits.size} pembelian di ${MONTHS_LONG[m]} ${y}"><div class="cal-hd"><b>${MONTHS_LONG[m]} ${y}</b><span class="hint">${hits.size} pembelian bulan ini</span></div>
+    <div class="cal-g">${DAY_S.map(x => `<span class="dow">${x}</span>`).join('')}${cells}</div></div>`;
+}
+function confirmStats(st) {
+  const s = byT(st.stock), p = st.s, a = parseAmt(st.amount), d = upcoming(p), finite = p.end !== 'forever';
+  const tile = (k, v, sub) => `<div class="stat"><span class="hint">${k}</span><span class="v">${v}</span>${sub ? `<span class="hint">${sub}</span>` : ''}</div>`;
+  return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
+    ${cfStock(s)}
+    <div class="stats3">${tile('Per pembelian', usd(a), FREQ_NAME[p.freq].toLowerCase())}${tile('Per bulan', '≈ ' + usd(Math.round(perMonthNum(p, a))), p.freq === 'daily' ? '±21 hari bursa' : p.freq === 'weekly' ? '±4 kali' : '1 kali')}${finite ? tile(`Total ${p.end} bulan`, usd(d.length * a), d.length + ' pembelian') : tile('Durasi', 'Terus', 'sampai dihapus')}</div>
+    ${miniCal(p)}
+    <dl class="cf-rows"><div><dt>Mulai</dt><dd>${fmtLong(d[0])}</dd></div>${finite ? `<div><dt>Berakhir</dt><dd>${fmtLong(d.at(-1))}</dd></div>` : ''}<div><dt>Sumber Dana</dt><dd>Rekening Saham AS</dd></div></dl>
+    ${cfAgree(st)}</div>${cfFoot(st)}` };
+}
+
+
+/* ================= Hub info-box explorations ================= */
+const infoReady = st => byT(st.stock) && schedDone(st.s) && st.s.end != null;
+const infoEmpty = () => `<div class="info">${svg('cal', 16)}<span>Pilih saham, nominal, jadwal, dan durasi untuk melihat kapan rekeningmu didebit.</span></div>`;
+const shortDate = d => `${d.getDate()} ${MONTHS[d.getMonth()]}${d.getFullYear() !== TODAY.getFullYear() ? ' ' + d.getFullYear() : ''}`;
+
+// 2 · Key facts
+function infoFacts(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const p = st.s, a = parseAmt(st.amount), ok = !isNaN(a) && !amtError(st.amount), d = upcoming(p), finite = p.end !== 'forever';
+  const row = (k, v, sub) => `<div><dt>${k}</dt><dd>${v}${sub ? `<span class="hint">${sub}</span>` : ''}</dd></div>`;
+  return `<dl class="facts">
+    ${row('Debit pertama', fmtDate(d[0]), 'atau hari bursa berikutnya')}
+    ${row('Berakhir', finite ? fmtDate(d.at(-1)) : 'Sampai kamu hapus', finite ? `setelah ${d.length} pembelian` : '')}
+    ${ok ? `<div class="facts-total"><dt>${finite ? 'Total didebit' : 'Estimasi per bulan'}</dt><dd>${finite ? usd(d.length * a) : '≈ ' + usd(Math.round(perMonthNum(p, a)))}</dd></div>` : ''}</dl>`;
+}
+
+// 3 · One-liner + expandable schedule
+function infoLine(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const p = st.s, a = parseAmt(st.amount), ok = !amtError(st.amount), d = upcoming(p), finite = p.end !== 'forever';
+  const line = finite
+    ? `<b>${d.length}× ${ok ? usd(a) : ''}</b>${ok ? ` · total <b>${usd(d.length * a)}</b>` : ''} · ${d.length === 1 ? fmtDate(d[0]) : `${shortDate(d[0])} – ${shortDate(d.at(-1))}`}`
+    : `<b>${ok ? usd(a) : ''} ${when(p)}</b> · mulai ${shortDate(d[0])}${ok ? ` · ≈ ${usd(Math.round(perMonthNum(p, a)))}/bln` : ''}`;
+  const list = st.infoOpen ? `<ol class="sched-list" id="sched-list">${(finite ? d : d.slice(0, 8)).map((x, i) => `<li><span>${i + 1}.</span><span>${fmtDate(x)}</span>${ok ? `<span>${usd(a)}</span>` : ''}</li>`).join('')}
+    ${finite ? '' : `<li class="more"><span></span><span>Berlanjut ${when(p)}…</span></li>`}</ol>
+    <p class="hint" style="padding:0 12px 10px">Kalau jatuh di hari libur bursa AS, dibeli di hari bursa berikutnya.</p>` : '';
+  return `<div class="oneline"><div class="oneline-row">${svg('cal', 16)}<span class="oneline-t">${line}</span>
+    <button type="button" class="link" data-a="infoToggle" data-k="info-toggle" aria-expanded="${!!st.infoOpen}" aria-controls="sched-list">${st.infoOpen ? 'Tutup' : 'Lihat jadwal'}</button></div>${list}</div>`;
+}
+
+// 4 · Date range bar
+function infoRange(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const p = st.s, a = parseAmt(st.amount), ok = !amtError(st.amount), finite = p.end !== 'forever', d = upcoming(p);
+  const span = finite ? d : d.filter(x => x <= addMonths(d[0], 3)), t0 = +span[0], t1 = +span.at(-1) || t0 + 1;
+  const ticks = span.map((x, i) => `<i style="left:${span.length === 1 ? 0 : ((+x - t0) / (t1 - t0) * 100).toFixed(2)}%" ${i === 0 ? 'class="first"' : ''}></i>`).join('');
+  const end = finite ? `<span class="rng-e"><span class="hint">Selesai</span><b>${fmtDate(d.at(-1))}</b></span>` : `<span class="rng-e"><span class="hint">Selesai</span><b>Sampai dihapus</b></span>`;
+  const foot = finite
+    ? `<b>${d.length}</b> pembelian × ${ok ? `<b>${usd(a)}</b> = <b>${usd(d.length * a)}</b>` : 'nominal'}`
+    : `${ok ? `≈ <b>${usd(Math.round(perMonthNum(p, a)))}</b> per bulan` : 'Berjalan terus'} · ${when(p)}`;
+  return `<div class="rng"><div class="rng-top"><span><span class="hint">Debit pertama</span><b>${fmtDate(d[0])}</b></span>${end}</div>
+    <div class="rng-bar ${finite ? '' : 'open'}" role="img" aria-label="${finite ? d.length + ' pembelian dari ' + fmtDate(d[0]) + ' sampai ' + fmtDate(d.at(-1)) : 'Pembelian berjalan terus'}">${ticks}</div>
+    <div class="rng-ft"><span>${foot}</span><span class="hint">atau hari bursa berikutnya</span></div></div>`;
+}
+
+const prefill = st => Object.assign(st, { stock: 'TSM', amount: '25', s: { freq: 'weekly', day: 1, date: null, end: 6 } });
+const infoVariant = view => app({ ...sparkCfg, init: st => { prefill(st); st.infoView = view; } });
+const ivCurrent = infoVariant(null), ivFacts = infoVariant(infoFacts), ivLine = infoVariant(infoLine), ivRange = infoVariant(infoRange);
+
+/* ================= Key facts riffs ================= */
+const DAY_FULL = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+const relDays = d => { const n = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - TODAY) / 864e5); return n <= 0 ? 'hari ini' : n === 1 ? 'besok' : `${n} hari lagi`; };
+const factsData = st => { const p = st.s, a = parseAmt(st.amount), ok = !amtError(st.amount), d = upcoming(p), finite = p.end !== 'forever'; return { p, a, ok, d, finite, total: finite ? d.length * a : Math.round(perMonthNum(p, a)) }; };
+const holidayNote = `<p class="kf-note">${svg('info', 14)}Kalau bursa AS libur, dibeli di hari bursa berikutnya.</p>`;
+
+// 2 · Money first
+function factsMoney(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const { p, a, ok, d, finite, total } = factsData(st);
+  // "Until deleted" plans have no money block for now — only the date span.
+  const money = ok && finite
+    ? `<div class="kf-money"><span class="hint">Total yang akan didebit</span><b>${usd(total)}</b><span class="hint">${d.length} pembelian × ${usd(a)}</span></div>` : '';
+  return `<div class="kf">${money}
+    ${finite && d.length === 1 ? `<div class="kf-span"><span><span class="hint">Tanggal beli</span><b>${fmtDate(d[0])}</b></span></div>`
+      : `<div class="kf-span"><span><span class="hint">Mulai</span><b>${fmtDate(d[0])}</b></span><span class="kf-arrow" aria-hidden="true">→</span>
+      <span class="r"><span class="hint">Selesai</span><b>${finite ? fmtDate(d.at(-1)) : 'Sampai dihapus'}</b></span></div>`}${holidayNote}</div>`;
+}
+
+// 3 · Next debit
+function factsNext(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const { p, a, ok, d, finite, total } = factsData(st);
+  const after = d[1] ? `${when(p).replace(/^setiap/, 'Setiap')}` : '';
+  return `<div class="kf">
+    <div class="kf-next"><span class="kf-badge">${svg('cal', 18)}</span><span class="row-meta"><span class="hint">Debit berikutnya</span><b>${DAY_FULL(d[0])}</b><span class="kf-rel">${relDays(d[0])}</span></span>${ok ? `<b class="kf-amt">${usd(a)}</b>` : ''}</div>
+    <dl class="kf-list">
+      ${after ? `<div><dt>Setelah itu</dt><dd>${after}</dd></div>` : ''}
+      ${finite && d.length === 1 ? '' : `<div><dt>${finite ? 'Terakhir' : 'Berakhir'}</dt><dd>${finite ? `${fmtDate(d.at(-1))} <span class="hint">(ke-${d.length})</span>` : 'Sampai kamu hapus'}</dd></div>`}
+      ${ok ? `<div><dt>${finite ? 'Total' : 'Per bulan'}</dt><dd>${finite ? usd(total) : '≈ ' + usd(total)}</dd></div>` : ''}</dl>${holidayNote}</div>`;
+}
+
+// 4 · Plain steps
+const ICON = {
+  start: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  repeat: '<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 014-4h12M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 01-4 4H4"/>',
+  flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M16 12.5h.01M3 10h18"/>',
+};
+const ic = k => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+function factsSteps(st) {
+  if (!infoReady(st)) return infoEmpty();
+  const { p, a, ok, d, finite, total } = factsData(st);
+  const step = (k, html) => `<li><span class="kf-ic">${ic(k)}</span><span>${html}</span></li>`;
+  const repeat = d.length > 1 ? step('repeat', `Lalu <b>${when(p)}</b>${finite ? `, total <b>${d.length} kali</b>` : ''}`) : '';
+  return `<div class="kf"><ol class="kf-steps">
+    ${step('start', `${finite && d.length === 1 ? 'Beli sekali pada' : 'Mulai'} <b>${DAY_FULL(d[0])}</b> <span class="kf-rel">${relDays(d[0])}</span>`)}
+    ${repeat}
+    ${finite && d.length === 1 ? '' : step('flag', finite ? `Selesai <b>${DAY_FULL(d.at(-1))}</b>` : `Berjalan terus <b>sampai kamu hapus</b>`)}
+    ${ok ? step('wallet', finite ? `Total <b>${usd(total)}</b> didebit dari Rekening Saham AS` : `Sekitar <b>${usd(total)} per bulan</b> didebit dari Rekening Saham AS`) : ''}
+  </ol>${holidayNote}</div>`;
+}
+const kfMoney = infoVariant(factsMoney), kfNext = infoVariant(factsNext), kfSteps = infoVariant(factsSteps);
+
+const initVariant = mode => app({ ...sparkCfg, init: st => { st.initMode = mode; } });
+const ivNow = initVariant(null), ivReveal = initVariant('reveal'), ivQuick = initVariant('quick'), ivGuided = initVariant('guided');
+/* ================= Stock list explorations (ref: Figma 13950:15951) ================= */
+const CAT = { AAPL: 'tech', NVDA: 'tech', TSM: 'tech', MSFT: 'tech', GOOGL: 'comm', AMZN: 'cons', 'BRK.B': 'fin', VOO: 'etf', META: 'comm', TSLA: 'cons', KO: 'cons', QQQ: 'etf', NFLX: 'comm', PG: 'cons', RDDT: 'comm' };
+const CATS = [['all', 'Semua Kategori', 'Semua'], ['etf', 'ETF', 'ETF'], ['tech', 'Teknologi', 'Teknologi'], ['cons', 'Konsumer', 'Konsumer'], ['fin', 'Keuangan', 'Keuangan'], ['comm', 'Komunikasi', 'Komunikasi']];
+const SORTS = [['top', 'Return Tertinggi'], ['low', 'Return Terendah'], ['pop', 'Paling Populer'], ['az', 'Nama A–Z']];
+const POP = ['VOO', 'QQQ', 'AAPL', 'NVDA', 'TSLA', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSM', 'KO', 'NFLX', 'BRK.B', 'PG', 'RDDT'];
+function stockQuery(st, cat = st.cat || 'all') {
+  let l = filtered(st.q).filter(s => cat === 'all' || CAT[s.t] === cat);
+  const sort = st.sort || 'top';
+  const y = st.period || 3, v = s => retP(s, y);
+  const byRet = sign => (a, b) => (v(a) == null) - (v(b) == null) || sign * ((v(b) ?? 0) - (v(a) ?? 0));
+  if (sort === 'top') l = [...l].sort(byRet(1));
+  if (sort === 'low') l = [...l].sort(byRet(-1));
+  if (sort === 'pop') l = [...l].sort((a, b) => POP.indexOf(a.t) - POP.indexOf(b.t));
+  if (sort === 'az') l = [...l].sort((a, b) => a.t.localeCompare(b.t));
+  return l;
+}
+const sortLabel = st => SORTS.find(x => x[0] === (st.sort || 'top'))[1];
+const catLabel = st => CATS.find(x => x[0] === (st.cat || 'all'))[1];
+const searchFig = (st, id) => `<div class="search fig">${svg('search')}<input id="${id}" type="search" data-search placeholder="Cari Saham AS" value="${esc(st.q)}" autocomplete="off" spellcheck="false" aria-label="Cari saham" data-1p-ignore></div>`;
+const figChips = st => `<div class="fchips" data-sort>
+  <button type="button" class="fchip" data-a="openSort" data-k="chip-sort" aria-haspopup="dialog">${svg('sort', 16)}${sortLabel(st)}</button>
+  <button type="button" class="fchip" data-a="openCat" data-k="chip-cat" aria-haspopup="dialog">${svg('filter', 16)}${catLabel(st)}</button></div>`;
+const retNote = () => `<p class="retnote"><span class="retnote-ic">${svg('stock', 14)}</span>Return saham 1 tahun terakhir</p>`;
+const retRight = (s, st) => {
+  const y = st?.period || 1, v = retP(s, y);
+  if (!st?.period) return `<span class="fig-ret"><b class="${dir(ret(s))}">${pctTxt(ret(s))}</b><span class="s">dalam 1 tahun</span></span>`;
+  if (v == null) return `<span class="fig-ret"><b class="na">—</b><span class="s">Belum ${y} tahun</span></span>`;
+  if (st.figPeriod) return `<span class="fig-ret"><b class="${dir(v)}">${pctTxt(v)}${y > 1 ? '<span class="per-u">/thn</span>' : ''}</b><span class="s">${y === 1 ? 'dalam 1 tahun' : `rata-rata ${y} tahun`}</span></span>`;
+  return `<span class="fig-ret"><b class="${dir(v)}">${pctTxt(v)}${y > 1 ? '<span class="per-u">/thn</span>' : ''}</b></span>`;
+};
+const figRow = (st, s, mid = '') => `<button type="button" class="stock fig-row" data-a="pick" data-v="${s.t}" data-k="pick-${s.t}" aria-pressed="${st.stock === s.t}">
+  ${logo(s, 'lg')}<span class="row-meta"><span class="t">${s.t}${s.etf ? ' <span class="tag" style="vertical-align:1px">ETF</span>' : ''}</span><span class="s">${esc(s.n)}</span></span>${mid}${retRight(s, st)}<span class="tick" style="color:var(--text)">${svg('chev', 20, 2)}</span></button>`;
+const listOrEmpty = (st, l, row) => l.length ? l.map(row).join('') + `<p class="disc">${RET_DISC}</p>`
+  : st.q.trim() ? noResult(st.q) : `<div class="list-empty"><b>Belum ada saham di kategori ini</b>Coba pilih kategori lain.</div>`;
+function filterSheet(st) {
+  if (st.sheet === 'period') {
+    const opts = [[1, '1 tahun terakhir', 'Perubahan harga total'], [3, '3 tahun terakhir', 'Rata-rata return per tahun'], [5, '5 tahun terakhir', 'Rata-rata return per tahun']], cur = st.period || 1;
+    return { title: 'Periode Return', fit: true, body: `<div class="sheet-body" style="padding:0 0 calc(20px + env(safe-area-inset-bottom))"><div role="radiogroup">${opts.map(([v, l, d]) =>
+      `<button type="button" class="opt-btn" role="radio" aria-checked="${cur === v}" data-a="setPeriodSheet" data-v="${v}" data-k="opt-p${v}" style="border-radius:0;padding:12px 16px">
+        <span class="row-meta"><span class="t" style="font-weight:${cur === v ? 700 : 400}">${l}</span><span class="s">${d}</span></span>${cur === v ? `<span style="color:var(--primary)">${svg('check', 20, 2.25)}</span>` : ''}</button>`).join('')}</div></div>` };
+  }
+  const isSort = st.sheet === 'sort', opts = isSort ? SORTS : CATS.map(([v, l]) => [v, l]), cur = isSort ? (st.sort || 'top') : (st.cat || 'all');
+  return { title: isSort ? 'Urutkan' : 'Kategori Saham', fit: true, body: `<div class="sheet-body" style="padding:0 0 calc(20px + env(safe-area-inset-bottom))"><div role="radiogroup">${opts.map(([v, l]) =>
+    `<button type="button" class="opt-btn" role="radio" aria-checked="${cur === v}" data-a="${isSort ? 'setSort' : 'setCat'}" data-v="${v}" data-k="opt-${v}" style="border-radius:0;padding:14px 16px">
+      <span class="row-meta"><span class="t" style="font-weight:${cur === v ? 700 : 400}">${l}</span></span>${cur === v ? `<span style="color:var(--primary)">${svg('check', 20, 2.25)}</span>` : ''}</button>`).join('')}</div></div>` };
+}
+
+// 1 · Figma reference
+const slFigma = { title: 'Pilih Saham', head: st => `${searchFig(st, 'qf')}${figChips(st)}${retNote()}`, list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)) };
+// 2 · Sparkline
+const slSpark = { title: 'Pilih Saham', head: st => `${searchFig(st, 'qs')}${figChips(st)}${retNote()}`, list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s, spark(s, 56, 26))) };
+// 3 · Category tabs
+const slTabs = {
+  title: 'Pilih Saham',
+  period: true,
+  head: st => `${searchFig(st, 'qt')}<div class="ctabs" role="tablist" aria-label="Kategori" data-sort>${CATS.map(([v, , short]) =>
+      `<button type="button" role="tab" class="ctab" aria-selected="${(st.cat || 'all') === v}" data-a="setCatInline" data-v="${v}" data-k="ctab-${v}">${short}</button>`).join('')}</div>
+    <div class="tabs-sub"><div class="per-row"><span class="retnote-ic">${svg('stock', 14)}</span><span class="per-l">Return</span>
+      <div class="seg mini per" role="radiogroup" aria-label="Periode return">${[1, 3, 5].map(y => `<button type="button" role="radio" aria-checked="${(st.period || 3) === y}" data-a="setPeriod" data-v="${y}" data-k="per-${y}">${y}T</button>`).join('')}</div></div>
+      <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 14)} ${sortLabel(st)}</button></div>
+    <p class="per-hint">${(st.period || 3) === 1 ? 'Perubahan harga 1 tahun terakhir' : `Rata-rata per tahun, ${st.period || 3} tahun terakhir`}</p>`,
+  list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)),
+};
+// 4 · Sections
+const SECTIONS = [['Populer untuk SIP', 'Paling sering dipilih', st => POP.slice(0, 3).map(byT), 'pop'], ['ETF untuk pemula', 'Satu produk, isinya ratusan saham', () => STOCKS.filter(s => CAT[s.t] === 'etf'), 'etf'],
+  ['Teknologi', 'Return tertinggi di kategori ini', () => STOCKS.filter(s => CAT[s.t] === 'tech').sort((a, b) => ret(b) - ret(a)).slice(0, 3), 'tech'],
+  ['Konsumer', 'Merek yang kamu pakai sehari-hari', () => STOCKS.filter(s => CAT[s.t] === 'cons').sort((a, b) => ret(b) - ret(a)).slice(0, 3), 'cons']];
+const slSections = {
+  title: 'Pilih Saham',
+  head: st => `${searchFig(st, 'qx')}${st.cat && st.cat !== 'all' ? `<div class="sec-back"><button type="button" class="link" data-a="setCatInline" data-v="all" data-k="sec-back">${svg('back', 16, 2)} Semua kategori</button><b>${catLabel(st)}</b></div>` : ''}`,
+  list(st) {
+    if (st.q.trim() || (st.cat && st.cat !== 'all')) return listOrEmpty(st, stockQuery(st), s => figRow(st, s));
+    return SECTIONS.map(([title, sub, get, cat]) => `<section class="sec" aria-label="${title}"><div class="sec-hd"><span class="row-meta"><b>${title}</b><span class="hint">${sub}</span></span>
+      ${cat === 'pop' ? '' : `<button type="button" class="link" data-a="setCatInline" data-v="${cat}" data-k="sec-${cat}">Lihat semua</button>`}</div>${get(st).map(s => figRow(st, s)).join('')}</section>`).join('') + `<p class="disc">${RET_DISC}</p>`;
+  },
+};
+const stockVariant = cfg => app({ ...sparkCfg, lightPage: true, autoStock: true,
+  page: (p, st) => ({ title: cfg.title, body: `<div class="fig-head" data-head>${cfg.head(st)}</div><div class="scroll" data-list>${cfg.list(st)}</div>` }),
+  list: cfg.list, head: cfg.head, init: st => { st.sort = 'top'; st.cat = 'all'; if (cfg.period) st.period = 3; } });
+const svFigma = stockVariant(slFigma), svSpark = stockVariant(slSpark), svTabs = stockVariant(slTabs), svSections = stockVariant(slSections);
+
+// Figma 13950:15951 (updated): period + category chips, sort link
+const slFigma2 = {
+  title: 'Pilih Saham', period: 1,
+  head: st => { const y = st.period || 1; return `${searchFig(st, 'qf2')}<div class="fchips">
+      <button type="button" class="fchip" data-a="openPeriod" data-k="chip-period" aria-haspopup="dialog">${svg('cal', 16)}Return ${y} tahun terakhir</button>
+      <button type="button" class="fchip" data-a="openCat" data-k="chip-cat" aria-haspopup="dialog">${svg('filter', 16)}${catLabel(st)}</button></div>
+    <div class="tabs-sub"><p class="retnote"><span class="retnote-ic">${svg('stock', 14)}</span>${y === 1 ? 'Return saham 1 tahun terakhir' : `Rata-rata return per tahun, ${y} tahun terakhir`}</p>
+      <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 14)} ${sortLabel(st)}</button></div>`; },
+  list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)),
+};
+const svFigma2 = app({ ...sparkCfg, lightPage: true, autoStock: true,
+  page: (p, st) => ({ title: slFigma2.title, body: `<div class="fig-head" data-head>${slFigma2.head(st)}</div><div class="scroll" data-list>${slFigma2.list(st)}</div>` }),
+  list: slFigma2.list, head: slFigma2.head, init: st => { st.sort = 'top'; st.cat = 'all'; st.period = 1; st.figPeriod = true; } });
+const variants = [svFigma2];
+const stage = document.getElementById('stage');
+const picker = document.querySelector('.proto-picker');
+const highlight = picker.querySelector('.proto-picker-highlight');
+const items = [...picker.querySelectorAll('.proto-picker-item:not(.proto-picker-replay)')];
+const replay = picker.querySelector('.proto-picker-replay');
+let current = 0;
+
+function moveHighlight() {
+  const el = items[current];
+  highlight.style.width = el.offsetWidth + 'px';
+  highlight.style.transform = `translateX(${el.offsetLeft}px)`;
+}
+function mount(i) {
+  stage.innerHTML = '';
+  requestAnimationFrame(() => { stage.innerHTML = ''; variants[i](stage); });
+}
+function setActive(i) {
+  if (i < 0 || i >= variants.length) return;
+  current = i;
+  items.forEach((el, j) => {
+    el.toggleAttribute('data-active', j === i);
+    if (j === i) el.setAttribute('aria-current', 'true');
+    else el.removeAttribute('aria-current');
+  });
+  moveHighlight();
+  const url = new URL(location);
+  url.searchParams.set('v', i + 1);
+  history.replaceState(null, '', url);
+  mount(i);
+}
+items.forEach((el, i) => el.addEventListener('click', () => setActive(i)));
+replay?.addEventListener('click', () => mount(current));
+window.addEventListener('resize', moveHighlight);
+document.addEventListener('keydown', (e) => {
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const num = parseInt(e.key, 10);
+  if (num >= 1 && num <= variants.length) setActive(num - 1);
+  else if (e.key === 'ArrowRight') setActive((current + 1) % variants.length);
+  else if (e.key === 'ArrowLeft') setActive((current - 1 + variants.length) % variants.length);
+  else if (e.key === 'r' || e.key === 'R') mount(current);
+});
+setActive((parseInt(new URLSearchParams(location.search).get('v'), 10) || 1) - 1);
+requestAnimationFrame(() => requestAnimationFrame(() => picker.setAttribute('data-ready', '')));
+</script>
+</body>
+</html>
