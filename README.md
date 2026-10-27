@@ -2,7 +2,7 @@
 
 Interactive prototype of the SIP (Systematic Investment Plan) creation flow for US stocks.
 
-**Live:** https://randyvarianda.github.io/sip-prototype/
+**Live:** https://randy-ajaib.github.io/sip-prototype/
 
 ## Flow
 1. **Pilih Saham:** stock list with search, return period (1 / 3 / 5 tahun), category and sort
