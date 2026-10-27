@@ -1,5 +1,15 @@
 # SIP creation — decisions from /sip-prototype
 
+## Main page after picking a stock — Figma 14030:20305 (28 Okt 2026)
+- Stock card (bordered): logo, ticker, name, pencil button to change stock; green "Potensi kenaikan …" strip inside the card.
+- **Nominal on the page** again: "Nominal pembelian" input + $5 / $10 / $25 / $50 chips (no nominal sheet in this path).
+- Jadwal and Durasi as two dropdown rows in one bordered box: "Jadwal nabung rutin — Setiap Hari ⌄", "Durasi — Sampai dihapus ⌄".
+- Picking a stock prefills **$10, Setiap Hari, Sampai dihapus**, so the plan is complete straight away (info box + button show).
+- Jadwal sheet button reads **Simpan**; Durasi sheet keeps **Selesai**.
+- Info box first bullet uses the full day name: "Pembelian pertama pada **Rabu, 28 Okt 2026** …".
+- Rencana SIP tab label shows the count: "Rencana SIP (1)".
+- Before a stock is picked, the empty state with step icons (Figma 13947:15639) is unchanged.
+
 ## Rencana SIP — Figma 14014:19075 (27 Okt 2026)
 - Title "Rencana SIP kamu" + note that SIP buys run when the US market opens (21.30 WIB).
 - One card per plan: logo + ticker, "Aktif" label, three cells Nominal / Frekuensi (Harian, Mingguan, Bulanan) / Autodebit (next debit date).

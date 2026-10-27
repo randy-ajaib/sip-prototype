@@ -590,6 +590,25 @@ h1, h2, h3, p { margin: 0; }
 .sip-info p { font-size: 12px; line-height: 18px; }
 .sip-info .tlink { align-self: flex-start; font-size: 12px; line-height: 18px; }
 
+/* ---------- Figma 14030:20305: stock-picked layout ---------- */
+.sel-card { margin: 16px 16px 0; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; }
+.sel-top { display: flex; align-items: center; gap: 12px; padding: 12px 4px 12px 12px; }
+.sel-top .t { font-size: 16px; line-height: 20px; }
+.sel-card .pot-pill { margin: 0; border-radius: 0; }
+.inl-nom { display: flex; flex-direction: column; gap: 8px; padding: 16px 16px 0; }
+.inl-nom label { font-size: 14px; line-height: 20px; font-weight: 700; }
+.amt.inl input { height: 48px; border: 1px solid transparent; background: var(--surface-2); font-size: 18px; font-weight: 400; padding-left: 26px; }
+.amt.inl input:focus { border-color: var(--primary); background: #fff; }
+.amt.inl .pre { font-weight: 400; font-size: 18px; color: var(--text-2); }
+.inl-nom .err:empty { display: none; }
+.dd-group { margin: 16px 16px 0; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; }
+.dd { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 0 12px; border: 0; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.dd + .dd { border-top: 1px solid var(--border); }
+.dd:active { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .dd:hover { background: var(--surface-2); } }
+.dd-l { flex: 1; font-size: 14px; color: var(--text-2); }
+.dd b { font-size: 14px; }
+.dd svg { flex: none; color: var(--text); }
 </style>
 </head>
 <body>
@@ -661,6 +680,8 @@ const ready = (stock, s, amt) => !!stock && schedDone(s) && s.end != null && !am
 const P = {
   back: '<path d="M15 18l-6-6 6-6"/>',
   chev: '<path d="M9 18l6-6-6-6"/>',
+  edit: '<path d="M4 20h4L19.5 8.5a2.1 2.1 0 00-3-3L5 17v3z"/><path d="M14.5 7.5l3 3"/>',
+  chevd: '<path d="M6 9l6 6 6-6"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
@@ -686,7 +707,7 @@ const header = (title, back = true) => `<div class="hd"><button type="button" cl
 
 const tabs = tab => `<div class="tabs" role="tablist" aria-label="SIP">
   <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">Mulai Nabung</button>
-  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">Rencana SIP</button></div>`;
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">Rencana SIP${PLANS.length ? ` (${PLANS.length})` : ''}</button></div>`;
 
 const intro = tab => `<div class="intro">Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).${tabs(tab)}</div>`;
 
@@ -917,6 +938,20 @@ function hubBody(st) {
       <span class="pill ${dir(ret(s))}">${pctTxt(ret(s))}</span></button>`).join('')}
     <button type="button" class="link qp-all" data-a="openStock" data-k="qp-all">Lihat semua saham</button></div>
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
+  if (stock) {
+    const schedLbl = !st.s.freq ? 'Pilih jadwal' : st.s.freq === 'daily' ? 'Setiap Hari' : schedShort(st.s);
+    const endLbl = st.s.end == null ? 'Pilih durasi' : st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan';
+    const dd = (k, a, label, value) => `<button type="button" class="dd" data-a="${a}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20, 2)}</button>`;
+    return `<form class="form" novalidate><div class="scroll">
+      <div class="sel-card"><div class="sel-top">${logo(stock, 'lg')}<span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>
+        <button type="button" class="icon-btn" data-a="openStock" data-k="row-stock" aria-label="Ganti saham">${svg('edit', 22, 1.9)}</button></div>${potensiPill(stock, st)}</div>
+      <div class="inl-nom"><label for="amt-h">Nominal pembelian</label>
+        <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
+        <p class="err" id="amt-h-err" data-err>${st.amtErr ? svg('info', 16) + st.amtErr : ''}</p>
+        ${quickChips(parseAmt(st.amount))}</div>
+      <div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLbl)}</div>
+      </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
+  }
   const show = n => mode !== 'reveal' || n <= step;
   return `<form class="form" novalidate><div class="scroll">${stockBlock}
     ${!show(2) ? '' : row('nominal', 'openNominal', !!stock, 2, amtOk, amtOk ? usd(parseAmt(st.amount)) : 'Tentukan nominal', '', 'Nominal pembelian')}
@@ -929,7 +964,7 @@ function infoBullets(st) {
   const p = st.s, d = upcoming(p), finite = p.end !== 'forever';
   const next = p.freq === 'daily' ? 'setiap <b>hari bursa</b>' : p.freq === 'weekly' ? `setiap <b>${DAY_L[p.day]}</b>` : `setiap <b>tanggal ${p.date}</b>`;
   const last = d.at(-1), single = finite && d.length === 1;
-  const items = [`Pembelian pertama pada <b>${fmtDate(d[0])}</b> atau hari bursa berikutnya jika bursa libur${single ? '.' : ','}`];
+  const items = [`Pembelian pertama pada <b>${DAY_L[d[0].getDay()]}, ${d[0].getDate()} ${MONTHS[d[0].getMonth()]} ${d[0].getFullYear()}</b> atau hari bursa berikutnya jika bursa libur${single ? '.' : ','}`];
   if (!single) {
     items.push(`Pembelian selanjutnya ${next}.`);
     items.push(finite ? `Pembelian terakhir <b>${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}</b>.` : 'Berjalan terus sampai dihapus.');
@@ -980,7 +1015,7 @@ const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_O
   return `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span>
     <span class="row-meta"><span class="t">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</span><span class="s">${sub}</span></span></button>`;
 }).join('')}</div>`;
-const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-k="saveSched" ${schedDone(d) ? '' : 'disabled'}>Selanjutnya</button>`;
+const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-k="saveSched" ${schedDone(d) ? '' : 'disabled'}>Simpan</button>`;
 
 /* ================= App engine ================= */
 function app(V) {
@@ -1113,6 +1148,7 @@ function app(V) {
       phone.querySelectorAll('[data-quick] [data-a="quick"]').forEach(b => b.setAttribute('aria-pressed', String(n === +b.dataset.v)));
       ctx.patch('[data-proj]', V.proj(st));
       const c = phone.querySelector('[data-k="confirmAmt"]'); if (c) c.disabled = !!amtError(st.draftAmt);
+      if (phone.querySelector('[data-inline]')) { st.amount = st.draftAmt; ctx.patch('[data-footer]', hubFooter(st)); }
     }
     ctx.submit = () => { st.agree = false; st.terms = false; ctx.openSheet('confirm'); };
 
@@ -1215,7 +1251,14 @@ function nominalProj(st) {
 }
 const listBase = {
   endIn: 'row',
-  pick(v, ctx) { ctx.st.stock = v; ctx.pop(() => ctx.openSheet('nominal')); },
+  pick(v, ctx) {
+    const st = ctx.st; st.stock = v;
+    if (!st.amount) st.amount = '10';
+    if (!st.s.freq) Object.assign(st.s, { freq: 'daily', day: null, date: null });
+    if (st.s.end == null) st.s.end = 'forever';
+    st.draftAmt = st.amount; st.amtErr = '';
+    ctx.pop(() => ctx.focus(isTouch ? '[data-k="row-stock"]' : '#amt-h'));
+  },
   openNominal(ctx) { ctx.openSheet('nominal'); },
   sheet: nominalSheet,
   proj: nominalProj,
