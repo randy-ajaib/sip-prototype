@@ -1551,7 +1551,7 @@ const slFigma2 = {
       <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 14)} ${sortLabel(st)}</button></div>`; },
   list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)),
 };
-const svFigma2 = app({ ...sparkCfg, lightPage: true, autoStock: true,
+const svFigma2 = app({ ...sparkCfg, lightPage: true,
   page: (p, st) => ({ title: slFigma2.title, body: `<div class="fig-head" data-head>${slFigma2.head(st)}</div><div class="scroll" data-list>${slFigma2.list(st)}</div>` }),
   list: slFigma2.list, head: slFigma2.head, init: st => { st.sort = 'top'; st.cat = 'all'; st.period = 1; st.figPeriod = true; } });
 const variants = [svFigma2];
