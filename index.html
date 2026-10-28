@@ -6,7 +6,7 @@
 <title>SIP creation — prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@500&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary: #3278f0;
@@ -45,7 +45,7 @@ h1, h2, h3, p { margin: 0; }
 #stage { min-height: 100%; display: grid; place-items: center; padding: 32px 16px; }
 .phone {
   position: relative; width: 390px; height: 844px; background: var(--header);
-  border-radius: 44px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column;
+  border-radius: 8px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column;
   box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 24px 48px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.06);
 }
 @media (max-width: 430px) {
@@ -55,6 +55,14 @@ h1, h2, h3, p { margin: 0; }
 .main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
 /* Chrome */
+.sbar { position: relative; z-index: 6; height: 24px; flex: none; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; background: var(--header); }
+.sbar img { display: block; }
+.sbar img + img { margin-left: 2px; }
+.sbar img:nth-of-type(3) { margin-left: 9px; }
+.sbar span { width: 36px; margin-left: 7px; text-align: right; font-family: Roboto, system-ui, sans-serif; font-weight: 500; font-size: 14px; line-height: 16px; color: #fff; opacity: .9; font-variant-numeric: tabular-nums; }
+.sbar.light { background: #fff; }
+.sbar.light img { filter: brightness(0); }
+.sbar.light span { color: #000; }
 .sb { height: 36px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 4px 28px 0; color: #fff; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .sb svg { display: block; }
 .hd { height: 56px; flex: none; display: flex; align-items: center; gap: 4px; padding: 0 8px; color: #fff; }
@@ -245,7 +253,7 @@ h1, h2, h3, p { margin: 0; }
 /* ---------- Round 2 ---------- */
 .overlay.enter .backdrop { animation: fadeIn .3s ease-out; }
 .overlay.enter .sheet { animation: sheetIn .4s var(--ease-drawer); }
-.page { position: absolute; inset: 0; z-index: 5; background: #fff; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.08); }
+.page { position: absolute; inset: 24px 0 0; z-index: 5; background: #fff; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.08); }
 .page.enter { animation: pageIn .4s var(--ease-drawer); }
 .page.leaving { animation: pageOut .24s ease-in forwards; }
 .page.gone { visibility: hidden; }
@@ -308,6 +316,10 @@ h1, h2, h3, p { margin: 0; }
 .cf-rows div { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 20px; }
 .cf-rows dt { color: var(--text-2); }
 .cf-rows dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.cf-rows .cf-total { padding-block: 8px; border-block: 1px solid var(--border); }
+.cf-rows .cf-total dt { color: var(--text); font-weight: 700; }
+.cf-rows .cf-total dd { font-size: 16px; }
+.cf-note { margin-top: -4px; font-size: 12px; line-height: 16px; color: var(--text-2); }
 .cf-hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .cf-agree { display: flex; gap: 12px; align-items: flex-start; font-size: 12px; line-height: 18px; color: var(--text-2); }
 .cf-agree input { position: relative; width: 18px; height: 18px; margin: 9px 0 0; flex: none; accent-color: var(--primary); cursor: pointer; }
@@ -550,7 +562,10 @@ h1, h2, h3, p { margin: 0; }
 .main .body, .page-body { flex: 1 0 auto; min-height: auto; overflow: clip; }
 .main .form { flex: 1 0 auto; min-height: auto; }
 .main .scroll, .page .scroll { flex: 1 0 auto; min-height: auto; overflow: visible; }
-.main .footer { position: sticky; bottom: 0; z-index: 1; }
+.main .footer { position: sticky; bottom: 0; z-index: 1; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); }
+.main .footer .fund .k { color: rgba(0, 0, 0, 0.65); }
+.main .footer .fund > span:last-child { color: #000; }
+.main .footer .fund .tag { margin-left: 4px; padding: 0 4px; background: #e1f2fa; color: #3a83f9; }
 
 .page-top.light .hd h1 { font-size: 17px; line-height: 23px; }
 .page-top.light + .page-body { padding-top: 0; }
@@ -595,28 +610,137 @@ h1, h2, h3, p { margin: 0; }
 .sel-top { display: flex; align-items: center; gap: 12px; padding: 12px 4px 12px 12px; }
 .sel-top .t { font-size: 16px; line-height: 20px; }
 .sel-card .pot-pill { margin: 0; border-radius: 0; }
-.inl-nom { display: flex; flex-direction: column; gap: 8px; padding: 16px 16px 0; }
-.inl-nom label { font-size: 14px; line-height: 20px; font-weight: 700; }
-.amt.inl input { height: 48px; border: 1px solid transparent; background: var(--surface-2); font-size: 18px; font-weight: 400; padding-left: 26px; }
+.inl-nom { display: flex; flex-direction: column; gap: 6px; padding: 24px 16px 0; }
+.inl-nom label { font-size: 14px; line-height: 19px; font-weight: 700; margin-bottom: 2px; }
+.amt.inl input { height: 40px; border: 1px solid transparent; border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 16px; font-weight: 700; padding-left: 18px; }
 .amt.inl input:focus { border-color: var(--primary); background: #fff; }
-.amt.inl .pre { font-weight: 400; font-size: 18px; color: var(--text-2); }
+.amt.inl .pre { left: 10px; font-weight: 700; font-size: 16px; color: rgba(0, 0, 0, 0.65); }
+.inl-nom .pchip[aria-pressed="true"] { background: rgba(50, 120, 240, 0.1); border-color: #3278f0; color: #2264d4; }
+.inl-nom .pchip { height: 24px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 5px; background: transparent; font-size: 11px; line-height: 15px; font-weight: 700; color: rgba(0, 0, 0, 0.65); }
 .inl-nom .err:empty { display: none; }
-.dd-group { margin: 16px 16px 0; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; }
-.dd { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 0 12px; border: 0; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
-.dd + .dd { border-top: 1px solid var(--border); }
+.dd-group { margin: 24px 16px 0; border: 1px solid #e3e8ea; border-radius: 8px; overflow: hidden; }
+.dd { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 12px; border: 0; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.dd + .dd { border-top: 1px solid #e3e8ea; }
 .dd:active { background: var(--surface-2); }
 @media (hover: hover) and (pointer: fine) { .dd:hover { background: var(--surface-2); } }
-.dd-l { flex: 1; font-size: 14px; color: var(--text-2); }
-.dd b { font-size: 14px; }
+.dd-l { flex: 1; font-size: 14px; line-height: 20px; color: rgba(0, 0, 0, 0.65); }
+.dd b { font-size: 14px; line-height: 20px; color: #171f2c; }
 .dd svg { flex: none; color: var(--text); }
-.sel-empty { display: flex; align-items: center; gap: 12px; width: calc(100% - 32px); padding: 12px 8px 12px 12px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
-.sel-empty .t { flex: 1; font-size: 16px; line-height: 20px; font-weight: 700; }
-.sel-empty:active { background: var(--surface-2); }
 .amt.inl input::placeholder { color: var(--text); }
+/* Jadwal + Durasi sheets — Figma 14111:21681 */
+.sheet.sh-ds { border-radius: 26px 26px 0 0; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); }
+.sh-ds .grab { width: 64px; background: rgba(0, 0, 0, 0.04); }
+.sh-ds .sheet-hd { align-items: flex-start; gap: 10px; padding: 24px 16px 12px; }
+.sh-ds .sheet-hd h2 { flex: 1; font-size: 20px; line-height: 26px; letter-spacing: -0.2px; color: #000; }
+.sh-ds .sheet-hd .icon-btn { position: relative; width: 24px; height: 24px; color: #000; }
+.sh-ds .sheet-hd .icon-btn::before { content: ""; position: absolute; inset: -10px; }
+.sh-ds .sheet-body { padding: 10px 16px; gap: 16px; }
+.sh-ds .lbl { margin-bottom: -8px; font-size: 12px; line-height: 16px; color: #000; }
+.sh-ds .ochips, .sh-ds .ochips.five { gap: 6px; }
+.sh-ds .ochip { font-size: 13px; line-height: 1.35; font-weight: 700; background: rgba(0, 0, 0, 0.04); color: rgba(0, 0, 0, 0.65); }
+.sh-ds .ochip[aria-checked="true"] { background: rgba(50, 120, 240, 0.1); border-color: #3278f0; color: #2264d4; }
+.sh-ds .dgrid { grid-template-columns: repeat(7, 40px); justify-content: space-between; row-gap: 0; }
+.sh-ds .dcell { width: 40px; height: 40px; font-size: 16px; line-height: 22px; color: #06090d; }
+.sh-ds .dcell[aria-checked="true"] { background: url("assets/date-selected.svg") center / 36px 36px no-repeat; color: #fff; font-weight: 400; }
+.sh-ds .snote { padding: 0; border-radius: 0; background: none; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sh-ds .snote b { font-weight: 700; color: #000; }
+.sh-ds [data-endlist]:not(.plan-part) > [role="radiogroup"] { display: flex; flex-direction: column; gap: 16px; }
+.sh-ds .eopt { gap: 12px; padding: 0; }
+.sh-ds .eopt .radio { width: 24px; height: 24px; border: 0; border-radius: 0; background: url("assets/radio-off.svg") center / 24px 24px no-repeat; }
+.sh-ds .eopt .radio::after { display: none; }
+.sh-ds .eopt[aria-checked="true"] .radio { background-image: url("assets/radio-on.svg"); background-size: 20px 20px; }
+.sh-ds .eopt .row-meta { gap: 4px; }
+.sh-ds .eopt .t { font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.sh-ds .eopt .s { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sh-ds .sh-ft { padding: 12px 16px calc(36px + env(safe-area-inset-bottom)); }
+.pick-err, .sched-err { margin: 6px 16px 0; }
+/* PROTO:initial-state BEGIN — Search row (Figma 14067:20236) */
+.pick-row { display: flex; align-items: center; gap: 8px; width: calc(100% - 32px); margin: 16px 16px 0; padding: 12px; border: 1px solid #e3e8ea; border-radius: 8px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.pick-row:active { background: rgba(0, 0, 0, 0.04); }
+.pick-row .t { flex: 1; font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.pick-row img { flex: none; }
+.pick-row-ic { position: relative; width: 24px; height: 24px; flex: none; }
+.pick-row-ic img { position: absolute; top: 2.74px; left: 3px; }
+.plan-row { display: flex; align-items: center; gap: 8px; width: calc(100% - 32px); margin: 24px 16px 0; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.plan-row:active { background: rgba(0, 0, 0, 0.04); }
+.plan-row img { flex: none; }
+.plan-row > .t, .plan-row .row-meta .t { flex: 1; font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.plan-row .row-meta .s { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.65); }
+.plan-card { display: flex; flex-direction: column; width: calc(100% - 32px); margin: 16px 16px 0; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; background: #fff; text-align: left; cursor: pointer; overflow: hidden; }
+.plan-hd { display: flex; align-items: flex-start; gap: 8px; padding: 12px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+.plan-hd img { flex: none; }
+.plan-hd .t { flex: 1; font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.plan-hd .ubah { font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; }
+.plan-kv { display: flex; justify-content: space-between; padding: 12px; font-size: 14px; line-height: 1.35; }
+.plan-kv + .plan-kv { border-top: 1px solid rgba(0, 0, 0, 0.1); }
+.plan-kv span { color: rgba(0, 0, 0, 0.65); }
+.plan-kv b { color: #000; }
+.plan-card:active { background: rgba(0, 0, 0, 0.02); }
+.plan-part { display: contents; }
+.plan-hr { height: 1px; margin: 0; border: 0; background: rgba(0, 0, 0, 0.1); }
+.plan-sum { margin: 0; padding-left: 21px; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.plan-sum b { font-weight: 700; color: #000; }
+.plan-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.form.init-row .inl-nom { padding-top: 16px; }
+.form.init-row .inl-nom .pchips { margin-top: 6px; }
+.form.init-row .dd-group { margin-top: 16px; }
+/* Picker (verbatim from PICKER.md) */
+.proto-picker { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2147483647; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(10, 10, 10, 0.82); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 24px rgba(0, 0, 0, 0.24), 0 2px 6px rgba(0, 0, 0, 0.12); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 13px; line-height: 1; -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none; }
+.proto-picker-highlight { position: absolute; top: 4px; left: 0; height: 28px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); will-change: transform; }
+.proto-picker[data-ready] .proto-picker-highlight { transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1), width 250ms cubic-bezier(0.23, 1, 0.32, 1); }
+@media (prefers-reduced-motion: reduce) { .proto-picker[data-ready] .proto-picker-highlight { transition: none; } }
+.proto-picker-item { position: relative; display: flex; align-items: center; height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: rgba(255, 255, 255, 0.55); font: inherit; cursor: pointer; transition: color 150ms ease-out; }
+.proto-picker-item:hover { color: rgba(255, 255, 255, 0.85); }
+.proto-picker-item:active { transform: scale(0.97); }
+.proto-picker-item:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.4); outline-offset: 2px; }
+.proto-picker-item[data-active] { color: #fff; }
+.proto-picker-divider { width: 1px; height: 16px; margin: 0 4px; background: rgba(255, 255, 255, 0.12); }
+.proto-picker-replay { padding: 0 10px; font-size: 14px; }
+.proto-picker[data-position="top"] { bottom: auto; top: 24px; }
+.proto-picker-group { position: relative; display: flex; gap: 2px; }
+.proto-picker-group .proto-picker-highlight { top: 0; }
+/* PROTO:initial-state END */
+/* Pick card with return chips — Figma 14082:21972 */
+.pick-card { margin: 16px 16px 0; border-radius: 8px; background: #f5f5f5; overflow: hidden; }
+.pick-top { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; background: #fff; overflow: hidden; }
+.pick-top::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 61px; height: 59px; background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0)); pointer-events: none; }
+.pick-head { display: flex; flex-direction: column; gap: 4px; line-height: 1.35; }
+.pick-head b { font-size: 14px; color: #000; }
+.pick-head span { font-size: 10px; color: rgba(0, 0, 0, 0.48); }
+.rc-rail { display: flex; gap: 8px; margin: 0 -12px; padding: 0 12px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 12px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.rc-rail::-webkit-scrollbar { display: none; }
+.rc-chip { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px 4px 4px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 20px; background: #fff; font-size: 12px; line-height: 1.35; color: #000; cursor: pointer; scroll-snap-align: start; touch-action: manipulation; font-variant-numeric: tabular-nums; transition: border-color .15s ease-out, transform .16s var(--ease-out); }
+.rc-chip img, .rc-chip .logo { width: 24px; height: 24px; flex: none; }
+.rc-chip .logo { font-size: 7px; }
+.rc-chip .r { color: #0c8a5c; }
+.rc-chip .r.down { color: var(--down); }
+.rc-chip:active { transform: scale(.96); }
+@media (hover: hover) and (pointer: fine) { .rc-chip:hover { border-color: var(--primary); } }
+.rc-more { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; background: transparent; font-size: 14px; line-height: 1.35; font-weight: 700; color: #171f2c; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.rc-more span { flex: 1; }
+.rc-more img { flex: none; }
+.rc-more:active { background: rgba(0, 0, 0, 0.04); }
 </style>
 </head>
 <body>
 <div id="stage"></div>
+<!-- PROTO:initial-state BEGIN -->
+<nav class="proto-picker" data-position="top" aria-label="Prototype variants">
+  <span class="proto-picker-group" data-axis="pick" role="group" aria-label="Pilih saham">
+    <span class="proto-picker-highlight" aria-hidden="true"></span>
+    <button class="proto-picker-item" data-v="chips">Return chips</button>
+    <button class="proto-picker-item" data-v="row">Search row</button>
+  </span>
+  <span class="proto-picker-divider" aria-hidden="true"></span>
+  <span class="proto-picker-group" data-axis="sched" role="group" aria-label="Jadwal">
+    <span class="proto-picker-highlight" aria-hidden="true"></span>
+    <button class="proto-picker-item" data-v="split">Separated</button>
+    <button class="proto-picker-item" data-v="one">One sheet</button>
+  </span>
+  <span class="proto-picker-divider" aria-hidden="true"></span>
+  <button class="proto-picker-item proto-picker-replay" aria-label="Replay animation (R)">↻</button>
+</nav>
+<!-- PROTO:initial-state END -->
 
 <script>
 /* ================= Data & helpers ================= */
@@ -699,13 +823,15 @@ const P = {
   dollar: '<path d="M12 3.5v17M16 8c0-1.7-1.8-3-4-3s-4 1.2-4 3c0 4.2 8 2.3 8 6.5 0 1.8-1.8 3-4 3s-4-1.3-4-3"/>',
   sched: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M7.5 13.5h2M11 13.5h2M14.5 13.5h2M7.5 17h2M11 17h2"/>',
 };
-const svg = (k, size = 20, sw = 1.75) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+// Icons from friz-xc/pd-design-artifacts (assets/icons), filled 24px, recolored to currentColor.
+const PD_ICONS = {"back": "<path d=\"M14.293 5.29302C14.6835 4.90249 15.3166 4.90249 15.7071 5.29302C16.0976 5.68354 16.0976 6.31655 15.7071 6.70708L10.4141 12L15.7071 17.293C16.0976 17.6835 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6835 19.0976 14.293 18.7071L8.29302 12.7071C7.90249 12.3166 7.90249 11.6835 8.29302 11.293L14.293 5.29302Z\" fill=\"currentColor\"/>", "chev": "<path d=\"M8.29302 5.29302C8.68354 4.90249 9.31655 4.90249 9.70708 5.29302L15.7071 11.293C16.0976 11.6835 16.0976 12.3166 15.7071 12.7071L9.70708 18.7071C9.31655 19.0976 8.68354 19.0976 8.29302 18.7071C7.90249 18.3166 7.90249 17.6835 8.29302 17.293L13.586 12L8.29302 6.70708C7.90249 6.31655 7.90249 5.68354 8.29302 5.29302Z\" fill=\"currentColor\"/>", "chevd": "<path d=\"M17.293 8.29302C17.6835 7.90249 18.3166 7.90249 18.7071 8.29302C19.0976 8.68354 19.0976 9.31655 18.7071 9.70708L12.7071 15.7071C12.3166 16.0976 11.6835 16.0976 11.293 15.7071L5.29302 9.70708C4.90249 9.31655 4.90249 8.68354 5.29302 8.29302C5.68354 7.90249 6.31655 7.90249 6.70708 8.29302L12 13.586L17.293 8.29302Z\" fill=\"currentColor\"/>", "search": "<path d=\"M18 11C18 7.13401 14.866 4 11 4C7.13401 4 4 7.13401 4 11C4 14.866 7.13401 18 11 18C14.866 18 18 14.866 18 11ZM20 11C20 13.125 19.2619 15.0766 18.0303 16.6162L21.707 20.293C22.0976 20.6835 22.0976 21.3165 21.707 21.707C21.3165 22.0976 20.6835 22.0976 20.293 21.707L16.6162 18.0303C15.0766 19.2619 13.125 20 11 20C6.02944 20 2 15.9706 2 11C2 6.02944 6.02944 2 11 2C15.9706 2 20 6.02944 20 11Z\" fill=\"currentColor\"/>", "check": "<path d=\"M19.293 5.29302C19.6835 4.90249 20.3166 4.90249 20.7071 5.29302C21.0976 5.68354 21.0976 6.31655 20.7071 6.70708L9.70708 17.7071C9.31655 18.0976 8.68354 18.0976 8.29302 17.7071L3.29302 12.7071C2.90249 12.3166 2.90249 11.6835 3.29302 11.293C3.68354 10.9025 4.31655 10.9025 4.70708 11.293L9.00005 15.586L19.293 5.29302Z\" fill=\"currentColor\"/>", "close": "<path d=\"M17.2929 5.29302C17.6834 4.90249 18.3164 4.90249 18.707 5.29302C19.0975 5.68354 19.0975 6.31655 18.707 6.70708L13.414 12L18.707 17.293C19.0975 17.6835 19.0975 18.3166 18.707 18.7071C18.3164 19.0976 17.6834 19.0976 17.2929 18.7071L11.9999 13.4141L6.70696 18.7071C6.31643 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6835 5.29289 17.293L10.5859 12L5.29289 6.70708C4.90237 6.31655 4.90237 5.68354 5.29289 5.29302C5.68342 4.90249 6.31643 4.90249 6.70696 5.29302L11.9999 10.586L17.2929 5.29302Z\" fill=\"currentColor\"/>", "cal": "<path d=\"M20 10H4V19C4 19.5523 4.44771 20 5 20H19C19.5523 20 20 19.5523 20 19V10ZM15 5V4H9V5C9 5.55228 8.55228 6 8 6C7.44772 6 7 5.55228 7 5V4H5C4.44772 4 4 4.44772 4 5V8H20V5C20 4.44771 19.5523 4 19 4H17V5C17 5.55228 16.5523 6 16 6C15.4477 6 15 5.55228 15 5ZM22 19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V5C2 3.34315 3.34315 2 5 2H7C7 1.44772 7.44772 1 8 1C8.55228 1 9 1.44772 9 2H15C15 1.44772 15.4477 1 16 1C16.5523 1 17 1.44772 17 2H19C20.6569 2 22 3.34315 22 5V19Z\" fill=\"currentColor\"/>", "sort": "<path d=\"M6.00005 4C6.00005 3.44772 6.44776 3 7.00005 3C7.55233 3 8.00005 3.44772 8.00005 4V17.5859L10.293 15.293C10.6835 14.9024 11.3166 14.9024 11.7071 15.293C12.0976 15.6835 12.0976 16.3165 11.7071 16.707L7.70708 20.707C7.31655 21.0976 6.68354 21.0976 6.29302 20.707L2.29302 16.707C1.90249 16.3165 1.90249 15.6835 2.29302 15.293C2.68354 14.9024 3.31655 14.9024 3.70708 15.293L6.00005 17.5859V4ZM15 11C15.5523 11 16 11.4477 16 12C16 12.5523 15.5523 13 15 13H11C10.4478 13 10 12.5523 10 12C10 11.4477 10.4478 11 11 11H15ZM18 7C18.5523 7 19 7.44772 19 8C19 8.55228 18.5523 9 18 9H11C10.4478 9 10 8.55228 10 8C10 7.44772 10.4478 7 11 7H18ZM21 3C21.5523 3 22 3.44772 22 4C22 4.55228 21.5523 5 21 5H11C10.4478 5 10 4.55228 10 4C10 3.44772 10.4478 3 11 3H21Z\" fill=\"currentColor\"/>", "filter": "<path d=\"M13.0131 13.7227C13.073 13.08 13.3385 12.4706 13.7748 11.9883L20.9975 4H3.0004L10.225 11.9883C10.7236 12.5395 11.0001 13.2567 11.0004 14V20.001L12.9994 21H13.0004V14L13.0131 13.7227ZM15.0004 21L14.9965 21.127C14.9777 21.4236 14.8926 21.713 14.7475 21.9736C14.5816 22.2715 14.3421 22.5218 14.0522 22.7012C13.7622 22.8805 13.4308 22.9826 13.0902 22.998C12.7923 23.0115 12.4958 22.9584 12.2221 22.8428L12.1059 22.7891L10.1059 21.7891C9.77355 21.6229 9.49355 21.3678 9.29825 21.0518C9.12741 20.7752 9.02765 20.4616 9.00528 20.1387L9.0004 20V14C9.00017 13.7524 8.90772 13.5137 8.74161 13.3301L1.51602 5.34082V5.33984C1.25688 5.05271 1.08667 4.69642 1.02579 4.31445C0.964975 3.93257 1.01526 3.54089 1.17227 3.1875C1.32933 2.83412 1.58635 2.53404 1.91056 2.32324C2.23469 2.11256 2.61284 2.00019 2.99942 2H21.0024L21.1469 2.00586C21.4825 2.03097 21.8071 2.14046 22.0902 2.3252C22.4139 2.53631 22.67 2.83619 22.8266 3.18945C22.9831 3.54264 23.034 3.93396 22.9731 4.31543C22.9121 4.6969 22.7416 5.05301 22.4828 5.33984L22.4818 5.34082L15.2592 13.3301H15.2582C15.0922 13.5137 15.0006 13.7525 15.0004 14V21Z\" fill=\"currentColor\"/>", "edit": "<path d=\"M21 4.81897C21.0001 4.33657 20.8079 3.87399 20.4668 3.53284C20.1259 3.19184 19.6638 2.99982 19.1817 2.99963C18.6995 2.99957 18.2366 3.19108 17.8955 3.53186L16.4209 5.00647L18.9932 7.57874L20.4668 6.1051L20.5879 5.97131C20.853 5.64776 20.9999 5.24093 21 4.81897ZM4.54787 16.8824C4.43189 16.9982 4.34589 17.1409 4.29787 17.2975L3.24904 20.7487L6.70607 19.7008L6.82033 19.6588C6.932 19.6093 7.0341 19.5395 7.12111 19.4528L17.5791 8.9928L15.0069 6.42053L4.54787 16.8824ZM23 4.81897C22.9999 5.76857 22.6462 6.68197 22.0117 7.38245L21.8809 7.51917L19.793 9.60608C19.7665 9.6407 19.7387 9.67498 19.707 9.70667C19.6751 9.7386 19.6404 9.76687 19.6055 9.79358L8.53322 20.8688C8.18551 21.2154 7.75781 21.472 7.2881 21.6149L2.93458 22.9352L2.93165 22.9362C2.67254 23.014 2.39717 23.0196 2.13478 22.9537C1.87233 22.8878 1.63202 22.7523 1.44044 22.5612C1.24881 22.3698 1.11236 22.1293 1.04591 21.8668C0.9796 21.6045 0.985109 21.3292 1.06251 21.0699L1.06447 21.066L2.38478 16.7135L2.38576 16.7106C2.52994 16.2405 2.78754 15.8126 3.13576 15.4655L14.209 4.38928C14.2348 4.35599 14.2624 4.32315 14.293 4.2926C14.3238 4.26184 14.3561 4.23355 14.3897 4.20764L16.4805 2.1178C17.1968 1.40171 18.1688 0.999507 19.1817 0.999634C20.1944 0.999821 21.1658 1.40256 21.8818 2.11877C22.5978 2.83501 23.0001 3.80626 23 4.81897Z\" fill=\"currentColor\"/>", "stock": "<path d=\"M18 17C18 17.5523 17.5523 18 17 18C16.4477 18 16 17.5523 16 17V9.41406L7.70703 17.707C7.31651 18.0976 6.68349 18.0976 6.29297 17.707C5.90244 17.3165 5.90244 16.6835 6.29297 16.293L14.5859 8H7C6.44772 8 6 7.55228 6 7C6 6.44772 6.44772 6 7 6H17C17.5523 6 18 6.44772 18 7V17Z\" fill=\"currentColor\"/>", "alert": "<path d=\"M11.9899 1.98608C12.5206 1.98608 13.0421 2.12711 13.5006 2.39429C13.958 2.66084 14.3367 3.04349 14.5983 3.50366L22.5963 17.4998L22.6891 17.6736C22.8919 18.085 22.9975 18.5384 22.9977 18.9988C22.9978 19.5251 22.8602 20.0428 22.5973 20.4988C22.3344 20.9547 21.9553 21.3329 21.4996 21.5964C21.044 21.8599 20.5269 21.9992 20.0006 21.9998H3.99964V21.9988C3.47399 22.0019 2.95673 21.868 2.49964 21.6082C2.03982 21.3468 1.65677 20.9683 1.39027 20.5115C1.1239 20.0547 0.983234 19.5354 0.982063 19.0066C0.980914 18.4791 1.1193 17.9608 1.38245 17.5037L9.38148 3.50366C9.64307 3.04334 10.0226 2.66087 10.4801 2.39429C10.9385 2.12722 11.4593 1.98612 11.9899 1.98608ZM11.9899 3.98608C11.8132 3.98612 11.6396 4.03294 11.4869 4.12183C11.3341 4.21089 11.207 4.33902 11.1198 4.49292L11.1188 4.49585L3.11878 18.4958L3.11585 18.4998C3.02769 18.6524 2.98167 18.8264 2.98206 19.0027C2.98252 19.1787 3.02919 19.3516 3.11781 19.5037C3.20664 19.6559 3.33465 19.7827 3.48792 19.8699C3.64109 19.9569 3.8147 20.0013 3.99085 19.9998H19.9987C20.1741 19.9996 20.3468 19.9537 20.4987 19.866C20.6504 19.7782 20.7763 19.6516 20.8639 19.4998C20.9515 19.3478 20.9977 19.1752 20.9977 18.9998C20.9976 18.8243 20.9516 18.6517 20.8639 18.4998L20.8619 18.4958L12.8619 4.49585L12.86 4.49292C12.7728 4.3391 12.6465 4.21086 12.4938 4.12183C12.3409 4.03277 12.1668 3.98608 11.9899 3.98608ZM12.0104 15.9998C12.5624 15.9999 13.0103 16.4477 13.0104 16.9998C13.0104 17.5519 12.5625 17.9996 12.0104 17.9998H11.9996C11.4475 17.9995 10.9996 17.5519 10.9996 16.9998C10.9998 16.4477 11.4476 16 11.9996 15.9998H12.0104ZM10.9996 12.9998V8.99976C10.9998 8.44771 11.4476 7.99998 11.9996 7.99976C12.5519 7.99976 12.9995 8.44757 12.9996 8.99976V12.9998C12.9996 13.552 12.5519 13.9998 11.9996 13.9998C11.4475 13.9995 10.9996 13.5519 10.9996 12.9998Z\" fill=\"currentColor\"/>", "del": "<path d=\"M21 7C21 6.73479 20.8946 6.4805 20.707 6.29297C20.5195 6.10545 20.2652 6.00002 20 6H10C9.75154 6.00001 9.51211 6.09279 9.32812 6.25977L3 11.999L9.32812 17.7402C9.51211 17.9072 9.75154 18 10 18H20C20.2652 18 20.5195 17.8946 20.707 17.707C20.8946 17.5195 21 17.2652 21 17V7ZM17.293 8.29297C17.6835 7.90247 18.3165 7.90245 18.707 8.29297C19.0975 8.68349 19.0975 9.31651 18.707 9.70703L16.4141 12L18.707 14.293C19.0975 14.6835 19.0975 15.3165 18.707 15.707C18.3165 16.0975 17.6835 16.0975 17.293 15.707L15 13.4141L12.707 15.707C12.3165 16.0975 11.6835 16.0975 11.293 15.707C10.9024 15.3165 10.9024 14.6835 11.293 14.293L13.5859 12L11.293 9.70703C10.9024 9.31651 10.9024 8.68349 11.293 8.29297C11.6835 7.90247 12.3165 7.90245 12.707 8.29297L15 10.5859L17.293 8.29297ZM23 17C23 17.7956 22.6837 18.5585 22.1211 19.1211C21.5585 19.6837 20.7956 20 20 20H10C9.25478 20 8.53628 19.7224 7.98438 19.2217L1.65625 13.4805C1.44969 13.293 1.28385 13.0646 1.1709 12.8096C1.05794 12.5545 1 12.278 1 11.999C1.00007 11.7202 1.05801 11.4444 1.1709 11.1895C1.28385 10.9344 1.44969 10.706 1.65625 10.5186L7.98438 4.77832L8.19824 4.60156C8.71581 4.21273 9.34768 4.00004 10 4H20C20.7956 4.00002 21.5585 4.31631 22.1211 4.87891C22.6837 5.44151 23 6.20437 23 7V17Z\" fill=\"currentColor\"/>"};
+const svg = (k, size = 20, sw = 1.75) => PD_ICONS[k]
+  ? `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" aria-hidden="true">${PD_ICONS[k]}</svg>`
+  : `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
 
 /* ================= Shared pieces ================= */
-const statusBar = () => `<div class="sb" aria-hidden="true"><span>12:30</span><span style="display:flex;gap:6px;align-items:center">
-  <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="1"/><rect x="9" y="3" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
-  <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 11.5L.6 3.4a10.5 10.5 0 0114.8 0z"/></svg>
-  <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#fff"/><rect x="21.5" y="4" width="1.5" height="4" rx=".75" fill="#fff" opacity=".5"/></svg></span></div>`;
+// Android status bar — Figma Top Bar (I14082:21973;1190:6686)
+const statusBar = light => `<div class="sbar${light ? ' light' : ''}" aria-hidden="true"><img src="assets/statusbar/wifi.svg" width="18" height="14" alt=""><img src="assets/statusbar/cellular.svg" width="14" height="14" alt=""><img src="assets/statusbar/battery.svg" width="9" height="14" alt=""><span>12:30</span></div>`;
 
 const header = (title, back = true) => `<div class="hd"><button type="button" class="icon-btn" data-a="back" data-k="back" aria-label="Kembali" ${back ? '' : 'hidden'}>${svg('back', 24, 2)}</button><h1>${title}</h1></div>`;
 
@@ -752,7 +878,7 @@ function amountField(id, val, err, label = 'Nominal per pembelian') {
   const n = parseAmt(val);
   return `<div class="field"><label for="${id}">${label}</label>
     <div class="amt"><span class="pre" aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(val)}" aria-invalid="${!!err}" aria-describedby="${id}-err ${id}-hint"></div>
-    <p class="err" id="${id}-err" data-err>${err ? svg('info', 16) + err : ''}</p>
+    <p class="err" id="${id}-err" data-err>${err || ''}</p>
     ${quickChips(n)}<p class="hint" id="${id}-hint">Bisa beli pecahan saham, minimal $1.</p></div>`;
 }
 const quickChips = n => `<div class="pchips" data-quick>${[5, 10, 25, 50].map(v => `<button type="button" class="pchip" data-a="quick" data-v="${v}" data-k="q-${v}" aria-pressed="${n === v}">${usd(v)}</button>`).join('')}</div>`;
@@ -803,10 +929,10 @@ function plansView() {
       <button type="button" class="tlink" data-k="deposit">Deposit Rekening Saham AS</button></div></div></div>`;
 }
 
-const baseState = () => ({ stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
+const baseState = () => ({ stockErr: false, schedErr: '', stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
 
 /* ================= 1-year recurring-buy simulation ================= */
-const RISK = { AAPL: [.14, .035], NVDA: [.42, .06], TSM: [.38, .05], MSFT: [.11, .03], GOOGL: [.29, .045], AMZN: [.08, .04], 'BRK.B': [.05, .022], VOO: [.15, .022], META: [.21, .05], TSLA: [.33, .08], KO: [-.04, .02], QQQ: [.19, .03], NFLX: [.36, .055], PG: [-.07, .02], RDDT: [.85, .09] };
+const RISK = { AAPL: [.32, .035], NVDA: [.44, .06], TSM: [.38, .05], MSFT: [.11, .03], GOOGL: [.29, .045], AMZN: [.44, .04], 'BRK.B': [.05, .022], VOO: [.15, .022], META: [.21, .05], TSLA: [.24, .08], KO: [-.04, .02], QQQ: [.19, .03], NFLX: [.36, .055], PG: [-.07, .02], RDDT: [.85, .09] };
 // Annualized 3- and 5-year returns (simulated). null = not listed long enough.
 const LONG = { AAPL: [.18, .22], NVDA: [.62, .58], TSM: [.35, .27], MSFT: [.19, .20], GOOGL: [.24, .19], AMZN: [.16, .12], 'BRK.B': [.14, .13], VOO: [.16, .14], META: [.45, .21], TSLA: [.08, .34], KO: [.04, .06], QQQ: [.21, .18], NFLX: [.38, .17], PG: [.02, .05], RDDT: [null, null] };
 const retP = (s, y = 1) => y === 1 ? ret(s) : LONG[s.t][y === 3 ? 0 : 1] == null ? null : LONG[s.t][y === 3 ? 0 : 1] * 100;
@@ -913,6 +1039,46 @@ function potensiPill(s, st) {
   const up = v >= 0, lead = (up ? 'Potensi kenaikan' : 'Perubahan harga') + (y > 1 ? ' rata-rata' : '');
   return `<p class="pot-pill ${up ? 'up' : 'down'}">${svg('stock', 16)}<span>${lead} <b>${pctTxt(v)}${y > 1 ? '/thn' : ''}</b> dalam ${y} tahun terakhir${fallback}.</span></p>`;
 }
+
+// Empty state: pick card with 1-year-return chips (Figma 14082:21972)
+const PICK_CHIPS = ['NVDA', 'AAPL', 'TSLA', 'AMZN'];
+const BRAND_LOGO = new Set(['NVDA', 'AAPL', 'TSLA', 'AMZN']); // assets/logos/*.svg from Figma
+const pctWhole = p => (p >= 0 ? '+' : '−') + Math.round(Math.abs(p)) + '%';
+const chipLogo = x => BRAND_LOGO.has(x.t) ? `<img src="assets/logos/${x.t}.svg" width="24" height="24" alt="">` : logo(x);
+const pickErr = st => st.stockErr ? `<p class="err pick-err" role="alert">Pilih saham terlebih dahulu</p>` : '';
+const pickCard = st => /* PROTO:initial-state */ st.initStyle === 'row' ? pickRow(st) : `<div class="pick-card"><div class="pick-top"><div class="pick-head"><b>Pilih saham untuk nabung rutin</b><span>*Return 1 tahun terakhir</span></div>
+  <div class="rc-rail" role="list" aria-label="Saham pilihan">${PICK_CHIPS.map(byT).map(x =>
+    `<button type="button" class="rc-chip" role="listitem" data-a="quickPick" data-v="${x.t}" data-k="rc-${x.t}" aria-label="${x.t}, return 1 tahun ${pctWhole(ret(x))}">${chipLogo(x)}<span>${x.t}</span><span class="r ${dir(ret(x))}">${pctWhole(ret(x))}</span></button>`).join('')}</div></div>
+  <button type="button" class="rc-more" data-a="openStock" data-k="row-stock"><span>Lihat semua saham &amp; ETF</span><img src="assets/chev-right-20.svg" width="20" height="20" alt=""></button></div>${pickErr(st)}`;
+/* PROTO:initial-state BEGIN — One sheet: Jadwal + Durasi behind one row (Figma 14111:21442) */
+const planRow = (st, schedLbl, endLbl) => {
+  // Filled: summary card with Ubah (Figma 14111:23123); the whole card opens the sheet.
+  if (schedDone(st.s) && st.s.end != null) return `<button type="button" class="plan-card" data-a="openPlan" data-k="row-plan" aria-haspopup="dialog">
+    <span class="plan-hd"><img src="assets/ic-auto-plan-20.svg" width="20" height="20" alt=""><span class="t">Jadwal Nabung Rutin</span><span class="ubah">Ubah</span></span>
+    <span class="plan-kv"><span>Frekuensi</span><b>${schedLbl}</b></span><span class="plan-kv"><span>Durasi</span><b>${endLbl}</b></span></button>`;
+  return `<button type="button" class="plan-row" data-a="openPlan" data-k="row-plan" aria-haspopup="dialog"><img src="assets/ic-auto-plan-20.svg" width="20" height="20" alt="">
+    <span class="t">Tentukan jadwal Nabung Rutin</span><img src="assets/ic-chevron-right.svg" width="20" height="20" alt=""></button>`;
+};
+function planSheet(st) {
+  const d = st.draft;
+  return { title: 'Jadwal Nabung Rutin', fit: true, cls: 'sh-ds', body: `<div class="plan-scroll"><div class="sheet-body"><div class="plan-part" data-sched>${schedBody(d, st, true)}</div>
+    <div class="plan-part" data-endlist>${planEnd(st)}</div></div></div>
+    <div class="footer sh-ft" data-sched-ft>${saveBtn(d)}</div>` };
+}
+// Durasi as chips + divider + summary bullets (Figma 14111:21744)
+function planEnd(st) {
+  const d = st.draft, cur = st.draftEnd ?? 'forever', fmt = x => `${DAY_L[x.getDay()]}, ${x.getDate()} ${MONTHS[x.getMonth()]} ${x.getFullYear()}`;
+  const chips = END_OPTS.map(([v, l]) => `<button type="button" class="ochip" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</button>`).join('');
+  const when = d.freq === 'daily' ? '<b>setiap hari bursa</b>, Senin–Jumat.' : d.freq === 'weekly' && d.day ? `<b>setiap hari ${DAY_L[d.day].toLowerCase()}</b>` : d.freq === 'monthly' && d.date ? `<b>setiap tanggal ${d.date}</b>` : '';
+  const last = !schedDone(d) ? '' : cur === 'forever' ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(buyDates({ ...d, end: cur }).at(-1))}</b>`;
+  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>
+    <hr class="plan-hr"><ul class="plan-sum" aria-live="polite">${when ? `<li>Dibeli otomatis ${when}</li>` : ''}${last ? `<li>${last}</li>` : ''}</ul>`;
+}
+/* PROTO:initial-state END */
+/* PROTO:initial-state BEGIN — Search row (Figma 14067:20236) */
+const pickRow = st => `<button type="button" class="pick-row" data-a="openStock" data-k="row-stock"><span class="pick-row-ic" aria-hidden="true"><img src="assets/icp-us-stock.svg" width="18.56" height="19.09" alt=""></span>
+  <span class="t">Pilih saham untuk nabung rutin</span><img src="assets/search-24.svg" width="24" height="24" alt=""></button>${pickErr(st)}`;
+/* PROTO:initial-state END */
 function hubBody(st) {
   if (st.tab === 'plans') return plansView();
   if (st.done) return successView(st.done, { a: 'tab', v: 'plans', label: 'Lihat Rencana SIP' });
@@ -946,15 +1112,16 @@ function hubBody(st) {
     const schedLbl = !st.s.freq ? 'Pilih jadwal' : st.s.freq === 'daily' ? 'Setiap Hari' : schedShort(st.s);
     const endLbl = st.s.end == null ? 'Pilih durasi' : st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan';
     const dd = (k, a, label, value) => `<button type="button" class="dd" data-a="${a}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20, 2)}</button>`;
-    return `<form class="form" novalidate><div class="scroll">
-      ${!stock ? `<button type="button" class="sel-card sel-empty" data-a="openStock" data-k="row-stock"><span class="logo ph lg" aria-hidden="true"></span><span class="t">Pilih Saham</span>${svg('chev', 24, 2)}</button>` :
+    return `<form class="form${!stock && st.initStyle === 'row' ? ' init-row' : ''}" novalidate><div class="scroll">
+      ${!stock ? pickCard(st) :
       `<div class="sel-card"><div class="sel-top">${logo(stock, 'lg')}<span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>
         <button type="button" class="icon-btn" data-a="openStock" data-k="row-stock" aria-label="Ganti saham">${svg('edit', 22, 1.9)}</button></div>${potensiPill(stock, st)}</div>`}
       <div class="inl-nom"><label for="amt-h">Nominal pembelian${stock ? ' ' + stock.t : ''}</label>
         <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
-        <p class="err" id="amt-h-err" data-err>${st.amtErr ? svg('info', 16) + st.amtErr : ''}</p>
+        <p class="err" id="amt-h-err" data-err>${st.amtErr && !st.stockErr ? st.amtErr : ''}</p>
         ${quickChips(parseAmt(st.amount))}</div>
-      <div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLbl)}</div>
+      ${st.oneSched ? planRow(st, schedLbl, endLbl) /* PROTO:initial-state */ : `<div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLbl)}</div>`}
+      ${st.schedErr && !st.stockErr && !st.amtErr ? `<p class="err sched-err" role="alert">${st.schedErr}</p>` : ''}
       </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
   }
   const show = n => mode !== 'reveal' || n <= step;
@@ -964,18 +1131,7 @@ function hubBody(st) {
     ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Durasi', '', 'Durasi')}
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
 }
-// Bullet info box (Figma 13974:26541)
-function infoBullets(st) {
-  const p = st.s, d = upcoming(p), finite = p.end !== 'forever';
-  const next = p.freq === 'daily' ? 'setiap <b>hari bursa</b>' : p.freq === 'weekly' ? `setiap <b>${DAY_L[p.day]}</b>` : `setiap <b>tanggal ${p.date}</b>`;
-  const last = d.at(-1), single = finite && d.length === 1;
-  const items = [`Pembelian pertama pada <b>${DAY_L[d[0].getDay()]}, ${d[0].getDate()} ${MONTHS[d[0].getMonth()]} ${d[0].getFullYear()}</b> atau hari bursa berikutnya jika bursa libur${single ? '.' : ','}`];
-  if (!single) {
-    items.push(`Pembelian selanjutnya ${next}.`);
-    items.push(finite ? `Pembelian terakhir <b>${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}</b>.` : 'Berjalan terus sampai dihapus.');
-  }
-  return `<ul class="info-ul">${items.map(x => `<li>${x}</li>`).join('')}</ul>`;
-}
+// The plan summary (dates, count, total) lives on the confirmation sheet, not on the creation page.
 // Info box and Sumber Dana only appear once the plan is complete; the button is always there.
 const NEXT_STEP = [['openStock', 'Pilih Saham'], ['openNominal', 'Atur Nominal'], ['openSched', 'Atur Jadwal'], ['openEnd', 'Pilih Durasi']];
 const hubFooter = st => {
@@ -984,36 +1140,35 @@ const hubFooter = st => {
     const i = !st.stock ? 0 : (!st.amount || amtError(st.amount)) ? 1 : !schedDone(st.s) ? 2 : 3;
     return `<button type="button" class="cta" data-a="${NEXT_STEP[i][0]}" data-k="cta">${NEXT_STEP[i][1]}</button>`;
   }
-  return `${ok ? (st.infoView || infoBullets)(st) : ''}${fund()}${cta(ok, st.submitting)}`;
+  return `${ok && st.infoView ? st.infoView(st) : ''}${fund()}${cta(true, st.submitting)}`;
 };
 
 function schedSheet(st) {
   const d = st.draft;
-  return { title: 'Jadwal Pembelian', fit: true, body: `<div class="sheet-body" data-sched>${schedBody(d, st)}</div>
-    <div class="footer" style="padding-top:4px" data-sched-ft>${saveBtn(d)}</div>` };
+  return { title: 'Jadwal Pembelian', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-sched>${schedBody(d, st)}</div>
+    <div class="footer sh-ft" data-sched-ft>${saveBtn(d)}</div>` };
 }
-const schedBody = (d, st) => {
+const schedBody = (d, st, plan = false) => {
   const opt = (a, v, l, on) => `<button type="button" class="ochip" role="radio" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
   let sub = '', note = '';
-  if (d.freq === 'daily') note = `Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.`;
+  if (d.freq === 'daily') note = `Dibeli otomatis <b>setiap hari bursa, Senin–Jumat.</b>`;
   if (d.freq === 'weekly') {
     sub = `<span class="lbl" id="day-l">Setiap hari</span><div class="ochips five" role="radiogroup" aria-labelledby="day-l">${[1, 2, 3, 4, 5].map(x => opt('day', x, DAY_L[x], d.day === x)).join('')}</div>`;
-    note = d.day ? `Dibeli otomatis <b>setiap hari ${DAY_L[d.day]}</b>.` : 'Pilih hari pembelian.';
+    note = d.day ? `Dibeli otomatis <b>setiap hari ${DAY_L[d.day].toLowerCase()}.</b>` : 'Pilih hari pembelian.';
   }
   if (d.freq === 'monthly') {
     sub = `<span class="lbl" id="date-l">Beli setiap tanggal</span><div class="dgrid" role="radiogroup" aria-labelledby="date-l">${Array.from({ length: 28 }, (_, i) => i + 1).map(x =>
       `<button type="button" class="dcell" role="radio" aria-checked="${d.date === x}" data-a="date" data-v="${x}" data-k="date-${x}">${x}</button>`).join('')}</div>`;
-    note = d.date ? `Dibeli otomatis <b>setiap tanggal ${d.date}</b>.` : 'Pilih tanggal pembelian.';
+    note = d.date ? `Dibeli otomatis <b>setiap tanggal ${d.date}.</b>` : 'Pilih tanggal pembelian.';
   }
-  const first = schedDone(d) ? firstDebit(d) : null;
-  return `<span class="lbl" id="freq-l">Atur Jadwal</span><div class="ochips three" role="radiogroup" aria-labelledby="freq-l">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('freq', v, l, d.freq === v)).join('')}</div>
-    ${sub}${note ? `<p class="snote">${note}</p>` : ''}<hr class="cf-hr">
-    <p class="preview" aria-live="polite">Pembelian pertama ${first ? `<b>${DAY_L[first.getDay()]} ${first.getDate()} ${MONTHS[first.getMonth()]} ${first.getFullYear()}</b>` : '—'}</p>`;
+  if (plan) note = ''; /* PROTO:initial-state — one sheet shows the note in its summary list */
+  return `<span class="lbl" id="freq-l">${plan ? 'Frekuensi' : 'Atur Jadwal'}</span><div class="ochips three" role="radiogroup" aria-labelledby="freq-l">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('freq', v, l, d.freq === v)).join('')}</div>
+    ${sub}${note ? `<p class="snote" aria-live="polite">${note}</p>` : ''}`;
 };
 function endSheet(st) {
   const cur = st.draftEnd ?? 'forever';
-  return { title: 'Durasi Nabung', fit: true, body: `<div class="sheet-body" style="padding:0" data-endlist>${endList(st, cur)}</div>
-    <div class="footer" style="padding-top:8px"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
+  return { title: 'Durasi Nabung', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-endlist>${endList(st, cur)}</div>
+    <div class="footer sh-ft"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
 }
 const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) => {
   const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : (() => { const last = buyDates({ ...st.s, end: v }).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; })();
@@ -1026,7 +1181,7 @@ const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-
 function app(V) {
   return function (stage) {
     // Figma 14067:20236: Jadwal and Durasi start on Setiap Hari / Sampai dihapus.
-    const freshS = () => ({ freq: 'daily', day: null, date: null, end: 'forever' });
+    const freshS = () => V.emptySched ? { freq: null, day: null, date: null, end: null } /* PROTO:initial-state */ : { freq: 'daily', day: null, date: null, end: 'forever' };
     const st = { ...baseState(), s: freshS(), endIn: V.endIn, amount: '', pages: [], sheet: null, enter: null, draft: null, draftAmt: '10', simFreq: 'weekly', simEnd: 'forever', sort: 'pop', detail: null };
     const phone = document.createElement('div');
     phone.className = 'phone';
@@ -1036,7 +1191,8 @@ function app(V) {
 
     function view() {
       const top = st.pages.length - 1;
-      let html = `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
+      let html = statusBar(top >= 0 && V.lightPage);
+      html += `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
       html += st.pages.map((p, i) => {
         const pg = V.page(p, st);
         return `<div class="page ${st.enter === 'page' && i === top ? 'enter' : ''}" ${i < top || st.sheet ? 'inert' : ''} role="dialog" aria-label="${esc(pg.title)}">
@@ -1044,12 +1200,12 @@ function app(V) {
           <div class="page-body">${pg.body}</div></div>`;
       }).join('');
       if (st.sheet) {
-        const sh = st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
+        const sh = st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'plan' ? planSheet(st) /* PROTO:initial-state */ : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
         html += `<div class="overlay ${st.enter === 'sheet' ? 'enter' : ''}"><div class="backdrop" data-a="close" aria-hidden="true"></div>
-          <div class="sheet ${sh.fit ? 'fit' : ''}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab" aria-hidden="true"></div>
+          <div class="sheet ${sh.fit ? 'fit' : ''} ${sh.cls || ''}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab" aria-hidden="true"></div>
           ${sh.bare ? `<h2 id="sh-t" class="sr-only">${sh.title}</h2>` : sh.closeLeft
             ? `<div class="sheet-hd left"><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', 22, 2)}</button><h2 id="sh-t">${sh.title}</h2></div>`
-            : `<div class="sheet-hd"><h2 id="sh-t">${sh.title}</h2><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', 22, 2)}</button></div>`}${sh.body}</div></div>`;
+            : `<div class="sheet-hd"><h2 id="sh-t">${sh.title}</h2><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', sh.cls ? 24 : 22, 2)}</button></div>`}${sh.body}</div></div>`;
       }
       return html;
     }
@@ -1062,7 +1218,8 @@ function app(V) {
       push(p) { st.pages.push(p); st.enter = 'page'; ctx.render(); ctx.focus(!isTouch && phone.querySelector('.page:last-of-type [data-search]') ? '.page:last-of-type [data-search]' : `[data-k="pop-${st.pages.length - 1}"]`); },
       pop(then) {
         const els = phone.querySelectorAll('.page'); const el = els[els.length - 1];
-        if (!el || el.classList.contains('leaving')) return;
+        if (!el) { ctx.render(); return then?.(); }
+        if (el.classList.contains('leaving')) return;
         el.classList.add('leaving');
         setTimeout(() => { st.pages.pop(); ctx.render(); then ? then() : ctx.focus(st.pages.length ? `[data-k="pop-${st.pages.length - 1}"]` : '[data-k="row-stock"]'); }, 240);
       },
@@ -1074,7 +1231,8 @@ function app(V) {
       },
       openSheet(name) {
         st.sheet = name; st.enter = 'sheet';
-        if (name === 'sched') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; }
+        if (name === 'sched' || name === 'plan') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; }
+        if (name === 'plan') st.draftEnd = st.s.end ?? 'forever'; /* PROTO:initial-state */
         if (name === 'end') st.draftEnd = st.s.end ?? 'forever';
         else if (name === 'nominal') { st.draftAmt = st.amount || '10'; st.amtErr = ''; }
         ctx.render();
@@ -1113,11 +1271,12 @@ function app(V) {
       freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
       day(v) { st.draft.day = +v; patchSched(); },
       date(v) { st.draft.date = +v; patchSched(); },
-      saveSched() { st.s = { ...st.draft }; ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
+      saveSched() { st.s = { ...st.draft }; st.schedErr = ''; if (st.sheet === 'plan') st.s.end = st.draftEnd ?? 'forever'; /* PROTO:initial-state */ ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
       end(v) { st.draft.end = endVal(v); patchSched(); },
       openEnd() { ctx.openSheet('end'); },
-      endpick(v) { st.draftEnd = endVal(v); ctx.patch('[data-endlist]', endList(st, st.draftEnd)); },
-      saveEnd() { st.s.end = st.draftEnd ?? 'forever'; ctx.closeSheet(() => ctx.focus('[data-k="cta"]')); },
+      openPlan() { ctx.openSheet('plan'); }, /* PROTO:initial-state */
+      endpick(v) { st.draftEnd = endVal(v); ctx.patch('[data-endlist]', st.sheet === 'plan' ? planEnd(st) : endList(st, st.draftEnd)); },
+      saveEnd() { st.s.end = st.draftEnd ?? 'forever'; st.schedErr = ''; ctx.closeSheet(() => ctx.focus('[data-k="cta"]')); },
       key(v) {
         let a = st.draftAmt;
         if (v === 'del') a = a.slice(0, -1);
@@ -1135,6 +1294,7 @@ function app(V) {
       simfreq(v) { st.simFreq = v; ctx.patch('[data-simseg]', amtSeg(v)); ctx.patch('[data-proj]', V.proj(st)); },
       confirmAmt() { if (!amtError(st.draftAmt)) V.confirm(ctx); },
       pcPick(v) { st.stock = v; ctx.openSheet('nominal'); },
+      quickPick(v) { V.pick(v, ctx); },
       openSort() { ctx.openSheet('sort'); },
       openCat() { ctx.openSheet('cat'); },
       setSort(v) { st.sort = v; ctx.closeSheet(() => ctx.focus('[data-k="chip-sort"]')); },
@@ -1145,16 +1305,27 @@ function app(V) {
       setCatInline(v) { st.cat = v; ctx.patch('[data-head]', V.head(st)); ctx.patch('[data-list]', V.list(st)); phone.querySelector('[data-list]').scrollTop = 0; },
       changeStock() { if (st.pages.length > 1) ctx.pop(); else { st.pages = [{ id: 'stock' }]; st.enter = 'page'; ctx.render(); } },
     };
-    function patchSched() { ctx.patch('[data-sched]', schedBody(st.draft, st)); ctx.patch('[data-sched-ft]', saveBtn(st.draft)); }
+    function patchSched() { const plan = st.sheet === 'plan'; ctx.patch('[data-sched]', schedBody(st.draft, st, plan)); ctx.patch('[data-sched-ft]', saveBtn(st.draft)); if (plan) ctx.patch('[data-endlist]', planEnd(st)); }
     function syncAmt() {
       const input = phone.querySelector('[data-amt]');
-      if (input) { input.setAttribute('aria-invalid', String(!!st.amtErr)); const err = phone.querySelector('[data-err]'); if (err) err.innerHTML = st.amtErr ? svg('info', 16) + st.amtErr : ''; }
+      if (input) { input.setAttribute('aria-invalid', String(!!st.amtErr)); const err = phone.querySelector('[data-err]'); if (err) err.textContent = st.amtErr && !st.stockErr ? st.amtErr : ''; }
       // Toggle in place: patching [data-quick] nested a second grid inside the first and shrank the chips.
       const n = parseAmt(st.draftAmt);
       phone.querySelectorAll('[data-quick] [data-a="quick"]').forEach(b => b.setAttribute('aria-pressed', String(n === +b.dataset.v)));
       ctx.patch('[data-proj]', V.proj(st));
       const c = phone.querySelector('[data-k="confirmAmt"]'); if (c) c.disabled = !!amtError(st.draftAmt);
       if (phone.querySelector('[data-inline]')) { st.amount = st.draftAmt; ctx.patch('[data-footer]', hubFooter(st)); }
+    }
+    // Tapping the CTA with an incomplete plan flags the first missing step: stock, then nominal, then jadwal / durasi.
+    // Only the highest-priority error shows: stock, then nominal, then jadwal (each as red text under its field).
+    function showFirstError() {
+      st.schedErr = '';
+      if (!st.stock) { st.stockErr = true; ctx.render(); ctx.focus('[data-k="row-stock"]'); return; }
+      const err = amtError(st.amount);
+      if (err) { st.amtErr = err; ctx.render(); ctx.focus('#amt-h'); return; }
+      const noSched = !schedDone(st.s);
+      st.schedErr = st.oneSched ? 'Tentukan jadwal nabung rutin terlebih dahulu' : noSched ? 'Pilih jadwal nabung rutin terlebih dahulu' : 'Pilih durasi terlebih dahulu';
+      ctx.render(); ctx.focus(st.oneSched ? '[data-k="row-plan"]' : noSched ? '[data-k="row-sched"]' : '[data-k="row-end"]');
     }
     ctx.submit = () => { st.agree = false; st.terms = false; ctx.openSheet('confirm'); };
 
@@ -1163,7 +1334,7 @@ function app(V) {
       if (!b || !phone.contains(b) || b.disabled) return;
       H[b.dataset.a]?.(b.dataset.v, b);
     });
-    phone.addEventListener('submit', e => { e.preventDefault(); if (ready(st.stock, st.s, st.amount)) ctx.submit(); });
+    phone.addEventListener('submit', e => { e.preventDefault(); if (ready(st.stock, st.s, st.amount)) ctx.submit(); else showFirstError(); });
     phone.addEventListener('input', e => {
       if (e.target.matches('[data-search]')) { st.q = e.target.value; ctx.patch('[data-list]', V.list(st)); }
       if (e.target.matches('[data-amt]')) {
@@ -1200,12 +1371,16 @@ const termsBox = st => st.terms ? `<ul class="terms">
   <li>Kalau saldo kurang atau bursa libur, pembelian dilewati atau digeser ke hari bursa berikutnya.</li>
   <li>Kamu bisa ubah atau hapus rencana SIP kapan saja di tab Rencana SIP.</li></ul>` : '';
 function confirmSheet(st) {
-  const s = byT(st.stock), plan = st.s;
-  const rows = [['Jadwal Pembelian', FREQ_NAME[plan.freq]], ['Tanggal Mulai', fmtLong(firstDebit(plan))], ['Jadwal Rutin', routine(plan)],
-    ['Jangka Waktu', term(plan)], ['Sumber Dana', 'Rekening Saham AS']];
+  const s = byT(st.stock), plan = st.s, amt = parseAmt(st.amount), forever = plan.end === 'forever';
+  const dates = upcoming(plan), n = forever ? Math.round(PER_MONTH[plan.freq]) : dates.length, total = usd(Math.round(amt * n * 100) / 100);
+  const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  const rows = [['Jadwal', routine(plan)], ['Durasi', term(plan).replace('bulan', 'Bulan')], ['Pembelian pertama', long(dates[0])],
+    ['Pembelian terakhir', forever ? 'Sampai dihapus' : long(dates.at(-1))], ['Jumlah pembelian', forever ? `≈ ${n}× per bulan` : `${n}×`],
+    [forever ? 'Total dana per bulan' : 'Total dana', forever ? `≈ ${total}` : total, 'cf-total'], ['Sumber Dana', 'Rekening Saham AS']];
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
-    <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(parseAmt(st.amount))}</span></div>
-    <dl class="cf-rows">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(amt)}</span><span class="s">per pembelian</span></div>
+    <dl class="cf-rows">${rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <p class="cf-note">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</p>
     <hr class="cf-hr">
     <div class="cf-agree"><input type="checkbox" id="agree" data-a="agree" ${st.agree ? 'checked' : ''}>
       <span><label for="agree">Saya telah membaca dan memahami </label><button type="button" class="tlink" data-a="terms" data-k="terms" aria-expanded="${!!st.terms}">Syarat dan Ketentuan</button><label for="agree"> Systematic Investment Plan (SIP), serta menyetujui untuk memilih portofolio yang mungkin mengandung risiko.</label></span></div>
@@ -1246,10 +1421,10 @@ const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'del'];
 const nominalSheet = st => ({ title: 'Nominal Pembelian', fit: true, body: `<div class="sheet-body nom">
   <label for="amt-n" class="nom-l">Nominal beli ${st.stock}</label>
   <div class="amt nom-in"><span class="pre" aria-hidden="true">$</span><input id="amt-n" data-amt type="text" inputmode="none" autocomplete="off" spellcheck="false" value="${esc(st.draftAmt)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-n-err"></div>
-  <p class="err" id="amt-n-err" data-err>${st.amtErr ? svg('info', 16) + st.amtErr : ''}</p>
+  <p class="err" id="amt-n-err" data-err>${st.amtErr || ''}</p>
   ${quickChips(parseAmt(st.draftAmt))}
   ${confirmBtn(st, 'Selanjutnya')}
-  <div class="keypad" aria-label="Papan angka">${KEYS.map(k => `<button type="button" class="key" data-a="key" data-v="${k}" data-k="key-${k}" ${k === 'del' ? 'aria-label="Hapus"' : k === ',' ? 'aria-label="Koma"' : ''}>${k === 'del' ? `<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M8 2h15a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 0123 18H8l-6.5-8z"/><path d="M12 7l6 6M18 7l-6 6" stroke-linecap="round"/></svg>` : k}</button>`).join('')}</div></div>` });
+  <div class="keypad" aria-label="Papan angka">${KEYS.map(k => `<button type="button" class="key" data-a="key" data-v="${k}" data-k="key-${k}" ${k === 'del' ? 'aria-label="Hapus"' : k === ',' ? 'aria-label="Koma"' : ''}>${k === 'del' ? svg('del', 26) : k}</button>`).join('')}</div></div>` });
 function nominalProj(st) {
   const s = byT(st.stock);
   if (!s) return '';
@@ -1259,10 +1434,10 @@ function nominalProj(st) {
 const listBase = {
   endIn: 'row',
   pick(v, ctx) {
-    const st = ctx.st; st.stock = v;
+    const st = ctx.st; st.stock = v; st.stockErr = false;
     if (!st.amount) st.amount = '10';
-    if (!st.s.freq) Object.assign(st.s, { freq: 'daily', day: null, date: null });
-    if (st.s.end == null) st.s.end = 'forever';
+    if (!st.oneSched && !st.s.freq) Object.assign(st.s, { freq: 'daily', day: null, date: null }); /* PROTO:initial-state — one sheet keeps the schedule empty */
+    if (!st.oneSched && st.s.end == null) st.s.end = 'forever';
     st.draftAmt = st.amount; st.amtErr = '';
     ctx.pop(() => ctx.focus(isTouch ? '[data-k="row-stock"]' : '#amt-h'));
   },
@@ -1603,10 +1778,54 @@ const slFigma2 = {
       <button type="button" class="link" data-a="openSort" data-k="chip-sort">${svg('sort', 16)}${sortLabel(st)}</button></div>`; },
   list: st => listOrEmpty(st, stockQuery(st), s => figRow(st, s)),
 };
-const svFigma2 = app({ ...sparkCfg, lightPage: true,
+const figCfg = ({ ...sparkCfg, lightPage: true,
   page: (p, st) => ({ title: slFigma2.title, body: `<div class="fig-head" data-head>${slFigma2.head(st)}</div><div class="scroll" data-list>${slFigma2.list(st)}</div>` }),
   list: slFigma2.list, head: slFigma2.head, init: st => { st.sort = 'top'; st.cat = 'all'; st.period = 1; st.figPeriod = true; } });
-svFigma2(document.getElementById('stage'));
+/* PROTO:initial-state BEGIN — picker wiring (PICKER.md) */
+// Two independent axes: how the stock is picked × how Jadwal/Durasi are set. URL: ?pick=chips|row&sched=split|one
+const AXES = { pick: ['chips', 'row'], sched: ['split', 'one'] };
+const params = new URLSearchParams(location.search);
+const sel = { pick: AXES.pick.includes(params.get('pick')) ? params.get('pick') : 'chips', sched: AXES.sched.includes(params.get('sched')) ? params.get('sched') : 'split' };
+const build = () => app({ ...figCfg, emptySched: sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.oneSched = sel.sched === 'one'; } });
+const stage = document.getElementById('stage');
+const picker = document.querySelector('.proto-picker');
+const groups = [...picker.querySelectorAll('.proto-picker-group')];
+const replay = picker.querySelector('.proto-picker-replay');
+function paint() {
+  groups.forEach(g => {
+    const hl = g.querySelector('.proto-picker-highlight');
+    g.querySelectorAll('.proto-picker-item').forEach(b => {
+      const on = b.dataset.v === sel[g.dataset.axis];
+      b.toggleAttribute('data-active', on);
+      if (on) { b.setAttribute('aria-current', 'true'); hl.style.width = b.offsetWidth + 'px'; hl.style.transform = `translateX(${b.offsetLeft}px)`; }
+      else b.removeAttribute('aria-current');
+    });
+  });
+}
+function mount() {
+  stage.innerHTML = '';
+  requestAnimationFrame(() => { stage.innerHTML = ''; build()(stage); });
+}
+function set(axis, v) {
+  sel[axis] = v; paint();
+  const url = new URL(location);
+  url.searchParams.delete('v'); url.searchParams.set('pick', sel.pick); url.searchParams.set('sched', sel.sched); url.searchParams.delete('first');
+  history.replaceState(null, '', url);
+  mount();
+}
+groups.forEach(g => g.querySelectorAll('.proto-picker-item').forEach(b => b.addEventListener('click', () => set(g.dataset.axis, b.dataset.v))));
+replay?.addEventListener('click', mount);
+window.addEventListener('resize', paint);
+document.addEventListener('keydown', (e) => {
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const keys = { 1: ['pick', 'chips'], 2: ['pick', 'row'], 3: ['sched', 'split'], 4: ['sched', 'one'] };
+  if (keys[e.key]) set(...keys[e.key]);
+  else if (e.key === 'r' || e.key === 'R') mount();
+});
+paint(); mount();
+requestAnimationFrame(() => requestAnimationFrame(() => picker.setAttribute('data-ready', '')));
+/* PROTO:initial-state END */
 </script>
 </body>
 </html>

@@ -1,6 +1,75 @@
 # SIP creation — decisions from /sip-prototype
 
-## Initial state — Figma 14067:20236 (28 Okt 2026)
+## Icons — friz-xc/pd-design-artifacts (28 Okt 2026)
+- Icons come from `assets/icons` in the PD design-artifacts repo (filled, 24px, recolored to the text color), embedded in `index.html`:
+  chevron-left (back), chevron-right, chevron-down (dropdowns), search, check, x (close), calendar, sort-list, filter,
+  pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
+- Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
+
+## Where the summary lives (28 Okt 2026)
+- **Creation page:** no summary at all; the footer is just Sumber Dana + "Mulai Nabung Rutin" (the 3-bullet info box and the one-line "Pembelian pertama" are removed).
+  The One sheet keeps its short Figma bullets as live feedback while choosing.
+- **Confirmation sheet = the full commitment:** amount + "per pembelian", then Jadwal, Durasi, Pembelian pertama, Pembelian terakhir (or "Sampai dihapus"),
+  Jumlah pembelian (14× / ≈ 21× per bulan), **Total dana** ($140 / "Total dana per bulan ≈ $210", emphasized between dividers), Sumber Dana,
+  and the note "Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya." Replaces Jadwal Pembelian / Tanggal Mulai / Jadwal Rutin / Jangka Waktu.
+- Explored and dropped for the One sheet summary: Sentence ("Kamu akan beli $10 NVDA setiap…"), Facts box (first/last/count/total), Timeline (date pills).
+  Count and total belong on the confirmation sheet, not while choosing.
+
+## Jadwal + Durasi sheets — Figma 14111:21681 (28 Okt 2026)
+- Sheet chrome (these two sheets only): 26px top radius, 64px light grabber, 20px title, 24px close icon, content padding 10/16 with 16px gaps, Simpan button with 36px bottom space.
+- Jadwal: labels 12px black; option chips 32px, 6px gap, grey fill / blue tint + border when selected; weekly days spelled out (Senin–Jumat).
+  Monthly calendar 1–28 in a full-width 7-column grid of 40px cells, selected date = dark blue (#165BCC) circle.
+- Note is plain text, grey lead + black bold rest: "Dibeli otomatis **setiap hari bursa, Senin–Jumat.**" / "**setiap hari senin.**" / "**setiap tanggal 22.**"
+- **Removed** the divider and "Pembelian pertama …" line from the Jadwal sheet (not in Figma); the first purchase date still shows in the info box on the main page.
+- Durasi: 24px radios (blue #3A83F9 on, grey #A9BCC7 off), 14px bold title over 12px grey "Pembelian terakhir {Hari, d Mmm yyyy}"; button **Simpan**.
+
+## Initial state: pick card with return chips — Figma 14082:21972 (28 Okt 2026)
+- Replaces the empty "Pilih Saham ›" row. Grey (#f5f5f5) container holding a white bordered card:
+  **Pilih saham untuk nabung rutin** (14px) over grey "*Return 1 tahun terakhir" (10px), then a horizontally scrolling chip rail with a white fade on the right edge;
+  below the card, row **Lihat semua saham & ETF ›** opens the stock list.
+- Chips (32px, 12px text, pill): real brand logos from Figma (`assets/logos/`), ticker, green 1-year return as a whole percent.
+  Order NVDA +44%, AAPL +32%, TSLA +24%, AMZN +44%. Simulated 1-year returns for these four were set to the Figma values so the list, strip and chips agree.
+  Tapping a chip picks the stock directly (prefills $10, Setiap Hari, Sampai dihapus).
+- Same frame restyles the rest of the page: 24px between sections; Nominal input 40px, 4% grey fill, radius 8, 16px bold; $5–$50 chips 24px outlined, 11px;
+  Jadwal/Durasi box border #e3e8ea, radius 8, 12px row padding with dividers; footer shadow, "Rekening Saham AS" black, Autodebit tag #e1f2fa / #3a83f9.
+- Status bar is back (Figma Android bar, 24px: wifi, signal, battery, 12:30 in Roboto Medium). It stays fixed while the screen scrolls,
+  sits above pushed pages, and turns white with dark icons on white pages. Phone frame corner radius 8px (was 44px).
+- **Stock first = Any order (28 Okt 2026).** The whole form is visible from the start; the stock-first order is enforced only by the CTA error below.
+  - Tried and reverted: **Reveal** (only the stock card + "Pilih Saham" CTA until a stock is picked, then Nominal + Jadwal fade in).
+  - Rejected: **List first** (opening on the stock list hid the SIP intro and the Rencana SIP tab behind an extra screen).
+  - Still worth exploring, not prototyped: a "Nabung Rutin" entry on each stock's detail page that opens this form with the stock prefilled.
+- **CTA "Mulai Nabung Rutin" is always enabled** (as in Figma). Errors are **plain red text** (no icon, no red outline) under the field,
+  and **only one shows at a time**, priority stock → nominal → jadwal (a lower error stays hidden while a higher one shows):
+  1. no stock → "Pilih saham terlebih dahulu" under the pick card, focus moves to the card; cleared when a stock is picked;
+  2. no / invalid nominal → "Masukkan nominal per pembelian" / "Minimal $1…" under the amount input, focus moves to the input;
+  3. jadwal / durasi missing → "Pilih jadwal nabung rutin terlebih dahulu" / "Pilih durasi terlebih dahulu" under the Jadwal box,
+     or "Tentukan jadwal nabung rutin terlebih dahulu" under the One sheet row; the sheet no longer opens by itself. Cleared on Simpan.
+- Amount chips $5–$50 on the page: the selected chip uses the bottom-sheet active option style (blue tint, #3278F0 border, #2264D4 text).
+- Open exploration, two independent axes in the picker (URL `?pick=chips|row&sched=split|one`, keys 1–2 / 3–4):
+  pick style × schedule style. Schedule **Separated** = Jadwal + Durasi rows; **One sheet** = one row → combined sheet;
+  once saved it becomes the summary card from 14111:23123 ("Jadwal Nabung Rutin · Ubah", Frekuensi / Durasi rows; whole card opens the sheet).
+  One sheet content (14111:21744): "Frekuensi" chips, day/date picker, "Durasi" as 5 chips in a 3-column grid (no radio list),
+  divider, then a grey bullet summary: "Dibeli otomatis **setiap hari bursa**, Senin–Jumat." / "**setiap hari senin**" / "**setiap tanggal 22**"
+  and "Pembelian berjalan terus sampai dihapus" or "Pembelian terakhir **Senin, 23 Nov 2026**". Fits without scrolling, even on Bulanan.
+- Pick styles: **Return chips** (14082:21972, default) vs **Search row** (14067:20236:
+  one bordered row with US-stock icon, "Pilih saham untuk nabung rutin" and a search icon; 16px section spacing)
+  vs **One sheet** (14111:21442: Jadwal + Durasi replaced by one row "Tentukan jadwal Nabung Rutin" with calendar icon; schedule starts empty,
+  no prefill on stock pick; the row opens one "Jadwal Nabung Rutin" sheet with Atur Jadwal on top and the Durasi radios below, one Simpan;
+  once saved the row reads "Jadwal nabung rutin / Setiap tanggal 22 · 3 Bulan"). The combined sheet isn't in Figma yet; built from the two existing sheets.
+  With Bulanan selected it is taller than the screen and scrolls inside the sheet.
+  CTA error order in this option: stock → nominal → opens the combined sheet.
+- Figma "SemiBold" renders as Lato Bold (Google Fonts has no Lato 600).
+- Nominal, Jadwal and Durasi stay active before a stock is picked.
+- Chip returns are whole percents (Figma); everywhere else keeps one decimal ("+44,0%").
+- Explored and set aside (decided from /sip-prototype picker):
+  - Round 1, stock-first hero cards: **Tiles** (4 logo tiles), **Popular list** (rows with return), **Categories** (category grid), **Inline search** (search field in the card). All locked the fields below until a stock was picked, which added a step without adding information.
+  - Round 2, content and approach: **Copy fixes** (ETFs first, "Return 1 tahun terakhir · bukan jaminan", "Naik +x%" strip, monthly total + disclaimer in the footer),
+    **Starter** (prefilled VOO $10/hari plan, one tap to apply), **Risk first** (Stabil / Bertumbuh / Agresif cards with a volatility meter),
+    **Budget first** (Rp500 rb / 1 jt / 2 jt per month → per-buy amount at a simulated rate).
+  - Open questions carried from round 2, not resolved by this choice: "Estimasi return" and "Potensi kenaikan" read as forecasts; return-sorted chips put volatile single stocks before ETFs;
+    the monthly commitment (≈ $210/bulan at $10 daily) isn't shown before the CTA. Check the wording with compliance.
+
+## Initial state — Figma 14067:20236 (28 Okt 2026, superseded by 14082:21972)
 - Same layout as the picked state, empty: placeholder card "Pilih Saham ›", "Nominal pembelian" input with **$0** placeholder (no chip selected),
   Jadwal **Setiap Hari** and Durasi **Sampai dihapus** preset from the start.
 - Footer: **Sumber Dana always shown**; info box only once the plan is complete; disabled "Mulai Nabung Rutin".
