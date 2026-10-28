@@ -240,6 +240,14 @@ h1, h2, h3, p { margin: 0; }
 .plans { padding: 8px 0; }
 .plan { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
 .plan .amtv { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; }
+.plans-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; }
+.empty-ill { position: relative; width: 225px; height: 150px; flex: none; }
+.empty-ill span { position: absolute; }
+.empty-ill img { display: block; width: 100%; height: 100%; }
+.plans-empty-tx { display: flex; flex-direction: column; gap: 4px; line-height: 1.35; }
+.plans-empty-tx b { font-size: 14px; color: #06090d; }
+.plans-empty-tx p { font-size: 12px; color: #445b70; }
+.plans-empty .cta { width: 100%; }
 .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; padding: 32px; }
 .empty .ic { width: 56px; height: 56px; border-radius: 999px; background: var(--surface-2); display: grid; place-items: center; color: var(--text-2); margin-bottom: 8px; }
 .empty p { font-size: 14px; line-height: 20px; color: var(--text-2); max-width: 28ch; }
@@ -644,7 +652,7 @@ h1, h2, h3, p { margin: 0; }
 .sh-ds .dcell[aria-checked="true"] { background: url("assets/date-selected.svg") center / 36px 36px no-repeat; color: #fff; font-weight: 400; }
 .sh-ds .snote { padding: 0; border-radius: 0; background: none; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
 .sh-ds .snote b { font-weight: 700; color: #000; }
-.sh-ds [data-endlist]:not(.plan-part) > [role="radiogroup"] { display: flex; flex-direction: column; gap: 16px; }
+.sh-ds [data-endlist]:not(.plan-part) > [role="radiogroup"]:first-child { display: flex; flex-direction: column; gap: 16px; }
 .sh-ds .eopt { gap: 12px; padding: 0; }
 .sh-ds .eopt .radio { width: 24px; height: 24px; border: 0; border-radius: 0; background: url("assets/radio-off.svg") center / 24px 24px no-repeat; }
 .sh-ds .eopt .radio::after { display: none; }
@@ -680,6 +688,23 @@ h1, h2, h3, p { margin: 0; }
 .plan-hr { height: 1px; margin: 0; border: 0; background: rgba(0, 0, 0, 0.1); }
 .plan-sum { margin: 0; padding-left: 21px; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
 .plan-sum b { font-weight: 700; color: #000; }
+.ecal-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ecal-hd b { font-size: 14px; line-height: 1.35; }
+.ecal-hd .icon-btn { width: 36px; height: 36px; color: #000; }
+.ecal-hd .icon-btn:disabled { color: rgba(0, 0, 0, 0.2); cursor: default; }
+.ecal-wd { display: grid; grid-template-columns: repeat(7, 40px); justify-content: space-between; font-size: 12px; line-height: 20px; color: rgba(0, 0, 0, 0.48); text-align: center; }
+.sh-ds .ochips.mgrid { grid-template-columns: repeat(4, 1fr); }
+.sh-ds .ochips.four { grid-template-columns: repeat(4, 1fr); }
+.sh-ds .ochip:disabled { opacity: .35; cursor: default; }
+.cust-live { font-size: 13px; line-height: 1.35; color: rgba(0, 0, 0, 0.65); font-variant-numeric: tabular-nums; }
+.cust-live b { color: #000; }
+.cnt { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px; border-radius: 10px; background: rgba(0, 0, 0, 0.04); }
+.cnt-btn { width: 44px; height: 40px; border: 0; border-radius: 8px; background: #fff; font-size: 22px; line-height: 1; color: #2264d4; cursor: pointer; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08); touch-action: manipulation; transition: transform .16s var(--ease-out); }
+.cnt-btn:active { transform: scale(.94); }
+.cnt-btn:disabled { color: rgba(0, 0, 0, 0.2); cursor: default; }
+.cnt-v { font-size: 20px; line-height: 1.3; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cnt-v span { font-size: 13px; font-weight: 400; color: rgba(0, 0, 0, 0.65); }
+.sh-ds .dcell:disabled { color: rgba(0, 0, 0, 0.2); cursor: default; }
 .plan-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .form.init-row .inl-nom { padding-top: 16px; }
 .form.init-row .inl-nom .pchips { margin-top: 6px; }
@@ -698,6 +723,20 @@ h1, h2, h3, p { margin: 0; }
 .proto-picker-replay { padding: 0 10px; font-size: 14px; }
 .proto-picker[data-position="top"] { bottom: auto; top: 24px; }
 .proto-picker-group { position: relative; display: flex; gap: 2px; }
+/* Collapsed by default: a gear button; the options open as an overlay panel under it. */
+.proto-fab { position: fixed; top: 16px; right: 16px; z-index: 2147483647; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 999px; background: rgba(10, 10, 10, 0.82); color: rgba(255, 255, 255, 0.85); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 24px rgba(0, 0, 0, 0.24); cursor: pointer; transition: color .15s ease-out, transform .16s cubic-bezier(0.23, 1, 0.32, 1); }
+.proto-fab:hover, .proto-fab[aria-expanded="true"] { color: #fff; }
+.proto-fab:active { transform: scale(0.94); }
+.proto-fab:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; }
+.proto-fab svg { transition: transform .25s cubic-bezier(0.23, 1, 0.32, 1); }
+.proto-fab[aria-expanded="true"] svg { transform: rotate(60deg); }
+.proto-picker#proto-panel { top: 64px; right: 16px; bottom: auto; left: auto; transform: none; flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; border-radius: 16px; transform-origin: top right; animation: protoIn .16s cubic-bezier(0.23, 1, 0.32, 1); }
+.proto-picker#proto-panel[hidden] { display: none; }
+.proto-picker-label { padding: 4px 4px 0; font-size: 11px; color: rgba(255, 255, 255, 0.45); }
+.proto-picker-label:first-child { padding-top: 0; }
+.proto-picker#proto-panel .proto-picker-replay { justify-content: center; margin-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.08); border-radius: 0 0 8px 8px; padding-top: 4px; height: 32px; }
+@keyframes protoIn { from { opacity: 0; transform: scale(.96) translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .proto-picker#proto-panel, .proto-fab svg { animation: none; transition: none; } }
 .proto-picker-group .proto-picker-highlight { top: 0; }
 /* PROTO:initial-state END */
 /* Pick card with return chips — Figma 14082:21972 */
@@ -711,6 +750,7 @@ h1, h2, h3, p { margin: 0; }
 .rc-rail::-webkit-scrollbar { display: none; }
 .rc-chip { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px 4px 4px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 20px; background: #fff; font-size: 12px; line-height: 1.35; color: #000; cursor: pointer; scroll-snap-align: start; touch-action: manipulation; font-variant-numeric: tabular-nums; transition: border-color .15s ease-out, transform .16s var(--ease-out); }
 .rc-chip img, .rc-chip .logo { width: 24px; height: 24px; flex: none; }
+.rc-chip img { border-radius: 999px; background: #c6effc; } /* Figma clips each asset icon to a circle */
 .rc-chip .logo { font-size: 7px; }
 .rc-chip .r { color: #0c8a5c; }
 .rc-chip .r.down { color: var(--down); }
@@ -725,20 +765,28 @@ h1, h2, h3, p { margin: 0; }
 <body>
 <div id="stage"></div>
 <!-- PROTO:initial-state BEGIN -->
-<nav class="proto-picker" data-position="top" aria-label="Prototype variants">
+<button type="button" class="proto-fab" aria-label="Opsi prototipe" aria-expanded="false" aria-controls="proto-panel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+<nav class="proto-picker" id="proto-panel" aria-label="Opsi prototipe" hidden>
+  <span class="proto-picker-label">Pilih saham</span>
   <span class="proto-picker-group" data-axis="pick" role="group" aria-label="Pilih saham">
     <span class="proto-picker-highlight" aria-hidden="true"></span>
     <button class="proto-picker-item" data-v="chips">Return chips</button>
     <button class="proto-picker-item" data-v="row">Search row</button>
   </span>
-  <span class="proto-picker-divider" aria-hidden="true"></span>
+  <span class="proto-picker-label">Jadwal</span>
   <span class="proto-picker-group" data-axis="sched" role="group" aria-label="Jadwal">
     <span class="proto-picker-highlight" aria-hidden="true"></span>
     <button class="proto-picker-item" data-v="split">Separated</button>
     <button class="proto-picker-item" data-v="one">One sheet</button>
   </span>
-  <span class="proto-picker-divider" aria-hidden="true"></span>
-  <button class="proto-picker-item proto-picker-replay" aria-label="Replay animation (R)">↻</button>
+  <span class="proto-picker-label">Custom durasi</span>
+  <span class="proto-picker-group" data-axis="cal" role="group" aria-label="Custom durasi">
+    <span class="proto-picker-highlight" aria-hidden="true"></span>
+    <button class="proto-picker-item" data-v="calendar">Calendar</button>
+    <button class="proto-picker-item" data-v="month">Month</button>
+    <button class="proto-picker-item" data-v="count">Count</button>
+  </span>
+  <button class="proto-picker-item proto-picker-replay">↻ Reset (R)</button>
 </nav>
 <!-- PROTO:initial-state END -->
 
@@ -916,9 +964,17 @@ function successView(plan, primary) {
     <div class="done-actions"><button type="button" class="cta" data-a="${primary.a}" data-v="${primary.v || ''}" data-k="done-primary">${primary.label}</button>
     <button type="button" class="cta ghost" data-a="reset" data-k="reset">Buat rencana lain</button></div></div>`;
 }
+// Empty Rencana SIP illustration (Figma "Montase / Not Found"): layers at their Figma insets (top right bottom left, % of 225×150).
+const EMPTY_ILL = `<div class="empty-ill" aria-hidden="true">${[
+  ['layer2.svg', '39.24% 10.33% 12.32% 62.32%'], ['v0.svg', '13.61% 52.72% 58.89% 15.31%'], ['v1.svg', '8.11% 24% 63.28% 54.03%'],
+  ['v2.svg', '49.14% 53.91% 22.23% 10.42%'], ['rect.png', '5% 16.46% 0 20.21%'], ['g0.svg', '9.22% 28.68% 54.55% 49.91%'],
+  ['g1.svg', '64.33% 72.78% 28.36% 22.53%'], ['g2.svg', '65.59% 67.3% 25.22% 29.12%'], ['g3.svg', '74.02% 68.74% 16.64% 26.32%'],
+  ['g4.svg', '51.28% 22.38% 41.4% 72.93%'], ['g5.svg', '52.55% 16.89% 38.26% 79.53%'], ['g6.svg', '60.98% 18.33% 29.68% 76.73%'],
+].map(([f, inset]) => `<span style="inset:${inset}"><img src="assets/empty-plan/${f}" alt=""></span>`).join('')}</div>`;
 function plansView() {
-  if (!PLANS.length) return `<div class="empty"><div class="ic">${svg('cal', 24)}</div><b>Belum ada rencana SIP</b>
-    <p>Rencana nabung rutin yang kamu buat akan muncul di sini.</p><button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">Buat rencana</button></div>`;
+  if (!PLANS.length) return `<div class="plans-empty">${EMPTY_ILL}<div class="plans-empty-tx"><b>Belum ada rencana nabung rutin</b>
+    <p>Yuk, mulai nabung rutin dengan SIP dan tingkatkan aset investasimu secara konsisten.</p></div>
+    <button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">Mulai Nabung</button></div>`;
   // Figma 14014:19075: one card per plan (Nominal / Frekuensi / next Autodebit), then the deposit infobox.
   const FREQ = { daily: 'Harian', weekly: 'Mingguan', monthly: 'Bulanan' };
   const cell = (k, v) => `<div class="sip-cell"><span>${k}</span><b>${v}</b></div>`;
@@ -968,20 +1024,82 @@ const gainTxt = g => (g >= 0 ? '+' : '−') + usd0(Math.abs(g));
 const dir = n => n >= 0 ? 'up' : 'down';
 const FREQ_PER = { daily: 'tiap hari bursa', weekly: 'tiap minggu', monthly: 'tiap bulan' };
 const START = `${MONTHS[TODAY.getMonth()]} ${TODAY.getFullYear() - 1}`;
-const END_OPTS = [['forever', 'Sampai dihapus'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [12, '12 bulan']];
-const endVal = v => v === 'forever' ? 'forever' : +v;
+const END_OPTS = [['forever', 'Sampai dihapus'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [12, '12 bulan'], ['custom', 'Custom']];
+const endVal = v => v === 'forever' || v === 'custom' ? v : +v;
+const dShort = d => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+// Label for a saved durasi: "Sampai dihapus", "3 Bulan" or a custom end date.
+const endLabel = s => s.end == null ? 'Pilih durasi' : s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s) : s.end + ' Bulan';
+// Custom durasi: allowed range is the first purchase up to 5 years out.
+const customRange = s => { const f = firstDebit(s), min = new Date(f.getFullYear(), f.getMonth(), f.getDate()); return { min, max: addMonths(min, 60) }; };
+const allBuys = s => buyDates({ ...s, end: 'custom', endDate: customRange(s).max });
+// Saved custom durasi label: by month ("s.d. Jun 2027"), by count ("20× pembelian") or by date ("s.d. 15 Jan 2027").
+const customLabel = (s, long) => s.endKind === 'month' ? `${long ? 'Sampai' : 's.d.'} ${(long ? MONTHS_LONG : MONTHS)[s.endDate.getMonth()]} ${s.endDate.getFullYear()}`
+  : s.endKind === 'count' ? (long ? `${s.endCount} kali pembelian` : `${s.endCount}× pembelian`) : `${long ? 'Sampai' : 's.d.'} ${dShort(s.endDate)}`;
+// Seeds the draft end for the active picker style (st.calStyle): calendar date, month end, or Nth purchase.
+function customInit(st, s) {
+  const { min, max } = customRange(s);
+  if (!st.draftEndDate || st.draftEndDate < min) st.draftEndDate = addMonths(min, 3);
+  const d = st.draftEndDate;
+  if (st.calStyle === 'month') { st.draftEndDate = new Date(d.getFullYear(), d.getMonth() + 1, 0); if (st.draftEndDate > max) st.draftEndDate = max; st.calYear = st.draftEndDate.getFullYear(); }
+  if (st.calStyle === 'count') { const all = allBuys(s); st.draftCount = Math.max(1, all.filter(x => x <= d).length); st.draftEndDate = all[st.draftCount - 1]; }
+  st.calMonth = new Date(st.draftEndDate.getFullYear(), st.draftEndDate.getMonth(), 1);
+}
+// Live consequence line under the Month / Count pickers.
+function customLive(st, s) {
+  const dates = buyDates({ ...s, end: 'custom', endDate: st.draftEndDate }), amt = amtError(st.amount) ? null : parseAmt(st.amount);
+  const total = amt == null ? '' : ` · total <b>${usd(Math.round(amt * dates.length * 100) / 100)}</b>`;
+  return st.calStyle === 'count' ? `<p class="cust-live" aria-live="polite">Berakhir <b>${DAY_L[dates.at(-1).getDay()]}, ${dShort(dates.at(-1))}</b>${total}</p>`
+    : `<p class="cust-live" aria-live="polite"><b>${dates.length}×</b> pembelian${total}</p>`;
+}
+function endMonthPicker(st, s) {
+  const { min, max } = customRange(s), y = st.calYear, sel = st.draftEndDate;
+  const chips = MONTHS.map((l, m) => {
+    const off = new Date(y, m + 1, 0) < min || new Date(y, m, 1) > max, on = sel.getFullYear() === y && sel.getMonth() === m;
+    return `<button type="button" class="ochip" role="radio" aria-checked="${on}" aria-label="${MONTHS_LONG[m]} ${y}" data-a="endmonth" data-v="${y}-${m + 1}" data-k="endmonth-${y}-${m + 1}" ${off ? 'disabled' : ''}>${l}</button>`;
+  }).join('');
+  return `<div class="ecal-hd"><button type="button" class="icon-btn" data-a="calyear" data-v="-1" data-k="calyear-prev" aria-label="Tahun sebelumnya" ${y <= min.getFullYear() ? 'disabled' : ''}>${svg('back', 20)}</button>
+    <b aria-live="polite">${y}</b><button type="button" class="icon-btn" data-a="calyear" data-v="1" data-k="calyear-next" aria-label="Tahun berikutnya" ${y >= max.getFullYear() ? 'disabled' : ''}>${svg('chev', 20)}</button></div>
+    <div class="ochips mgrid" role="radiogroup" aria-label="Bulan berakhir">${chips}</div>${customLive(st, s)}`;
+}
+function endCountPicker(st, s) {
+  const n = st.draftCount, top = allBuys(s).length;
+  const quick = [10, 25, 50, 100].filter(x => x <= top).map(x => `<button type="button" class="ochip" role="radio" aria-checked="${n === x}" data-a="cnt" data-v="=${x}" data-k="cnt-${x}">${x}×</button>`).join('');
+  return `<div class="cnt"><button type="button" class="cnt-btn" data-a="cnt" data-v="-1" data-k="cnt-dec" aria-label="Kurangi satu pembelian" ${n <= 1 ? 'disabled' : ''}>−</button>
+    <output class="cnt-v" aria-live="polite">${n}× <span>pembelian</span></output>
+    <button type="button" class="cnt-btn" data-a="cnt" data-v="1" data-k="cnt-inc" aria-label="Tambah satu pembelian" ${n >= top ? 'disabled' : ''}>+</button></div>
+    <div class="ochips four" role="radiogroup" aria-label="Jumlah pembelian cepat">${quick}</div>${customLive(st, s)}`;
+}
+const customPicker = (st, s) => st.calStyle === 'month' ? endMonthPicker(st, s) : st.calStyle === 'count' ? endCountPicker(st, s) : endCal(st, s);
+const customTitle = st => st.calStyle === 'count' ? 'Jumlah pembelian' : st.calStyle === 'month' ? 'Sampai bulan' : 'Berakhir pada';
+// Custom end-date calendar: from the first purchase up to 5 years out.
+function endCal(st, s) {
+  const first = firstDebit(s), min = new Date(first.getFullYear(), first.getMonth(), first.getDate()), max = addMonths(min, 60);
+  if (!st.draftEndDate || st.draftEndDate < min) st.draftEndDate = addMonths(min, 3);
+  if (!st.calMonth) st.calMonth = new Date(st.draftEndDate.getFullYear(), st.draftEndDate.getMonth(), 1);
+  const y = st.calMonth.getFullYear(), mo = st.calMonth.getMonth(), lead = (new Date(y, mo, 1).getDay() + 6) % 7, days = new Date(y, mo + 1, 0).getDate(), sel = st.draftEndDate;
+  const prevOk = new Date(y, mo, 0) >= min, nextOk = new Date(y, mo + 1, 1) <= max;
+  const cells = Array.from({ length: lead }, () => '<span></span>').concat(Array.from({ length: days }, (_, i) => {
+    const d = new Date(y, mo, i + 1), off = d < min || d > max, on = +d === +sel;
+    return `<button type="button" class="dcell" role="radio" aria-checked="${on}" aria-label="${DAY_L[d.getDay()]}, ${dShort(d)}" data-a="enddate" data-v="${y}-${mo + 1}-${i + 1}" data-k="enddate-${y}-${mo + 1}-${i + 1}" ${off ? 'disabled' : ''}>${i + 1}</button>`;
+  }));
+  return `<div class="ecal"><div class="ecal-hd"><button type="button" class="icon-btn" data-a="calnav" data-v="-1" data-k="calnav-prev" aria-label="Bulan sebelumnya" ${prevOk ? '' : 'disabled'}>${svg('back', 20)}</button>
+    <b aria-live="polite">${MONTHS_LONG[mo]} ${y}</b><button type="button" class="icon-btn" data-a="calnav" data-v="1" data-k="calnav-next" aria-label="Bulan berikutnya" ${nextOk ? '' : 'disabled'}>${svg('chev', 20)}</button></div>
+    <div class="ecal-wd" aria-hidden="true">${['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map(x => `<span>${x}</span>`).join('')}</div>
+    <div class="dgrid ecal-grid" role="radiogroup" aria-label="Tanggal berakhir">${cells.join('')}</div></div>`;
+}
 const endShort = e => e === 'forever' ? 'sampai dihapus' : e + ' bulan';
 const endLong = s => s.end === 'forever' ? 'Sampai dihapus' : `${s.end} bulan · s.d. ${fmtDate(buyDates(s).at(-1))}`;
 function addMonths(d, n) { const r = new Date(d.getFullYear(), d.getMonth() + n, 1); r.setDate(Math.min(d.getDate(), new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate())); return r; }
 // Every purchase date of a finite plan, starting at the first debit.
 function buyDates(s) {
-  const first = firstDebit(s), stop = addMonths(first, s.end), out = [];
+  const custom = s.end === 'custom', first = firstDebit(s), out = [];
+  const stop = custom ? new Date(s.endDate.getFullYear(), s.endDate.getMonth(), s.endDate.getDate() + 1) : addMonths(first, s.end);
   if (s.freq === 'monthly') {
     // Start from the month of the scheduled (un-rolled) date, so a 31 Okt → 2 Nov roll still counts as October's buy.
     const tmr = new Date(TODAY); tmr.setDate(tmr.getDate() + 1);
     const on = (y, m) => new Date(y, m, Math.min(s.date, new Date(y, m + 1, 0).getDate()));
     let m0 = tmr.getMonth(); while (on(tmr.getFullYear(), m0) < tmr) m0++;
-    for (let i = 0; i < s.end; i++) out.push(nextTrading(on(tmr.getFullYear(), m0 + i)));
+    for (let i = 0; custom || i < s.end; i++) { const d = nextTrading(on(tmr.getFullYear(), m0 + i)); if (custom && d >= stop) break; out.push(d); }
     return out;
   }
   const step = s.freq === 'weekly' ? 7 : 1;
@@ -1070,8 +1188,9 @@ function planEnd(st) {
   const d = st.draft, cur = st.draftEnd ?? 'forever', fmt = x => `${DAY_L[x.getDay()]}, ${x.getDate()} ${MONTHS[x.getMonth()]} ${x.getFullYear()}`;
   const chips = END_OPTS.map(([v, l]) => `<button type="button" class="ochip" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</button>`).join('');
   const when = d.freq === 'daily' ? '<b>setiap hari bursa</b>, Senin–Jumat.' : d.freq === 'weekly' && d.day ? `<b>setiap hari ${DAY_L[d.day].toLowerCase()}</b>` : d.freq === 'monthly' && d.date ? `<b>setiap tanggal ${d.date}</b>` : '';
-  const last = !schedDone(d) ? '' : cur === 'forever' ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(buyDates({ ...d, end: cur }).at(-1))}</b>`;
-  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>
+  const cal = cur === 'custom' && schedDone(d) ? `<span class="lbl">${customTitle(st)}</span>${customPicker(st, d)}` : '';
+  const last = !schedDone(d) ? '' : cur === 'forever' ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(buyDates({ ...d, end: cur, endDate: st.draftEndDate }).at(-1))}</b>`;
+  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}
     <hr class="plan-hr"><ul class="plan-sum" aria-live="polite">${when ? `<li>Dibeli otomatis ${when}</li>` : ''}${last ? `<li>${last}</li>` : ''}</ul>`;
 }
 /* PROTO:initial-state END */
@@ -1110,7 +1229,7 @@ function hubBody(st) {
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
   {
     const schedLbl = !st.s.freq ? 'Pilih jadwal' : st.s.freq === 'daily' ? 'Setiap Hari' : schedShort(st.s);
-    const endLbl = st.s.end == null ? 'Pilih durasi' : st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan';
+    const endLbl = endLabel(st.s);
     const dd = (k, a, label, value) => `<button type="button" class="dd" data-a="${a}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20, 2)}</button>`;
     return `<form class="form${!stock && st.initStyle === 'row' ? ' init-row' : ''}" novalidate><div class="scroll">
       ${!stock ? pickCard(st) :
@@ -1171,10 +1290,11 @@ function endSheet(st) {
     <div class="footer sh-ft"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
 }
 const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) => {
-  const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : (() => { const last = buyDates({ ...st.s, end: v }).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; })();
+  const lastOf = sched => { const last = buyDates(sched).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; };
+  const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : v === 'custom' ? (cur === 'custom' ? lastOf({ ...st.s, end: 'custom', endDate: st.draftEndDate }) : 'Pilih sendiri tanggal berakhirnya') : lastOf({ ...st.s, end: v });
   return `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span>
     <span class="row-meta"><span class="t">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</span><span class="s">${sub}</span></span></button>`;
-}).join('')}</div>`;
+}).join('')}</div>${cur === 'custom' ? customPicker(st, st.s) : ''}`;
 const saveBtn = d => `<button type="button" class="cta" data-a="saveSched" data-k="saveSched" ${schedDone(d) ? '' : 'disabled'}>Simpan</button>`;
 
 /* ================= App engine ================= */
@@ -1232,8 +1352,7 @@ function app(V) {
       openSheet(name) {
         st.sheet = name; st.enter = 'sheet';
         if (name === 'sched' || name === 'plan') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; }
-        if (name === 'plan') st.draftEnd = st.s.end ?? 'forever'; /* PROTO:initial-state */
-        if (name === 'end') st.draftEnd = st.s.end ?? 'forever';
+        if (name === 'plan' || name === 'end') { st.draftEnd = st.s.end ?? 'forever'; st.draftEndDate = st.s.endDate || null; st.draftCount = st.s.endCount || null; st.calYear = st.draftEndDate ? st.draftEndDate.getFullYear() : null; st.calMonth = st.draftEndDate ? new Date(st.draftEndDate.getFullYear(), st.draftEndDate.getMonth(), 1) : null; }
         else if (name === 'nominal') { st.draftAmt = st.amount || '10'; st.amtErr = ''; }
         ctx.render();
         ctx.focus(name === 'nominal' && !isTouch ? '[data-amt]' : name === 'success' ? '[data-k="see-plans"]' : '[data-k="close"]');
@@ -1271,12 +1390,27 @@ function app(V) {
       freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
       day(v) { st.draft.day = +v; patchSched(); },
       date(v) { st.draft.date = +v; patchSched(); },
-      saveSched() { st.s = { ...st.draft }; st.schedErr = ''; if (st.sheet === 'plan') st.s.end = st.draftEnd ?? 'forever'; /* PROTO:initial-state */ ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
+      saveSched() { st.s = { ...st.draft }; st.schedErr = ''; if (st.sheet === 'plan') { st.s.end = st.draftEnd ?? 'forever'; st.s.endDate = st.s.end === 'custom' ? st.draftEndDate : null; st.s.endKind = st.calStyle; st.s.endCount = st.calStyle === 'count' ? st.draftCount : null; }
+        if (st.s.end === 'custom' && st.s.endKind === 'count') st.s.endDate = allBuys(st.s)[Math.min(st.s.endCount, allBuys(st.s).length) - 1]; /* PROTO:initial-state */
+        if (st.s.end === 'custom' && buyDates(st.s).length === 0) st.s.endDate = new Date(firstDebit(st.s)); ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
       end(v) { st.draft.end = endVal(v); patchSched(); },
       openEnd() { ctx.openSheet('end'); },
       openPlan() { ctx.openSheet('plan'); }, /* PROTO:initial-state */
-      endpick(v) { st.draftEnd = endVal(v); ctx.patch('[data-endlist]', st.sheet === 'plan' ? planEnd(st) : endList(st, st.draftEnd)); },
-      saveEnd() { st.s.end = st.draftEnd ?? 'forever'; st.schedErr = ''; ctx.closeSheet(() => ctx.focus('[data-k="cta"]')); },
+      endpick(v) {
+        st.draftEnd = endVal(v);
+        if (st.draftEnd === 'custom') customInit(st, st.sheet === 'plan' ? st.draft : st.s);
+        patchEnd();
+      },
+      calnav(v) { st.calMonth = new Date(st.calMonth.getFullYear(), st.calMonth.getMonth() + +v, 1); patchEnd(); },
+      calyear(v) { st.calYear += +v; patchEnd(); },
+      endmonth(v) { const [y, m] = v.split('-').map(Number), { max } = customRange(st.sheet === 'plan' ? st.draft : st.s); st.draftEndDate = new Date(y, m, 0); if (st.draftEndDate > max) st.draftEndDate = max; patchEnd(); },
+      cnt(v) {
+        const all = allBuys(st.sheet === 'plan' ? st.draft : st.s);
+        st.draftCount = Math.min(all.length, Math.max(1, v[0] === '=' ? +v.slice(1) : st.draftCount + +v));
+        st.draftEndDate = all[st.draftCount - 1]; patchEnd();
+      },
+      enddate(v) { const [y, m, d] = v.split('-').map(Number); st.draftEndDate = new Date(y, m - 1, d); patchEnd(); },
+      saveEnd() { st.s.end = st.draftEnd ?? 'forever'; st.s.endDate = st.s.end === 'custom' ? st.draftEndDate : null; st.s.endKind = st.calStyle; st.s.endCount = st.calStyle === 'count' ? st.draftCount : null; st.schedErr = ''; ctx.closeSheet(() => ctx.focus('[data-k="cta"]')); },
       key(v) {
         let a = st.draftAmt;
         if (v === 'del') a = a.slice(0, -1);
@@ -1305,7 +1439,8 @@ function app(V) {
       setCatInline(v) { st.cat = v; ctx.patch('[data-head]', V.head(st)); ctx.patch('[data-list]', V.list(st)); phone.querySelector('[data-list]').scrollTop = 0; },
       changeStock() { if (st.pages.length > 1) ctx.pop(); else { st.pages = [{ id: 'stock' }]; st.enter = 'page'; ctx.render(); } },
     };
-    function patchSched() { const plan = st.sheet === 'plan'; ctx.patch('[data-sched]', schedBody(st.draft, st, plan)); ctx.patch('[data-sched-ft]', saveBtn(st.draft)); if (plan) ctx.patch('[data-endlist]', planEnd(st)); }
+    function patchEnd() { ctx.patch('[data-endlist]', st.sheet === 'plan' ? planEnd(st) : endList(st, st.draftEnd)); }
+    function patchSched() { const plan = st.sheet === 'plan'; if (plan && st.draftEnd === 'custom' && st.calStyle === 'count' && schedDone(st.draft)) { const all = allBuys(st.draft); st.draftCount = Math.min(st.draftCount, all.length); st.draftEndDate = all[st.draftCount - 1]; } ctx.patch('[data-sched]', schedBody(st.draft, st, plan)); ctx.patch('[data-sched-ft]', saveBtn(st.draft)); if (plan) ctx.patch('[data-endlist]', planEnd(st)); }
     function syncAmt() {
       const input = phone.querySelector('[data-amt]');
       if (input) { input.setAttribute('aria-invalid', String(!!st.amtErr)); const err = phone.querySelector('[data-err]'); if (err) err.textContent = st.amtErr && !st.stockErr ? st.amtErr : ''; }
@@ -1361,7 +1496,7 @@ function app(V) {
 /* ================= Confirmation + success (Figma 13945:15637) ================= */
 const FREQ_NAME = { daily: 'Setiap Hari', weekly: 'Setiap Minggu', monthly: 'Setiap Bulan' };
 const routine = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Tanggal ' + s.date;
-const term = s => s.end === 'forever' ? 'Sampai dihapus' : `${s.end} bulan`;
+const term = s => s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s, true) : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
   : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>Beli Otomatis</button>`;
@@ -1783,10 +1918,10 @@ const figCfg = ({ ...sparkCfg, lightPage: true,
   list: slFigma2.list, head: slFigma2.head, init: st => { st.sort = 'top'; st.cat = 'all'; st.period = 1; st.figPeriod = true; } });
 /* PROTO:initial-state BEGIN — picker wiring (PICKER.md) */
 // Two independent axes: how the stock is picked × how Jadwal/Durasi are set. URL: ?pick=chips|row&sched=split|one
-const AXES = { pick: ['chips', 'row'], sched: ['split', 'one'] };
+const AXES = { pick: ['chips', 'row'], sched: ['split', 'one'], cal: ['calendar', 'month', 'count'] };
 const params = new URLSearchParams(location.search);
-const sel = { pick: AXES.pick.includes(params.get('pick')) ? params.get('pick') : 'chips', sched: AXES.sched.includes(params.get('sched')) ? params.get('sched') : 'split' };
-const build = () => app({ ...figCfg, emptySched: sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.oneSched = sel.sched === 'one'; } });
+const sel = { pick: AXES.pick.includes(params.get('pick')) ? params.get('pick') : 'chips', sched: AXES.sched.includes(params.get('sched')) ? params.get('sched') : 'split', cal: AXES.cal.includes(params.get('cal')) ? params.get('cal') : 'month' };
+const build = () => app({ ...figCfg, emptySched: sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.oneSched = sel.sched === 'one'; st.calStyle = sel.cal; } });
 const stage = document.getElementById('stage');
 const picker = document.querySelector('.proto-picker');
 const groups = [...picker.querySelectorAll('.proto-picker-group')];
@@ -1809,22 +1944,29 @@ function mount() {
 function set(axis, v) {
   sel[axis] = v; paint();
   const url = new URL(location);
-  url.searchParams.delete('v'); url.searchParams.set('pick', sel.pick); url.searchParams.set('sched', sel.sched); url.searchParams.delete('first');
+  url.searchParams.delete('v'); url.searchParams.set('pick', sel.pick); url.searchParams.set('sched', sel.sched); url.searchParams.set('cal', sel.cal); url.searchParams.delete('first');
   history.replaceState(null, '', url);
   mount();
 }
 groups.forEach(g => g.querySelectorAll('.proto-picker-item').forEach(b => b.addEventListener('click', () => set(g.dataset.axis, b.dataset.v))));
 replay?.addEventListener('click', mount);
+const fab = document.querySelector('.proto-fab');
+function setOpen(open) {
+  picker.hidden = !open; fab.setAttribute('aria-expanded', String(open));
+  if (open) { picker.removeAttribute('data-ready'); paint(); requestAnimationFrame(() => picker.setAttribute('data-ready', '')); }
+}
+fab.addEventListener('click', () => setOpen(picker.hidden));
+document.addEventListener('pointerdown', e => { if (!picker.hidden && !picker.contains(e.target) && !fab.contains(e.target)) setOpen(false); });
 window.addEventListener('resize', paint);
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !picker.hidden) { setOpen(false); fab.focus(); return; }
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  const keys = { 1: ['pick', 'chips'], 2: ['pick', 'row'], 3: ['sched', 'split'], 4: ['sched', 'one'] };
+  const keys = { 1: ['pick', 'chips'], 2: ['pick', 'row'], 3: ['sched', 'split'], 4: ['sched', 'one'], 5: ['cal', 'calendar'], 6: ['cal', 'month'], 7: ['cal', 'count'] };
   if (keys[e.key]) set(...keys[e.key]);
   else if (e.key === 'r' || e.key === 'R') mount();
 });
 paint(); mount();
-requestAnimationFrame(() => requestAnimationFrame(() => picker.setAttribute('data-ready', '')));
 /* PROTO:initial-state END */
 </script>
 </body>

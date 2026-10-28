@@ -6,6 +6,25 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Rencana SIP empty state, custom Durasi, prototype options (29 Okt 2026)
+- **Rencana SIP empty state — Figma 14115:24269:** "Montase / Not Found" illustration (225×150, Figma layers in `assets/empty-plan/`),
+  "Belum ada rencana nabung rutin" (14px bold) + "Yuk, mulai nabung rutin dengan SIP dan tingkatkan aset investasimu secara konsisten." (12px, #445B70),
+  full-width **Mulai Nabung** button back to the form; block centred in the white area. Plan cards (14014:19075) unchanged once plans exist.
+- **Durasi: Custom** as a 6th option (fills the 3×2 chip grid in One sheet; 6th radio in the separate Durasi sheet).
+  Choosing it shows "Berakhir pada" + a month calendar (Sen–Min, ‹ › month navigation). Allowed range: the first purchase date up to 5 years out;
+  earlier dates and months are disabled. Default selection: first purchase + 3 months. The last purchase is the last buy day on or before the chosen date.
+  Labels: row / card "s.d. 15 Jan 2027", confirmation "Durasi: Sampai 15 Jan 2027", radio subtitle "Pembelian terakhir …" ("Pilih sendiri tanggal berakhirnya" before choosing).
+  With the calendar open, the One sheet is taller than the screen and scrolls; the summary bullets sit below the calendar.
+- **Custom durasi picker — open exploration** (gear panel "Custom durasi", `&cal=calendar|month|count`, keys 5–7; default **Month**):
+  - **Calendar:** full month grid, day precision (above). Many taps for far dates; the One sheet scrolls about 75px.
+  - **Month:** "Sampai bulan", ‹ year › + 12 month chips (4×3); ends on the last purchase in that month; live "35× pembelian · total $350".
+    Labels "s.d. Jun 2027" / confirmation "Sampai Juni 2027". One sheet overflows by about 10px.
+  - **Count:** "Jumlah pembelian", [−] 24× pembelian [+] + quick 10× / 25× / 50× / 100× (hidden when over the 5-year max);
+    ends on the Nth purchase; live "Berakhir Senin, 30 Nov 2026 · total $240". Labels "24× pembelian" / "24 kali pembelian".
+    Keeps the count when the schedule changes (end date moves). Fits without scrolling.
+- **Prototype options** collapse into a gear button (top right); tapping it opens the options as an overlay panel
+  (Pilih saham / Jadwal + Reset). It closes on outside tap or Escape; keys 1–4 and R still work.
+
 ## Where the summary lives (28 Okt 2026)
 - **Creation page:** no summary at all; the footer is just Sumber Dana + "Mulai Nabung Rutin" (the 3-bullet info box and the one-line "Pembelian pertama" are removed).
   The One sheet keeps its short Figma bullets as live feedback while choosing.
