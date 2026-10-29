@@ -6,6 +6,39 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Durasi → Jangka Waktu (29 Okt 2026)
+- Every on-screen **Durasi** now reads **Jangka Waktu**, in every exploration. That covers row and field labels, the "Jangka Waktu Nabung" sheet title,
+  confirmation and Detail SIP rows, the error "Pilih jangka waktu terlebih dahulu", the guided CTA "Pilih Jangka Waktu", and the gear panel label.
+- Older entries in this file still say Durasi, describing what was built at the time.
+
+## Riwayat SIP improvements — beyond Figma 14067:20096 (29 Okt 2026)
+- Proposed UX, not in Figma yet; all copy here is **derived**. Applies to the Riwayat / Rencana SIP tab in every exploration.
+- **Plan card:**
+  - The whole card is tappable, with a chevron next to the status tag.
+  - A line under the cells names the real schedule and duration ("Setiap Senin & Kamis · 3 Bulan"); the Frekuensi cell alone hid custom schedules.
+  - Every-N schedules read "Tiap 2 minggu" in the Frekuensi cell.
+- **Detail SIP page:**
+  - Logo, ticker, name, Aktif / Dijeda tag, nominal "per pembelian".
+  - Rows: Jadwal Pembelian, Durasi, Pembelian berikutnya, Pembelian terakhir (when there is an end), Sumber Dana.
+  - A "3 pembelian berikutnya" list with dates + amount and the bursa-libur note.
+  - **Jeda SIP / Lanjutkan SIP** (outline) and **Hentikan SIP** (red text).
+- **Jeda:** the tag turns grey "Dijeda", Autodebit shows "—", and the detail page replaces the upcoming list with
+  "SIP sedang dijeda. Tidak ada autodebit sampai kamu lanjutkan lagi."
+- **Hentikan:** a confirmation sheet "Hentikan SIP?" explains that no more autodebit happens and the stock already bought stays.
+  On confirm the plan is removed and the app returns to Riwayat (the empty state if it was the last plan).
+
+## Stock first: Konfirmasi footer, Buat SIP, Riwayat SIP (29 Okt 2026)
+- **Atur Nabung Rutin — Figma 14143:26715 (updated):** the footer adds an infobox above Sumber Dana:
+  "Pembelian awal **Rabu, 28 Okt 2026** dan akan ditagih setiap **hari Rabu**." It updates live from the schedule.
+  The CTA reads **Konfirmasi** (it was Mulai Nabung Rutin).
+- **Konfirmasi SIP:** the CTA reads **Buat SIP** (it was Beli Otomatis). This applies to every exploration.
+- **Riwayat SIP — Figma 14067:20096:**
+  - Stock first: after **Buat SIP**, the app lands on the Riwayat SIP tab instead of the success sheet.
+    A green "Berhasil membuat SIP" alert sits above a sticky **Buat SIP baru** button (back to the list); it hides after 5 s or on ×.
+  - Plan cards use the 24px brand logos where available, in every exploration.
+  - Tab names stay **Buat SIP Baru / Riwayat SIP** from 14148:26959. This frame still shows Mulai Nabung / Rencana SIP (1).
+  - The other explorations keep the success sheet.
+
 ## Confirmation without totals — Figma 14141:23531 (29 Okt 2026)
 - Removed **Jumlah pembelian** and **Total dana** (and "Total dana per bulan") from Konfirmasi SIP for now. This applies to every exploration.
 - Rows now: **Jadwal Pembelian**, Durasi, Pembelian pertama, Pembelian terakhir (only when there is an end; none for Sampai dihapus),

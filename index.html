@@ -604,7 +604,26 @@ h1, h2, h3, p { margin: 0; }
 .sip-hd { display: flex; flex-direction: column; gap: 4px; }
 .sip-hd h2 { font-size: 14px; line-height: 20px; font-weight: 700; }
 .sip-hd p { font-size: 12px; line-height: 16px; color: #445b70; }
-.sip-card { display: flex; flex-direction: column; gap: 16px; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; background: #fff; }
+.sip-card { display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out, transform .16s var(--ease-out); }
+.sip-card:active { background: #fafbfb; transform: scale(.99); }
+.sip-card-hd > svg { flex: none; margin-left: 4px; color: rgba(0, 0, 0, 0.48); }
+.sip-sub { font-size: 12px; line-height: 16px; color: #445b70; }
+.sip-badge.off { background: rgba(0, 0, 0, 0.06); color: rgba(0, 0, 0, 0.65); }
+.sip-det { display: flex; flex-direction: column; gap: 16px; padding: 0 16px 16px; }
+.sip-det .cf-hero .sip-badge { margin: 6px 0 4px; }
+.sip-det .cf-amt { font-size: 32px; line-height: 40px; font-weight: 700; }
+.sip-next { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; }
+.sip-next h2 { font-size: 14px; line-height: 20px; font-weight: 700; }
+.sip-next ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.sip-next li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; line-height: 20px; border-top: 1px solid #f0f2f3; }
+.sip-next li:first-child { border-top: 0; }
+.sip-next li b { font-variant-numeric: tabular-nums; }
+.sip-det-ft { gap: 4px; }
+.cta.sec { background: #fff; color: var(--primary-text); box-shadow: inset 0 0 0 1px #3278f0; }
+.cta.sec:active:not(:disabled) { background: rgba(50, 120, 240, 0.08); }
+.cta.ghost.danger { color: var(--danger); }
+.cta.danger-fill { background: var(--danger); }
+.cta.danger-fill:active:not(:disabled) { filter: brightness(.9); }
 .sip-card-hd { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--text); }
 .sip-badge { margin-left: auto; padding: 0 4px; border-radius: 4px; background: #e1f2fa; color: #3a83f9; font-size: 10px; line-height: 16px; }
 .sip-cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -741,6 +760,18 @@ h1, h2, h3, p { margin: 0; }
 .sf-white { padding: 16px; }
 .sf-white .dd-group { margin: 0; }
 .sf-white .sched-err { margin-top: 8px; }
+.sf-info { padding: 12px; border: 1px solid rgba(0, 0, 0, 0.04); border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sf-info b { font-weight: 700; color: #000; }
+.sip-ft { margin-top: auto; }
+.sip-ft .cta { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.sip-ft .cta img { flex: none; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 100%; display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid #2f9d5b; border-radius: 12px; background: #fff;
+  box-shadow: 0 8px 16px -4px rgba(96, 122, 141, 0.15); font-size: 14px; line-height: 20px; color: #06090d; animation: toast-in .25s var(--ease-out); }
+.toast span { flex: 1; }
+.toast .icon-btn { position: relative; width: 20px; height: 20px; color: #06090d; }
+.toast .icon-btn::before { content: ""; position: absolute; inset: -12px; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
 .sh-ds .cs-grp { display: flex; flex-direction: column; gap: 8px; }
 .sh-ds .cs-l { font-size: 12px; line-height: 1.35; font-weight: 700; color: #000; }
 .sh-ds .cs-rest { display: flex; flex-direction: column; gap: 16px; }
@@ -852,8 +883,8 @@ h1, h2, h3, p { margin: 0; }
     <button class="proto-picker-item" data-v="preset">Preset</button>
     <button class="proto-picker-item" data-v="full">Semua opsi</button>
   </span>
-  <span class="proto-picker-label">Custom durasi</span>
-  <span class="proto-picker-group" data-axis="cal" role="group" aria-label="Custom durasi">
+  <span class="proto-picker-label">Custom jangka waktu</span>
+  <span class="proto-picker-group" data-axis="cal" role="group" aria-label="Custom jangka waktu">
     <span class="proto-picker-highlight" aria-hidden="true"></span>
     <button class="proto-picker-item" data-v="calendar">Calendar</button>
     <button class="proto-picker-item" data-v="month">Month</button>
@@ -1061,7 +1092,7 @@ function reviewList(plan) {
     <div><dt>Nominal</dt><dd>${usd(parseAmt(plan.amount))} / pembelian</dd></div>
     <div><dt>Jadwal</dt><dd>${schedText(plan.s)}</dd></div>
     <div><dt>Pembelian pertama</dt><dd>${fmtDate(firstDebit(plan.s))}</dd></div>
-    <div><dt>Durasi</dt><dd>${endLong(plan.s)}</dd></div>
+    <div><dt>Jangka Waktu</dt><dd>${endLong(plan.s)}</dd></div>
     ${plan.s.end === 'forever' ? `<div><dt>Estimasi per bulan</dt><dd>${perMonth(plan.s, plan.amount)}</dd></div>`
       : `<div><dt>Total ${buyDates(plan.s).length} pembelian</dt><dd>${usd(buyDates(plan.s).length * parseAmt(plan.amount))}</dd></div>`}</dl>`;
 }
@@ -1079,19 +1110,49 @@ const EMPTY_ILL = `<div class="empty-ill" aria-hidden="true">${[
   ['g1.svg', '64.33% 72.78% 28.36% 22.53%'], ['g2.svg', '65.59% 67.3% 25.22% 29.12%'], ['g3.svg', '74.02% 68.74% 16.64% 26.32%'],
   ['g4.svg', '51.28% 22.38% 41.4% 72.93%'], ['g5.svg', '52.55% 16.89% 38.26% 79.53%'], ['g6.svg', '60.98% 18.33% 29.68% 76.73%'],
 ].map(([f, inset]) => `<span style="inset:${inset}"><img src="assets/empty-plan/${f}" alt=""></span>`).join('')}</div>`;
-function plansView() {
+function plansView(st) {
   if (!PLANS.length) return `<div class="plans-empty">${EMPTY_ILL}<div class="plans-empty-tx"><b>Belum ada rencana nabung rutin</b>
     <p>Yuk, mulai nabung rutin dengan SIP dan tingkatkan aset investasimu secara konsisten.</p></div>
     <button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">Mulai Nabung</button></div>`;
   // Figma 14014:19075: one card per plan (Nominal / Frekuensi / next Autodebit), then the deposit infobox.
-  const FREQ = { daily: 'Harian', weekly: 'Mingguan', monthly: 'Bulanan' };
-  const cell = (k, v) => `<div class="sip-cell"><span>${k}</span><b>${v}</b></div>`;
+  const cell = (k, v) => `<span class="sip-cell"><span>${k}</span><b>${v}</b></span>`;
   return `<div class="scroll sip-plans"><div class="sip-hd"><h2>Rencana SIP kamu</h2><p>Pembelian nabung rutin dengan SIP dilakukan saat market Saham AS buka (21.30 WIB).</p></div>
-    ${PLANS.map(p => { const d = firstDebit(p.s); return `<article class="sip-card"><div class="sip-card-hd">${logo(p.stock, 'sm')}<b>${p.stock.t}</b><span class="sip-badge">Aktif</span></div>
-      <div class="sip-cells">${cell('Nominal', usd(parseAmt(p.amount)))}${cell('Frekuensi', FREQ[p.s.freq])}${cell('Autodebit', `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`)}</div></article>`; }).join('')}
+    ${PLANS.map((p, i) => { const d = firstDebit(p.s); return `<button type="button" class="sip-card" data-a="openSip" data-v="${i}" data-k="sip-${i}" aria-label="Detail SIP ${p.stock.t}">
+      <span class="sip-card-hd">${sipLogo(p.stock)}<b>${p.stock.t}</b>${sipBadge(p)}${svg('chev', 20)}</span>
+      <span class="sip-cells">${cell('Nominal', usd(parseAmt(p.amount)))}${cell('Frekuensi', freqName(p.s))}${cell('Autodebit', p.paused ? '—' : `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`)}</span>
+      <span class="sip-sub">${routine(p.s)} · ${term(p.s).replace('bulan', 'Bulan')}</span></button>`; }).join('')}
     <div class="sip-info">${svg('info', 20)}<div><p>Agar autodebit SIP berjalan lancar, pastikan dana di Rekening Saham AS mencukupi.</p>
-      <button type="button" class="tlink" data-k="deposit">Deposit Rekening Saham AS</button></div></div></div>`;
+      <button type="button" class="tlink" data-k="deposit">Deposit Rekening Saham AS</button></div></div></div>
+    ${st?.stockFirst ? sipFooter(st) : ''}`;
 }
+/* ---- Riwayat SIP improvements (beyond Figma 14067:20096): tappable cards, schedule line, Detail SIP page, pause / stop ---- */
+const FREQ_N = { daily: ['Harian', 'hari'], weekly: ['Mingguan', 'minggu'], monthly: ['Bulanan', 'bulan'] };
+const freqName = s => (s.every || 1) > 1 ? `Tiap ${s.every} ${FREQ_N[s.freq][1]}` : FREQ_N[s.freq][0];
+const sipLogo = x => BRAND_LOGO.has(x.t) ? chipLogo(x) : logo(x, 'sm');
+const sipBadge = p => p.paused ? '<span class="sip-badge off">Dijeda</span>' : '<span class="sip-badge">Aktif</span>';
+function sipDetail(st, i) {
+  const p = PLANS[i]; if (!p) return { title: 'Detail SIP', body: '' };
+  const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`, forever = p.s.end === 'forever';
+  const all = buyDates({ ...p.s, end: forever ? 12 : p.s.end }), next = all.slice(0, 3);
+  const rows = [['Jadwal Pembelian', routine(p.s)], ['Jangka Waktu', term(p.s).replace('bulan', 'Bulan')], ['Pembelian berikutnya', p.paused ? 'Dijeda' : long(all[0])],
+    ...(forever ? [] : [['Pembelian terakhir', long(all.at(-1))]]), ['Sumber Dana', 'Rekening Saham AS', 'cf-src']];
+  return { title: 'Detail SIP', body: `<div class="scroll sip-det">
+    <div class="cf-hero">${lg40(p.stock)}<span class="t">${p.stock.t}</span><span class="s">${esc(p.stock.n)}</span>${sipBadge(p)}
+      <span class="cf-amt">${usd(parseAmt(p.amount))}</span><span class="s">per pembelian</span></div>
+    <dl class="cf-rows">${rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    ${p.paused ? `<div class="sip-info">${svg('info', 20)}<div><p>SIP sedang dijeda. Tidak ada autodebit sampai kamu lanjutkan lagi.</p></div></div>`
+      : `<section class="sip-next" aria-label="Pembelian berikutnya"><h2>${next.length} pembelian berikutnya</h2><ol>${next.map(d => `<li><span>${long(d)}</span><b>${usd(parseAmt(p.amount))}</b></li>`).join('')}</ol>
+      <p class="cf-note">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</p></section>`}
+    </div><div class="footer sip-det-ft">
+      <button type="button" class="cta sec" data-a="pauseSip" data-v="${i}" data-k="pause-sip">${p.paused ? 'Lanjutkan SIP' : 'Jeda SIP'}</button>
+      <button type="button" class="cta ghost danger" data-a="askStop" data-v="${i}" data-k="stop-sip">Hentikan SIP</button></div>` };
+}
+const stopSheet = st => { const p = PLANS[st.stopI]; return { title: 'Hentikan SIP?', fit: true, cls: 'sh-ds', body: `<div class="sheet-body"><p class="snote">SIP <b>${p.stock.t}</b> ${usd(parseAmt(p.amount))} ${routine(p.s).toLowerCase()} akan dihentikan dan tidak ada autodebit lagi. Saham yang sudah dibeli tetap ada di portofoliomu.</p></div>
+  <div class="footer sh-ft"><button type="button" class="cta danger-fill" data-a="stopSip" data-k="stop-yes">Hentikan SIP</button><button type="button" class="cta ghost" data-a="close" data-k="stop-no">Batal</button></div>` }; };
+/* PROTO:initial-state — Riwayat SIP (Figma 14067:20096): sticky "Buat SIP baru" + "Berhasil membuat SIP" alert (~5 s) after creating a plan */
+const sipFooter = st => `<div class="footer sip-ft">${st.toast ? `<div class="toast" role="status"><img src="assets/ic-success-20.svg" width="20" height="20" alt=""><span>Berhasil membuat SIP</span>
+    <button type="button" class="icon-btn" data-a="toastX" data-k="toast-x" aria-label="Tutup">${svg('close', 20)}</button></div>` : ''}
+  <button type="button" class="cta" data-a="tab" data-v="new" data-k="new-sip"><img src="assets/ic-auto-sip-20.svg" width="20" height="20" alt="">Buat SIP baru</button></div>`;
 
 const baseState = () => ({ stockErr: false, schedErr: '', stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
 
@@ -1147,7 +1208,7 @@ const END_PRESET = ['forever', 6, 12, 'custom'];
 const endOpts = st => st.simpleSched ? END_OPTS.filter(([v]) => END_PRESET.includes(v)) : END_OPTS;
 const dShort = d => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 // Label for a saved durasi: "Sampai dihapus", "3 Bulan" or a custom end date.
-const endLabel = s => s.end == null ? 'Pilih durasi' : s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s) : s.end + ' Bulan';
+const endLabel = s => s.end == null ? 'Pilih jangka waktu' : s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s) : s.end + ' Bulan';
 // Custom durasi: allowed range is the first purchase up to 5 years out.
 const customRange = s => { const f = firstDebit(s), min = new Date(f.getFullYear(), f.getMonth(), f.getDate()); return { min, max: addMonths(min, 60) }; };
 const allBuys = s => buyDates({ ...s, end: 'custom', endDate: customRange(s).max });
@@ -1238,7 +1299,7 @@ function endPreview(s, amt) {
   const d = buyDates(s), a = parseAmt(amt);
   return `<b>${d.length} pembelian</b>, terakhir <b>${fmtDate(d.at(-1))}</b>${isNaN(a) ? '' : ` · total <b>${usd(d.length * a)}</b>`}`;
 }
-const endChips = (sel, action) => `<div class="quick" role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) =>
+const endChips = (sel, action) => `<div class="quick" role="radiogroup" aria-label="Jangka Waktu">${END_OPTS.map(([v, l]) =>
   `<button type="button" class="qchip" role="radio" aria-checked="${sel === v}" data-a="${action}" data-v="${v}" data-k="${action}-${v}">${l}</button>`).join('')}</div>`;
 const startLabel = months => { const d = addMonths(TODAY, -months); return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`; };
 const DISC = 'Simulasi memakai harga historis 1 tahun terakhir dan belum termasuk biaya transaksi. Kinerja masa lalu tidak menjamin hasil di masa depan.';
@@ -1299,7 +1360,7 @@ const planRow = (st, schedLbl, endLbl) => {
   // Filled: summary card with Ubah (Figma 14111:23123); the whole card opens the sheet.
   if (schedDone(st.s) && st.s.end != null) return `<button type="button" class="plan-card" data-a="openPlan" data-k="row-plan" aria-haspopup="dialog">
     <span class="plan-hd"><img src="assets/ic-auto-plan-20.svg" width="20" height="20" alt=""><span class="t">Jadwal Nabung Rutin</span><span class="ubah">Ubah</span></span>
-    <span class="plan-kv"><span>Frekuensi</span><b>${schedLbl}</b></span><span class="plan-kv"><span>Durasi</span><b>${endLbl}</b></span></button>`;
+    <span class="plan-kv"><span>Frekuensi</span><b>${schedLbl}</b></span><span class="plan-kv"><span>Jangka Waktu</span><b>${endLbl}</b></span></button>`;
   return `<button type="button" class="plan-row" data-a="openPlan" data-k="row-plan" aria-haspopup="dialog"><img src="assets/ic-auto-plan-20.svg" width="20" height="20" alt="">
     <span class="t">Tentukan jadwal Nabung Rutin</span><img src="assets/ic-chevron-right.svg" width="20" height="20" alt=""></button>`;
 };
@@ -1319,7 +1380,7 @@ function planEnd(st) {
   const last = !schedDone(d) ? '' : !dates ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(dates.at(-1))}</b>`;
   // Count and total for a fixed duration (Figma 14111:21744); "Sampai dihapus" has no end, so no total.
   const tot = dates ? `<p class="plan-tot" aria-live="polite"><b>${dates.length}x</b> pembelian${amt > 0 ? ` • Total <b>${usd(Math.round(amt * dates.length * 100) / 100)}</b>` : ''}</p>` : '';
-  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips ${st.simpleSched ? 'two' : 'three'}" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}${tot}
+  return `<span class="lbl" id="dur-l">Jangka Waktu</span><div class="ochips ${st.simpleSched ? 'two' : 'three'}" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}${tot}
     <hr class="plan-hr"><ul class="plan-sum" aria-live="polite">${when ? `<li>Dibeli otomatis ${when}</li>` : ''}${last ? `<li>${last}</li>` : ''}</ul>`;
 }
 /* PROTO:initial-state END */
@@ -1328,7 +1389,7 @@ const pickRow = st => `<button type="button" class="pick-row" data-a="openStock"
   <span class="t">Pilih saham untuk nabung rutin</span><img src="assets/search-24.svg" width="24" height="24" alt=""></button>${pickErr(st)}`;
 /* PROTO:initial-state END */
 function hubBody(st) {
-  if (st.tab === 'plans') return plansView();
+  if (st.tab === 'plans') return plansView(st);
   if (st.done) return successView(st.done, { a: 'tab', v: 'plans', label: 'Lihat Rencana SIP' });
   if (st.stockFirst) return sfList(st); /* PROTO:initial-state */
   const stock = byT(st.stock), amtOk = !!st.amount && !amtError(st.amount), sd = schedDone(st.s);
@@ -1369,7 +1430,7 @@ function hubBody(st) {
         <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
         <p class="err" id="amt-h-err" data-err>${st.amtErr && !st.stockErr ? st.amtErr : ''}</p>
         ${quickChips(parseAmt(st.amount))}</div>
-      ${st.oneSched ? planRow(st, schedLbl, endLbl) /* PROTO:initial-state */ : `<div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLbl)}</div>`}
+      ${st.oneSched ? planRow(st, schedLbl, endLbl) /* PROTO:initial-state */ : `<div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Jangka Waktu', endLbl)}</div>`}
       ${st.schedErr && !st.stockErr && !st.amtErr ? `<p class="err sched-err" role="alert">${st.schedErr}</p>` : ''}
       </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
   }
@@ -1377,13 +1438,14 @@ function hubBody(st) {
   return `<form class="form" novalidate><div class="scroll">${stockBlock}
     ${!show(2) ? '' : row('nominal', 'openNominal', !!stock, 2, amtOk, amtOk ? usd(parseAmt(st.amount)) : 'Tentukan nominal', '', 'Nominal pembelian')}
     ${!show(3) ? '' : row('sched', 'openSched', amtOk, 3, sd, sd ? schedShort(st.s) : 'Jadwal pembelian', '', 'Jadwal nabung rutin')}
-    ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Durasi', '', 'Durasi')}
+    ${!show(4) ? '' : row('end', 'openEnd', sd, 4, endOk, endOk ? (st.s.end === 'forever' ? 'Sampai dihapus' : st.s.end + ' Bulan') : 'Jangka Waktu', '', 'Jangka Waktu')}
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>`;
 }
 // The plan summary (dates, count, total) lives on the confirmation sheet, not on the creation page.
 // Info box and Sumber Dana only appear once the plan is complete; the button is always there.
-const NEXT_STEP = [['openStock', 'Pilih Saham'], ['openNominal', 'Atur Nominal'], ['openSched', 'Atur Jadwal'], ['openEnd', 'Pilih Durasi']];
+const NEXT_STEP = [['openStock', 'Pilih Saham'], ['openNominal', 'Atur Nominal'], ['openSched', 'Atur Jadwal'], ['openEnd', 'Pilih Jangka Waktu']];
 const hubFooter = st => {
+  if (st.stockFirst) return sfFooter(st); /* PROTO:initial-state */
   const ok = ready(st.stock, st.s, st.amount);
   if (!ok && st.initMode === 'guided') {
     const i = !st.stock ? 0 : (!st.amount || amtError(st.amount)) ? 1 : !schedDone(st.s) ? 2 : 3;
@@ -1432,10 +1494,10 @@ const schedBody = (d, st, plan = false) => {
 };
 function endSheet(st) {
   const cur = st.draftEnd ?? 'forever';
-  return { title: 'Durasi Nabung', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-endlist>${endList(st, cur)}</div>
+  return { title: 'Jangka Waktu Nabung', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-endlist>${endList(st, cur)}</div>
     <div class="footer sh-ft"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
 }
-const endList = (st, cur) => st.stockFirst ? sfEndList(cur) /* PROTO:initial-state */ : `<div role="radiogroup" aria-label="Durasi">${endOpts(st).map(([v, l]) => {
+const endList = (st, cur) => st.stockFirst ? sfEndList(cur) /* PROTO:initial-state */ : `<div role="radiogroup" aria-label="Jangka Waktu">${endOpts(st).map(([v, l]) => {
   const lastOf = sched => { const last = buyDates(sched).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; };
   const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : v === 'custom' ? (cur === 'custom' ? lastOf({ ...st.s, end: 'custom', endDate: st.draftEndDate }) : 'Pilih sendiri tanggal berakhirnya') : lastOf({ ...st.s, end: v });
   return `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span>
@@ -1460,13 +1522,13 @@ function app(V) {
       let html = statusBar(top >= 0 && V.lightPage);
       html += `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header('SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
       html += st.pages.map((p, i) => {
-        const pg = V.page(p, st);
+        const pg = p.id === 'sip' ? sipDetail(st, p.i) : V.page(p, st);
         return `<div class="page ${st.enter === 'page' && i === top ? 'enter' : ''}" ${i < top || st.sheet ? 'inert' : ''} role="dialog" aria-label="${esc(pg.title)}">
           <div class="page-top ${V.lightPage ? 'light' : ''}"><div class="hd"><button type="button" class="icon-btn" data-a="pop" data-k="pop-${i}" aria-label="Kembali">${svg('back', 24, 2)}</button><h1>${esc(pg.title)}</h1></div></div>
           <div class="page-body">${pg.body}</div></div>`;
       }).join('');
       if (st.sheet) {
-        const sh = st.sheet === 'csched' ? cschedSheet(st) /* PROTO:initial-state */ : st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'plan' ? planSheet(st) /* PROTO:initial-state */ : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
+        const sh = st.sheet === 'stop' ? stopSheet(st) : st.sheet === 'csched' ? cschedSheet(st) /* PROTO:initial-state */ : st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'plan' ? planSheet(st) /* PROTO:initial-state */ : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
         html += `<div class="overlay ${st.enter === 'sheet' ? 'enter' : ''}"><div class="backdrop" data-a="close" aria-hidden="true"></div>
           <div class="sheet ${sh.fit ? 'fit' : ''} ${sh.cls || ''}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab" aria-hidden="true"></div>
           ${sh.bare ? `<h2 id="sh-t" class="sr-only">${sh.title}</h2>` : sh.closeLeft
@@ -1526,11 +1588,19 @@ function app(V) {
         setTimeout(() => {
           PLANS.unshift({ stock: byT(st.stock), s: { ...st.s }, amount: st.amount });
           st.submitting = false; st.created = PLANS[0];
+          if (st.stockFirst) return ctx.closeSheet(() => { /* PROTO:initial-state */
+            Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null, toast: true }); ctx.render(); ctx.focus('[data-k="new-sip"]');
+            clearTimeout(st.toastT); st.toastT = setTimeout(() => { st.toast = false; phone.querySelector('.toast')?.remove(); }, 5000);
+          });
           ctx.closeSheet(() => ctx.openSheet('success'));
         }, 900);
       },
       seePlans() { ctx.closeSheet(() => { Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null }); ctx.render(); ctx.focus('[data-k="tab-plans"]'); }); },
       openStock() { st.q = ''; ctx.push({ id: 'stock' }); },
+      openSip(v) { ctx.push({ id: 'sip', i: +v }); },
+      pauseSip(v) { const p = PLANS[+v]; p.paused = !p.paused; ctx.render(); ctx.focus('[data-k="pause-sip"]'); },
+      askStop(v) { st.stopI = +v; ctx.openSheet('stop'); },
+      stopSip() { PLANS.splice(st.stopI, 1); ctx.closeSheet(() => ctx.pop(() => ctx.focus('[data-k="tab-plans"]'))); },
       openNominal() { V.openNominal(ctx); },
       openSched() { ctx.openSheet('sched'); },
       freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
@@ -1615,7 +1685,7 @@ function app(V) {
       const err = amtError(st.amount);
       if (err) { st.amtErr = err; ctx.render(); ctx.focus('#amt-h'); return; }
       const noSched = !schedDone(st.s);
-      st.schedErr = st.oneSched ? 'Tentukan jadwal nabung rutin terlebih dahulu' : noSched ? 'Pilih jadwal nabung rutin terlebih dahulu' : 'Pilih durasi terlebih dahulu';
+      st.schedErr = st.oneSched ? 'Tentukan jadwal nabung rutin terlebih dahulu' : noSched ? 'Pilih jadwal nabung rutin terlebih dahulu' : 'Pilih jangka waktu terlebih dahulu';
       ctx.render(); ctx.focus(st.oneSched ? '[data-k="row-plan"]' : noSched ? '[data-k="row-sched"]' : '[data-k="row-end"]');
     }
     ctx.submit = () => { st.agree = false; st.terms = false; ctx.openSheet('confirm'); };
@@ -1657,7 +1727,7 @@ const routine = s => s.freq === 'monthly' && s.mmode !== 'lastwd' ? 'Setiap T' +
 const term = s => s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s, true) : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
-  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>Beli Otomatis</button>`;
+  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>Buat SIP</button>`;
 const termsBox = st => st.terms ? `<ul class="terms">
   <li>Rekening Saham AS didebit otomatis sesuai jadwal. Pastikan saldo cukup sebelum hari pembelian.</li>
   <li>Pembelian memakai harga pasar saat order dieksekusi, jadi jumlah lembar bisa berbeda tiap pembelian.</li>
@@ -1668,7 +1738,7 @@ function confirmSheet(st) {
   const dates = upcoming(plan);
   const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   // Figma 14141:23531: no Jumlah pembelian / Total dana for now; no Pembelian terakhir row for Sampai dihapus.
-  const rows = [['Jadwal Pembelian', routine(plan)], ['Durasi', term(plan).replace('bulan', 'Bulan')], ['Pembelian pertama', long(dates[0])],
+  const rows = [['Jadwal Pembelian', routine(plan)], ['Jangka Waktu', term(plan).replace('bulan', 'Bulan')], ['Pembelian pertama', long(dates[0])],
     ...(forever ? [] : [['Pembelian terakhir', long(dates.at(-1))]]), ['Sumber Dana', 'Rekening Saham AS', 'cf-src']];
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
     <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(amt)}</span><span class="s">per pembelian</span></div>
@@ -1868,7 +1938,7 @@ function confirmStats(st) {
   const tile = (k, v, sub) => `<div class="stat"><span class="hint">${k}</span><span class="v">${v}</span>${sub ? `<span class="hint">${sub}</span>` : ''}</div>`;
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
     ${cfStock(s)}
-    <div class="stats3">${tile('Per pembelian', usd(a), FREQ_NAME[p.freq].toLowerCase())}${tile('Per bulan', '≈ ' + usd(Math.round(perMonthNum(p, a))), p.freq === 'daily' ? '±21 hari bursa' : `${p.freq === 'weekly' ? '±' : ''}${Math.round(perMo(p))} kali`)}${finite ? tile(`Total ${p.end} bulan`, usd(d.length * a), d.length + ' pembelian') : tile('Durasi', 'Terus', 'sampai dihapus')}</div>
+    <div class="stats3">${tile('Per pembelian', usd(a), FREQ_NAME[p.freq].toLowerCase())}${tile('Per bulan', '≈ ' + usd(Math.round(perMonthNum(p, a))), p.freq === 'daily' ? '±21 hari bursa' : `${p.freq === 'weekly' ? '±' : ''}${Math.round(perMo(p))} kali`)}${finite ? tile(`Total ${p.end} bulan`, usd(d.length * a), d.length + ' pembelian') : tile('Jangka Waktu', 'Terus', 'sampai dihapus')}</div>
     ${miniCal(p)}
     <dl class="cf-rows"><div><dt>Mulai</dt><dd>${fmtLong(d[0])}</dd></div>${finite ? `<div><dt>Berakhir</dt><dd>${fmtLong(d.at(-1))}</dd></div>` : ''}<div><dt>Sumber Dana</dt><dd>Rekening Saham AS</dd></div></dl>
     ${cfAgree(st)}</div>${cfFoot(st)}` };
@@ -1877,7 +1947,7 @@ function confirmStats(st) {
 
 /* ================= Hub info-box explorations ================= */
 const infoReady = st => byT(st.stock) && schedDone(st.s) && st.s.end != null;
-const infoEmpty = () => `<div class="info">${svg('cal', 16)}<span>Pilih saham, nominal, jadwal, dan durasi untuk melihat kapan rekeningmu didebit.</span></div>`;
+const infoEmpty = () => `<div class="info">${svg('cal', 16)}<span>Pilih saham, nominal, jadwal, dan jangka waktu untuk melihat kapan rekeningmu didebit.</span></div>`;
 const shortDate = d => `${d.getDate()} ${MONTHS[d.getMonth()]}${d.getFullYear() !== TODAY.getFullYear() ? ' ' + d.getFullYear() : ''}`;
 
 // 2 · Key facts
@@ -2101,12 +2171,14 @@ function sfPage(st) {
       <div class="sf-nom"><label for="amt-h">Nominal Nabung Rutin <b>${x.t}</b></label>
         <div class="big-amt sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
         <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
-    <div class="sf-white"><div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLabel(st.s))}</div>
+    <div class="sf-white"><div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Jangka Waktu', endLabel(st.s))}</div>
       ${st.schedErr && !st.amtErr ? `<p class="err sched-err" role="alert">${st.schedErr}</p>` : ''}</div>
     </div><div class="footer" data-footer>${hubFooter(st)}</div></form>` };
 }
+// Footer (14143:26715): first purchase + schedule infobox, Sumber Dana, Konfirmasi.
+const sfFooter = st => `${schedDone(st.s) ? `<div class="sf-info">Pembelian awal <b>${DAY_LONG_DATE(firstDebit(st.s))}</b> dan akan ditagih setiap <b>${st.s.freq === 'weekly' && !isRule(st.s) ? 'hari ' : ''}${whenTxt(st.s)}</b>.</div>` : ''}${fund()}${cta(true, st.submitting, 'Konfirmasi')}`;
 // Durasi Nabung (14148:28280): plain radios, no Custom.
-const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Durasi">${END_OPTS.filter(([v]) => v !== 'custom').map(([v, l]) =>
+const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Jangka Waktu">${END_OPTS.filter(([v]) => v !== 'custom').map(([v, l]) =>
   `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</span></button>`).join('')}</div>`;
 // Custom Jadwal (14148:27684 / 28056 / 28175): "Beli setiap [n] [Hari|Minggu|Bulan]", then weekdays or a monthly rule.
 const CS_DATE = TODAY.getDate(), CS_WD = TODAY.getDay();
@@ -2130,6 +2202,7 @@ const cschedSheet = st => ({ title: 'Custom Jadwal', fit: true, cls: 'sh-ds', ba
   <div class="cs-rest" data-cs>${csRest(st)}</div></div>
   <div class="footer sh-ft" data-sched-ft>${saveBtn(st.draft)}</div>` });
 const SF_ACT = {
+  toastX(_, ctx) { ctx.st.toast = false; ctx.phone.querySelector('.toast')?.remove(); ctx.focus('[data-k="new-sip"]'); },
   sfCat(v, ctx) { ctx.st.sfCat = v; ctx.st.q = ''; const i = ctx.phone.querySelector('[data-search]'); if (i) i.value = '';
     ctx.phone.querySelectorAll('[data-a="sfCat"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v))); ctx.patch('[data-list]', sfRows(ctx.st)); },
   openCustom(_, ctx) { const st = ctx.st; st.draft.preset = 'custom'; st.draft.every ||= 1; st.sheet = 'csched'; ctx.render(); ctx.focus('[data-k="sh-back"]'); },
