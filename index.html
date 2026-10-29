@@ -621,6 +621,8 @@ h1, h2, h3, p { margin: 0; }
 .sel-top { display: flex; align-items: center; gap: 12px; padding: 12px 4px 12px 12px; }
 .sel-top .t { font-size: 16px; line-height: 20px; }
 .sel-card .pot-pill { margin: 0; border-radius: 0; }
+/* Same "Ubah" link as the Jadwal Nabung Rutin card; padding keeps a 44px tap target. */
+.sel-ubah { flex: none; align-self: stretch; min-width: 44px; padding: 0 8px; border: 0; background: transparent; font: inherit; font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; cursor: pointer; }
 .inl-nom { display: flex; flex-direction: column; gap: 6px; padding: 24px 16px 0; }
 .inl-nom label { font-size: 14px; line-height: 19px; font-weight: 700; margin-bottom: 2px; }
 .amt.inl input { height: 40px; border: 1px solid transparent; border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 16px; font-weight: 700; padding-left: 18px; }
@@ -691,6 +693,8 @@ h1, h2, h3, p { margin: 0; }
 .plan-hr { height: 1px; margin: 0; border: 0; background: rgba(0, 0, 0, 0.1); }
 .plan-sum { margin: 0; padding-left: 21px; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
 .plan-sum b { font-weight: 700; color: #000; }
+.plan-tot { margin: 0; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); font-variant-numeric: tabular-nums; }
+.plan-tot b { font-weight: 700; color: #000; }
 .ecal-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .ecal-hd b { font-size: 14px; line-height: 1.35; }
 .ecal-hd .icon-btn { width: 36px; height: 36px; color: #000; }
@@ -1035,9 +1039,11 @@ const endLabel = s => s.end == null ? 'Pilih durasi' : s.end === 'forever' ? 'Sa
 // Custom durasi: allowed range is the first purchase up to 5 years out.
 const customRange = s => { const f = firstDebit(s), min = new Date(f.getFullYear(), f.getMonth(), f.getDate()); return { min, max: addMonths(min, 60) }; };
 const allBuys = s => buyDates({ ...s, end: 'custom', endDate: customRange(s).max });
-// Saved custom durasi label: by month ("s.d. Jun 2027"), by count ("20× pembelian") or by date ("s.d. 15 Jan 2027").
-const customLabel = (s, long) => s.endKind === 'month' ? `${long ? 'Sampai' : 's.d.'} ${(long ? MONTHS_LONG : MONTHS)[s.endDate.getMonth()]} ${s.endDate.getFullYear()}`
-  : s.endKind === 'count' ? (long ? `${s.endCount} kali pembelian` : `${s.endCount}× pembelian`) : `${long ? 'Sampai' : 's.d.'} ${dShort(s.endDate)}`;
+// Saved custom durasi label. Short (form rows, Figma 14123:25221): "Sampai Nov 2027" for every picker.
+// Long (confirmation): by month ("Sampai Juni 2027"), by count ("20 kali pembelian") or by date ("Sampai 15 Jan 2027").
+const customLabel = (s, long) => !long ? `Sampai ${MONTHS[s.endDate.getMonth()]} ${s.endDate.getFullYear()}`
+  : s.endKind === 'month' ? `Sampai ${MONTHS_LONG[s.endDate.getMonth()]} ${s.endDate.getFullYear()}`
+  : s.endKind === 'count' ? `${s.endCount} kali pembelian` : `Sampai ${dShort(s.endDate)}`;
 // Seeds the draft end for the active picker style (st.calStyle): calendar date, month end, or Nth purchase.
 function customInit(st, s) {
   const { min, max } = customRange(s);
@@ -1047,8 +1053,9 @@ function customInit(st, s) {
   if (st.calStyle === 'count') { const all = allBuys(s); st.draftCount = Math.max(1, all.filter(x => x <= d).length); st.draftEndDate = all[st.draftCount - 1]; }
   st.calMonth = new Date(st.draftEndDate.getFullYear(), st.draftEndDate.getMonth(), 1);
 }
-// Live consequence line under the Month / Count pickers.
+// Live consequence line under the Month / Count pickers. The one sheet already shows count, total and last purchase below the chips.
 function customLive(st, s) {
+  if (st.sheet === 'plan') return '';
   const dates = buyDates({ ...s, end: 'custom', endDate: st.draftEndDate }), amt = amtError(st.amount) ? null : parseAmt(st.amount);
   const total = amt == null ? '' : ` · total <b>${usd(Math.round(amt * dates.length * 100) / 100)}</b>`;
   return st.calStyle === 'count' ? `<p class="cust-live" aria-live="polite">Berakhir <b>${DAY_L[dates.at(-1).getDay()]}, ${dShort(dates.at(-1))}</b>${total}</p>`
@@ -1192,8 +1199,11 @@ function planEnd(st) {
   const chips = END_OPTS.map(([v, l]) => `<button type="button" class="ochip" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</button>`).join('');
   const when = d.freq === 'daily' ? '<b>setiap hari bursa</b>, Senin–Jumat.' : d.freq === 'weekly' && d.day ? `<b>setiap hari ${DAY_L[d.day].toLowerCase()}</b>` : d.freq === 'monthly' && d.date ? `<b>setiap tanggal ${d.date}</b>` : '';
   const cal = cur === 'custom' && schedDone(d) ? `<span class="lbl">${customTitle(st)}</span>${customPicker(st, d)}` : '';
-  const last = !schedDone(d) ? '' : cur === 'forever' ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(buyDates({ ...d, end: cur, endDate: st.draftEndDate }).at(-1))}</b>`;
-  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}
+  const dates = schedDone(d) && cur !== 'forever' ? buyDates({ ...d, end: cur, endDate: st.draftEndDate }) : null, amt = parseAmt(st.amount);
+  const last = !schedDone(d) ? '' : !dates ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(dates.at(-1))}</b>`;
+  // Count and total for a fixed duration (Figma 14111:21744); "Sampai dihapus" has no end, so no total.
+  const tot = dates ? `<p class="plan-tot" aria-live="polite"><b>${dates.length}x</b> pembelian${amt > 0 ? ` • Total <b>${usd(Math.round(amt * dates.length * 100) / 100)}</b>` : ''}</p>` : '';
+  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}${tot}
     <hr class="plan-hr"><ul class="plan-sum" aria-live="polite">${when ? `<li>Dibeli otomatis ${when}</li>` : ''}${last ? `<li>${last}</li>` : ''}</ul>`;
 }
 /* PROTO:initial-state END */
@@ -1237,7 +1247,7 @@ function hubBody(st) {
     return `<form class="form${!stock && st.initStyle === 'row' ? ' init-row' : ''}" novalidate><div class="scroll">
       ${!stock ? pickCard(st) :
       `<div class="sel-card"><div class="sel-top">${logo(stock, 'lg')}<span class="row-meta"><span class="t">${stock.t}</span><span class="s">${esc(stock.n)}</span></span>
-        <button type="button" class="icon-btn" data-a="openStock" data-k="row-stock" aria-label="Ganti saham">${svg('edit', 22, 1.9)}</button></div>${potensiPill(stock, st)}</div>`}
+        <button type="button" class="sel-ubah" data-a="openStock" data-k="row-stock" aria-label="Ubah saham">Ubah</button></div>${potensiPill(stock, st)}</div>`}
       <div class="inl-nom"><label for="amt-h">Nominal pembelian${stock ? ' ' + stock.t : ''}</label>
         <div class="amt inl"><span class="pre" aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(st.amount)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
         <p class="err" id="amt-h-err" data-err>${st.amtErr && !st.stockErr ? st.amtErr : ''}</p>
@@ -1498,7 +1508,7 @@ function app(V) {
 
 /* ================= Confirmation + success (Figma 13945:15637) ================= */
 const FREQ_NAME = { daily: 'Setiap Hari', weekly: 'Setiap Minggu', monthly: 'Setiap Bulan' };
-const routine = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Tanggal ' + s.date;
+const routine = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Setiap Tanggal ' + s.date; // Figma 14123:25142
 const term = s => s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s, true) : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
