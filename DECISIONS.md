@@ -8,6 +8,9 @@
 
 ## Stock first — Figma section 14141:22641 "Approach - Stock first" (29 Okt 2026)
 Applies to the Stock first exploration only; the other explorations keep their copy.
+- **"Today" is the real current date** (it was pinned to Selasa, 27 Okt 2026). Setiap minggu = today's weekday (Senin on a weekend),
+  Setiap bulan = today's date, including 29–31 (shorter months use their last day; a weekend date rolls to the next trading day).
+  All dates in every exploration now move with the real date.
 - **Stock first is now the default** when the URL has no `?pick=` (gear panel: Pilih saham → Return chips / Search row still available).
 - **Header / intro:** "SIP Saham AS" and "Lewat SIP (Systematic Investment Plan), beli saham AS otomatis dengan nominal tetap, sesuai jadwal pilihan."
   - Tabs: **Buat Rencana SIP / Rencana Aktif (n)**.

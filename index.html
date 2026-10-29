@@ -921,7 +921,7 @@ const MONTHS_LONG = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Ju
 const fmtLong = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
 const DAY_S = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 const DAY_L = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const TODAY = new Date(2026, 9, 27); // Selasa, 27 Okt 2026
+const TODAY = (d => new Date(d.getFullYear(), d.getMonth(), d.getDate()))(new Date()); // the real current date (midnight)
 const PER_MONTH = { daily: 21, weekly: 4.33, monthly: 1 };
 const isTouch = matchMedia('(pointer: coarse)').matches;
 let PLANS = [];
@@ -2182,7 +2182,8 @@ const sfWhen = s => (s.freq === 'weekly' && !isRule(s) ? 'hari ' : '') + whenTxt
 // Footer (14143:26715): first purchase + schedule infobox, Sumber Dana, Lanjut.
 const sfFooter = st => `${schedDone(st.s) ? `<div class="sf-info">Pembelian pertama <b>${DAY_LONG_DATE(firstDebit(st.s))}</b>. Selanjutnya dibeli otomatis setiap <b>${sfWhen(st.s)}</b>.</div>` : ''}${fund()}${cta(true, st.submitting, 'Lanjut')}`;
 // Jadwal pembelian (14148:27475, 14163:77136 / 77220): weekly and monthly presets use today's weekday / date.
-const SF_DAY = TODAY.getDay() % 6 ? TODAY.getDay() : 1, SF_DATE = Math.min(TODAY.getDate(), 28);
+// Today's weekday (Senin on a weekend, when US markets are closed) and today's date; 29–31 fall back to the month's last day.
+const SF_DAY = TODAY.getDay() % 6 ? TODAY.getDay() : 1, SF_DATE = TODAY.getDate();
 const SF_PRESETS = [['daily', 'Setiap hari'], ['week', 'Setiap minggu'], ['month', 'Setiap bulan'], ['custom', 'Atur sendiri']];
 const SF_PRESET_SCHED = { daily: PRESET_SCHED.daily, week: { ...PRESET_SCHED.week, days: [SF_DAY] }, month: { ...PRESET_SCHED.month, dates: [SF_DATE] } };
 const sfNote = d => !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih hari pembelian.' : 'Pilih tanggal pembelian.')
