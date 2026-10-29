@@ -6,6 +6,52 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Confirmation without totals — Figma 14141:23531 (29 Okt 2026)
+- Removed **Jumlah pembelian** and **Total dana** (and "Total dana per bulan") from Konfirmasi SIP for now. This applies to every exploration.
+- Rows now: **Jadwal Pembelian**, Durasi, Pembelian pertama, Pembelian terakhir (only when there is an end; none for Sampai dihapus),
+  a divider, then Sumber Dana.
+- Not copied: Figma's "Tanggal Mulai 25 November 2025" row. It duplicates Pembelian pertama and shows a past date.
+
+## Stock first — new exploration (29 Okt 2026)
+- Gear panel **Pilih saham → Stock first** (`?pick=first`, key 0). It uses its own Figma sheets, so the Jadwal / Opsi jadwal axes don't apply to it.
+- **Initial state — Figma 14148:26959:** the tab card reads **Buat SIP Baru / Riwayat SIP**. The white panel holds the stock list itself:
+  "Pilih saham untuk nabung rutin", a "Cari Saham AS" search, category pills, then rows (40px logo, ticker, name, chevron; no return).
+  - Pills are **Trending · Fundamental · AI & Tech · ETF Pilihan**. Figma's two "Category 5" placeholders are left out.
+  - Which stock sits in each category is **derived**. Trending follows the Figma order: NVDA, AAPL, META, MSFT, AMZN, NFLX, PG, then the rest.
+  - Logos come from the Figma frame (`assets/logos-40/`). Stock without one falls back to the ticker circle.
+- **Atur Nabung Rutin — Figma 14143:26715:** opens when a stock is tapped.
+  - Grey top: a stock card with **Ubah** (back to the list), "Nominal Nabung Rutin **NVDA**", a 36px centered $ input and $5/$10/$25/$50 pills (default $10).
+  - Then the Jadwal nabung rutin / Durasi dropdown rows (Setiap Hari / Sampai dihapus) and the usual Sumber Dana + Mulai Nabung Rutin footer.
+  - Figma's label says "AAPL" on an NVDA card; the prototype uses the selected ticker.
+- **Jadwal pembelian — 14148:27475:** the preset radio list. Here **Custom** opens a second sheet instead of expanding inline.
+- **Custom Jadwal — 14148:27684 / 28056 / 28175** (back arrow returns to the preset list):
+  - "Beli setiap **[1] [Hari ▾]**". The number accepts 1–12; empty or out of range disables Simpan.
+  - Unit **Hari:** every N trading days.
+  - Unit **Minggu:** "Ulangi setiap" Senin–Jumat chips, more than one allowed (Figma's Filled chips = 0..many). Every N weeks; the first week with a match counts as week 1.
+  - Unit **Bulan:** **Setiap Tanggal {today}** · **Setiap {today's weekday} akhir bulan** (the last one of each month) · **Pilih Tanggal** (date grid, one or more). Every N months.
+  - The note names the result and the first purchase ("Dibeli otomatis setiap Senin & Kamis, 2 minggu sekali, mulai Kamis, 29 Okt 2026.").
+  - The today-based chips use the prototype's today (27 Okt, Selasa); Figma shows 29 / Kamis because it was drawn on 29 Okt.
+- **Durasi Nabung — 14148:28280:** radios Sampai dihapus / 1 / 3 / 6 / 12 Bulan; no Custom and no subtitles.
+
+## Preset jadwal — Figma 14148:27475 (29 Okt 2026)
+- The Jadwal sheet (both One sheet and Separated) was too much at once: 3 frequencies + a 5-day row or 28-date grid + 6 durasi chips.
+- **Preset** (new default, gear panel "Opsi jadwal", `&opts=preset|full`, keys 8–9): a radio list from Figma,
+  title "Jadwal pembelian", 24px radios, 12px to the label, 16px between rows, note line under the list:
+  - **Setiap hari:** every trading day, "Dibeli otomatis setiap hari bursa, Senin–Jumat."
+  - **Seminggu sekali:** the weekday of the first trading day after today (Rabu for 27 Okt), so the first buy is as soon as possible.
+  - **Sebulan sekali:** that same day's date, capped at 28 (tanggal 28).
+  - **Sebulan 2 kali:** tanggal 1 & 15.
+  - The note always names the day or date the preset picked ("Dibeli otomatis setiap hari Rabu.").
+  - Preset defaults (soonest day, 1 & 15) are **derived**, not from Figma or data; swap them for the most-used schedules when known.
+- **Custom (not in Figma yet, my proposal):** opens inline under the Custom radio, indented to the label:
+  Mingguan / Bulanan, then **one or more** weekdays (Sen–Jum) or dates (1–28), as checkboxes.
+  It starts from whatever was selected before (e.g. 1 & 15 after Sebulan 2 kali). The note adds the monthly count ("setiap hari Senin & Kamis, ±9× per bulan").
+  With nothing selected: "Pilih minimal satu hari / tanggal." and Simpan is disabled. Reopening restores Custom and its picks.
+  Labels everywhere read "Setiap Senin & Kamis" / "Setiap tanggal 1 & 15"; purchase dates, counts and totals handle several days a week or dates a month.
+  Open question: cap the number of picks (e.g. max 4 dates a month)?
+- Durasi in Preset mode: **Sampai dihapus · 6 Bulan · 12 Bulan · Custom** (1 and 3 bulan are still reachable through Custom).
+- **Semua opsi** keeps the previous sheet unchanged for comparison.
+
 ## Rencana SIP empty state, custom Durasi, prototype options (29 Okt 2026)
 - **Rencana SIP empty state — Figma 14115:24269:** "Montase / Not Found" illustration (225×150, Figma layers in `assets/empty-plan/`),
   "Belum ada rencana nabung rutin" (14px bold) + "Yuk, mulai nabung rutin dengan SIP dan tingkatkan aset investasimu secara konsisten." (12px, #445B70),

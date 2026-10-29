@@ -330,6 +330,7 @@ h1, h2, h3, p { margin: 0; }
 .cf-rows .cf-total { padding-block: 8px; border-block: 1px solid var(--border); }
 .cf-rows .cf-total dt { color: var(--text); font-weight: 700; }
 .cf-rows .cf-total dd { font-size: 16px; }
+.cf-rows .cf-src { padding-top: 8px; border-top: 1px solid var(--border); }
 .cf-note { margin-top: -4px; font-size: 12px; line-height: 16px; color: var(--text-2); }
 .cf-hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .cf-agree { display: flex; gap: 12px; align-items: flex-start; font-size: 12px; line-height: 18px; color: var(--text-2); }
@@ -702,6 +703,63 @@ h1, h2, h3, p { margin: 0; }
 .ecal-wd { display: grid; grid-template-columns: repeat(7, 40px); justify-content: space-between; font-size: 12px; line-height: 20px; color: rgba(0, 0, 0, 0.48); text-align: center; }
 .sh-ds .ochips.mgrid { grid-template-columns: repeat(4, 1fr); }
 .sh-ds .ochips.four { grid-template-columns: repeat(4, 1fr); }
+.sh-ds .ochips.two { grid-template-columns: repeat(2, 1fr); }
+/* Stock first — Figma 14148:26959 (list), 14143:26715 (Atur Nabung Rutin), 14148:28279 (Custom Jadwal) */
+.sf { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #fff; }
+.sf-hd { padding: 16px 16px 0; font-size: 16px; line-height: 1.35; font-weight: 700; color: #000; }
+.sf-top { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
+.sf-top .search { margin: 0 16px; }
+.sf-pills { display: flex; gap: 8px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.sf-pills::-webkit-scrollbar { display: none; }
+.sf-pill { flex: none; padding: 7px 8px; border: 1px solid #c9d5db; border-radius: 8px; background: #fff; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; cursor: pointer; transition: background-color .15s ease-out, border-color .15s ease-out; }
+.sf-pill[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+.sf-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 16px; border: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out; }
+.sf-row:active { background: var(--surface-2); }
+.sf-row .row-meta, .sf-card .row-meta { gap: 2px; }
+.sf-row .t { font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.sf-row .s, .sf-card .s { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sf-row > svg { flex: none; margin-left: 48px; color: #000; }
+.lg40 { position: relative; width: 40px; height: 40px; flex: none; border-radius: 999px; overflow: hidden; }
+.lg40 img { display: block; }
+.lg40.meta img + img { position: absolute; left: 7.14px; top: 11.43px; }
+.lg40.ring { display: grid; place-items: center; background: #fff; border: 1px solid rgba(0, 0, 0, 0.1); }
+.sf-grey { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #f4f6f6; }
+.sf-card { display: flex; align-items: center; gap: 8px; padding: 12px; background: #fff; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
+.sf-card .t { font-size: 14px; line-height: 20px; font-weight: 700; color: #171f2c; }
+.sf-ubah { position: relative; flex: none; border: 0; background: none; padding: 0; font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; cursor: pointer; }
+.sf-ubah::before { content: ""; position: absolute; inset: -14px -12px; }
+.sf-nom { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.sf-nom label { font-size: 14px; line-height: 20px; color: #06090d; }
+.sf-nom .err { margin: -12px 0 -4px; }
+.sf-nom .err:empty { display: none; }
+.big-amt.sf-amt { gap: 4px; padding: 0; font-size: 36px; line-height: 40px; color: #06090d; }
+.big-amt.sf-amt input { font-size: 36px; line-height: 40px; border-bottom: 0; caret-color: #3a83f9; color: #06090d; }
+.sf-nom .pchips { width: 100%; gap: 8px; }
+.sf-nom .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
+.sf-nom .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+.sf-white { padding: 16px; }
+.sf-white .dd-group { margin: 0; }
+.sf-white .sched-err { margin-top: 8px; }
+.sh-ds .cs-grp { display: flex; flex-direction: column; gap: 8px; }
+.sh-ds .cs-l { font-size: 12px; line-height: 1.35; font-weight: 700; color: #000; }
+.sh-ds .cs-rest { display: flex; flex-direction: column; gap: 16px; }
+.cs-every { display: flex; gap: 6px; }
+.cs-n { width: 43px; height: 32px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 6px; background: #fff; text-align: center; font-size: 13px; font-weight: 700; color: rgba(0, 0, 0, 0.65); }
+.cs-n:focus { border-color: #3278f0; outline: none; }
+.cs-unit { position: relative; display: inline-flex; align-items: center; height: 32px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 6px; }
+.cs-unit:focus-within { border-color: #3278f0; }
+.cs-unit select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 28px 0 8px; border: 0; background: transparent; font-size: 13px; font-weight: 700; color: rgba(0, 0, 0, 0.65); cursor: pointer; }
+.cs-unit select:focus { outline: none; }
+.cs-unit svg { position: absolute; right: 8px; pointer-events: none; color: rgba(0, 0, 0, 0.65); }
+.cs-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.cs-mon { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.cs-chip { height: 32px; padding: 4px 8px; border: 1px solid transparent; border-radius: 6px; background: rgba(0, 0, 0, 0.04); font-size: 13px; line-height: 1.35; font-weight: 700; color: rgba(0, 0, 0, 0.65); white-space: nowrap; cursor: pointer; transition: background-color .15s ease-out, border-color .15s ease-out; }
+.cs-chip[aria-checked="true"] { background: rgba(50, 120, 240, 0.1); border-color: #3278f0; color: #2264d4; }
+/* Preset jadwal — Figma 14148:27475: 24px radios, 12px to the label, 16px between rows */
+.sh-ds .plist { display: grid; gap: 16px; }
+.sh-ds .plist .eopt .t { font-weight: 600; }
+.sh-ds .cust { display: grid; gap: 12px; margin-left: 36px; }
+.sh-ds .cust .lbl .hint { font-weight: 400; color: rgba(0, 0, 0, 0.48); }
 .sh-ds .ochip:disabled { opacity: .35; cursor: default; }
 .cust-live { font-size: 13px; line-height: 1.35; color: rgba(0, 0, 0, 0.65); font-variant-numeric: tabular-nums; }
 .cust-live b { color: #000; }
@@ -779,12 +837,19 @@ h1, h2, h3, p { margin: 0; }
     <span class="proto-picker-highlight" aria-hidden="true"></span>
     <button class="proto-picker-item" data-v="chips">Return chips</button>
     <button class="proto-picker-item" data-v="row">Search row</button>
+    <button class="proto-picker-item" data-v="first">Stock first</button>
   </span>
   <span class="proto-picker-label">Jadwal</span>
   <span class="proto-picker-group" data-axis="sched" role="group" aria-label="Jadwal">
     <span class="proto-picker-highlight" aria-hidden="true"></span>
     <button class="proto-picker-item" data-v="split">Separated</button>
     <button class="proto-picker-item" data-v="one">One sheet</button>
+  </span>
+  <span class="proto-picker-label">Opsi jadwal</span>
+  <span class="proto-picker-group" data-axis="opts" role="group" aria-label="Opsi jadwal">
+    <span class="proto-picker-highlight" aria-hidden="true"></span>
+    <button class="proto-picker-item" data-v="preset">Preset</button>
+    <button class="proto-picker-item" data-v="full">Semua opsi</button>
   </span>
   <span class="proto-picker-label">Custom durasi</span>
   <span class="proto-picker-group" data-axis="cal" role="group" aria-label="Custom durasi">
@@ -838,25 +903,59 @@ function amtError(v) {
   if (n > 10000) return 'Maksimal $10,000 per pembelian';
   return '';
 }
-const schedDone = s => !!s && (s.freq === 'daily' || (s.freq === 'weekly' && s.day) || (s.freq === 'monthly' && s.date));
+// A schedule can buy on several weekdays (weekly) or dates (monthly): s.days / s.dates; older variants still set a single s.day / s.date.
+const daysOf = s => s.days?.length ? [...s.days].sort((a, b) => a - b) : s.day ? [s.day] : [];
+const datesOf = s => s.dates?.length ? [...s.dates].sort((a, b) => a - b) : s.date ? [s.date] : [];
+const andList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' & ' + a.at(-1);
+// "hari bursa" / "Senin & Kamis" / "tanggal 1 & 15"
+// s.every (Custom Jadwal): every N trading days / weeks / months; s.mmode 'lastwd' = the last s.wd weekday of the month.
+const whenTxt = s => {
+  const n = s.every || 1, per = n > 1 ? `, ${n} ${s.freq === 'weekly' ? 'minggu' : 'bulan'} sekali` : '';
+  if (s.freq === 'daily') return n > 1 ? `${n} hari bursa` : 'hari bursa';
+  if (s.freq === 'weekly') return andList(daysOf(s).map(x => DAY_L[x])) + per;
+  return (s.mmode === 'lastwd' ? `${DAY_L[s.wd]} akhir bulan` : 'tanggal ' + andList(datesOf(s))) + per;
+};
+const perMo = s => PER_MONTH[s.freq] * (s.freq === 'weekly' ? daysOf(s).length : s.freq === 'monthly' ? (s.mmode === 'lastwd' ? 1 : datesOf(s).length) : 1) / (s.every || 1);
+const schedDone = s => !!s && (s.every ?? 1) >= 1 && (s.freq === 'daily' || (s.freq === 'weekly' && daysOf(s).length > 0) || (s.freq === 'monthly' && (s.mmode === 'lastwd' || datesOf(s).length > 0)));
+const isRule = s => (s.every || 1) > 1 || s.mmode === 'lastwd';
+const mondayOf = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - (x.getDay() + 6) % 7); return x; };
+const lastWd = (y, m, wd) => { const d = new Date(y, m + 1, 0); while (d.getDay() !== wd) d.setDate(d.getDate() - 1); return d; };
+// Purchase dates of a Custom Jadwal rule from tomorrow up to (not including) stop. The first matching week / month is period 0.
+function ruleDates(s, stop) {
+  const n = s.every || 1, t = new Date(TODAY), out = []; t.setDate(t.getDate() + 1);
+  if (s.freq === 'monthly') {
+    const on = (y, m) => s.mmode === 'lastwd' ? [lastWd(y, m, s.wd)] : datesOf(s).map(x => new Date(y, m, Math.min(x, new Date(y, m + 1, 0).getDate())));
+    let m0 = t.getMonth(); while (!on(t.getFullYear(), m0).some(d => d >= t)) m0++;
+    for (let i = 0; ; i += n) for (const raw of on(t.getFullYear(), m0 + i)) { if (raw < t) continue; const d = nextTrading(new Date(raw)); if (d >= stop) return out; out.push(d); }
+  }
+  const ds = s.freq === 'weekly' ? daysOf(s) : [1, 2, 3, 4, 5];
+  let wk0 = null, k = 0;
+  for (const d = new Date(t); d < stop; d.setDate(d.getDate() + 1)) {
+    if (!ds.includes(d.getDay())) continue;
+    if (s.freq === 'weekly') { wk0 ??= mondayOf(d); if (Math.round((mondayOf(d) - wk0) / 6048e5) % n) continue; }
+    else if (k++ % n) continue;
+    out.push(new Date(d));
+  }
+  return out;
+}
 function schedText(s) {
   if (!s || !s.freq) return '';
   if (s.freq === 'daily') return 'Setiap hari bursa';
-  if (s.freq === 'weekly') return s.day ? 'Setiap hari ' + DAY_L[s.day] : 'Setiap minggu';
-  return s.date ? 'Setiap tanggal ' + s.date : 'Setiap bulan';
+  if (s.freq === 'weekly') return daysOf(s).length ? 'Setiap hari ' + whenTxt(s) : 'Setiap minggu';
+  return datesOf(s).length ? 'Setiap ' + whenTxt(s) : 'Setiap bulan';
 }
 function nextTrading(d) { while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return d; }
 function firstDebit(s) {
+  if (isRule(s)) return ruleDates(s, new Date(TODAY.getFullYear(), TODAY.getMonth() + 3 * (s.every || 1) + 2, 1))[0];
   const d = new Date(TODAY); d.setDate(d.getDate() + 1);
   if (s.freq === 'daily') return nextTrading(d);
-  if (s.freq === 'weekly') { while (d.getDay() !== s.day) d.setDate(d.getDate() + 1); return d; }
+  if (s.freq === 'weekly') { const ds = daysOf(s); while (!ds.includes(d.getDay())) d.setDate(d.getDate() + 1); return d; }
   for (let m = d.getMonth(); ; m++) {
     const last = new Date(d.getFullYear(), m + 1, 0).getDate();
-    const cand = new Date(d.getFullYear(), m, Math.min(s.date, last));
-    if (cand >= d) return nextTrading(cand);
+    for (const x of datesOf(s)) { const cand = new Date(d.getFullYear(), m, Math.min(x, last)); if (cand >= d) return nextTrading(cand); }
   }
 }
-const perMonth = (s, amt) => usd(Math.round(parseAmt(amt) * PER_MONTH[s.freq]));
+const perMonth = (s, amt) => usd(Math.round(parseAmt(amt) * perMo(s)));
 const ready = (stock, s, amt) => !!stock && schedDone(s) && s.end != null && !amtError(amt);
 
 /* ================= Icons ================= */
@@ -890,9 +989,10 @@ const statusBar = light => `<div class="sbar${light ? ' light' : ''}" aria-hidde
 
 const header = (title, back = true) => `<div class="hd"><button type="button" class="icon-btn" data-a="back" data-k="back" aria-label="Kembali" ${back ? '' : 'hidden'}>${svg('back', 24, 2)}</button><h1>${title}</h1></div>`;
 
+let TAB_L = ['Mulai Nabung', 'Rencana SIP']; // stock-first (Figma 14148:26959): Buat SIP Baru / Riwayat SIP
 const tabs = tab => `<div class="tabs" role="tablist" aria-label="SIP">
-  <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">Mulai Nabung</button>
-  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">Rencana SIP${PLANS.length ? ` (${PLANS.length})` : ''}</button></div>`;
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">${TAB_L[0]}</button>
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">${TAB_L[1]}${PLANS.length ? ` (${PLANS.length})` : ''}</button></div>`;
 
 const intro = tab => `<div class="intro">Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).${tabs(tab)}</div>`;
 
@@ -1033,6 +1133,17 @@ const FREQ_PER = { daily: 'tiap hari bursa', weekly: 'tiap minggu', monthly: 'ti
 const START = `${MONTHS[TODAY.getMonth()]} ${TODAY.getFullYear() - 1}`;
 const END_OPTS = [['forever', 'Sampai dihapus'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [12, '12 bulan'], ['custom', 'Custom']];
 const endVal = v => v === 'forever' || v === 'custom' ? v : +v;
+/* PROTO:initial-state — Preset jadwal (Figma 14148:27475): 4 presets + Custom; presets pick the day / date for you */
+const SCHED_PRESETS = [['daily', 'Setiap hari'], ['week', 'Seminggu sekali'], ['month', 'Sebulan sekali'], ['twice', 'Sebulan 2 kali'], ['custom', 'Custom']];
+// Seminggu / Sebulan sekali start on the first trading day after today, so the first buy is as soon as possible; Sebulan 2 kali = tgl 1 & 15.
+const SOON = (() => { const d = new Date(TODAY); d.setDate(d.getDate() + 1); return nextTrading(d); })();
+const PRESET_SCHED = Object.fromEntries(Object.entries({
+  daily: { freq: 'daily', days: null, dates: null }, week: { freq: 'weekly', days: [SOON.getDay()], dates: null },
+  month: { freq: 'monthly', days: null, dates: [Math.min(SOON.getDate(), 28)] }, twice: { freq: 'monthly', days: null, dates: [1, 15] },
+}).map(([k, v]) => [k, { every: 1, mmode: null, wd: null, ...v }]));
+const presetOf = s => s.preset || (s.freq === 'daily' ? 'daily' : 'custom');
+const END_PRESET = ['forever', 6, 12, 'custom'];
+const endOpts = st => st.simpleSched ? END_OPTS.filter(([v]) => END_PRESET.includes(v)) : END_OPTS;
 const dShort = d => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 // Label for a saved durasi: "Sampai dihapus", "3 Bulan" or a custom end date.
 const endLabel = s => s.end == null ? 'Pilih durasi' : s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s) : s.end + ' Bulan';
@@ -1104,16 +1215,20 @@ function addMonths(d, n) { const r = new Date(d.getFullYear(), d.getMonth() + n,
 function buyDates(s) {
   const custom = s.end === 'custom', first = firstDebit(s), out = [];
   const stop = custom ? new Date(s.endDate.getFullYear(), s.endDate.getMonth(), s.endDate.getDate() + 1) : addMonths(first, s.end);
+  if (isRule(s)) return ruleDates(s, stop);
   if (s.freq === 'monthly') {
     // Start from the month of the scheduled (un-rolled) date, so a 31 Okt → 2 Nov roll still counts as October's buy.
     const tmr = new Date(TODAY); tmr.setDate(tmr.getDate() + 1);
-    const on = (y, m) => new Date(y, m, Math.min(s.date, new Date(y, m + 1, 0).getDate()));
-    let m0 = tmr.getMonth(); while (on(tmr.getFullYear(), m0) < tmr) m0++;
-    for (let i = 0; custom || i < s.end; i++) { const d = nextTrading(on(tmr.getFullYear(), m0 + i)); if (custom && d >= stop) break; out.push(d); }
+    const xs = datesOf(s), on = (y, m, x) => new Date(y, m, Math.min(x, new Date(y, m + 1, 0).getDate()));
+    let m0 = tmr.getMonth(); while (on(tmr.getFullYear(), m0, xs.at(-1)) < tmr) m0++;
+    for (let i = 0; custom || i < s.end; i++) for (const x of xs) {
+      const raw = on(tmr.getFullYear(), m0 + i, x); if (raw < tmr) continue;
+      const d = nextTrading(raw); if (custom && d >= stop) return out; out.push(d);
+    }
     return out;
   }
-  const step = s.freq === 'weekly' ? 7 : 1;
-  for (const d = new Date(first); d < stop; d.setDate(d.getDate() + step)) if (d.getDay() % 6) out.push(new Date(d));
+  const ds = s.freq === 'weekly' ? daysOf(s) : [1, 2, 3, 4, 5];
+  for (const d = new Date(first); d < stop; d.setDate(d.getDate() + 1)) if (ds.includes(d.getDay())) out.push(new Date(d));
   return out;
 }
 function endPreview(s, amt) {
@@ -1159,7 +1274,7 @@ const confirmBtn = (st, label) => `<button type="button" class="cta" data-a="con
 
 /* ================= Shared hub ================= */
 /* Hub rows — Figma 13959:20993 */
-const schedShort = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Setiap tanggal ' + s.date;
+const schedShort = s => 'Setiap ' + whenTxt(s);
 const DAY_LONG_DATE = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 function potensiPill(s, st) {
   let y = st?.period || 1, v = retP(s, y), fallback = '';
@@ -1196,14 +1311,14 @@ function planSheet(st) {
 // Durasi as chips + divider + summary bullets (Figma 14111:21744)
 function planEnd(st) {
   const d = st.draft, cur = st.draftEnd ?? 'forever', fmt = x => `${DAY_L[x.getDay()]}, ${x.getDate()} ${MONTHS[x.getMonth()]} ${x.getFullYear()}`;
-  const chips = END_OPTS.map(([v, l]) => `<button type="button" class="ochip" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</button>`).join('');
-  const when = d.freq === 'daily' ? '<b>setiap hari bursa</b>, Senin–Jumat.' : d.freq === 'weekly' && d.day ? `<b>setiap hari ${DAY_L[d.day].toLowerCase()}</b>` : d.freq === 'monthly' && d.date ? `<b>setiap tanggal ${d.date}</b>` : '';
+  const chips = endOpts(st).map(([v, l]) => `<button type="button" class="ochip" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</button>`).join('');
+  const when = d.freq === 'daily' ? '<b>setiap hari bursa</b>, Senin–Jumat.' : schedDone(d) ? `<b>setiap ${d.freq === 'weekly' ? 'hari ' : ''}${whenTxt(d)}</b>` : '';
   const cal = cur === 'custom' && schedDone(d) ? `<span class="lbl">${customTitle(st)}</span>${customPicker(st, d)}` : '';
   const dates = schedDone(d) && cur !== 'forever' ? buyDates({ ...d, end: cur, endDate: st.draftEndDate }) : null, amt = parseAmt(st.amount);
   const last = !schedDone(d) ? '' : !dates ? 'Pembelian berjalan terus sampai dihapus' : `Pembelian terakhir <b>${fmt(dates.at(-1))}</b>`;
   // Count and total for a fixed duration (Figma 14111:21744); "Sampai dihapus" has no end, so no total.
   const tot = dates ? `<p class="plan-tot" aria-live="polite"><b>${dates.length}x</b> pembelian${amt > 0 ? ` • Total <b>${usd(Math.round(amt * dates.length * 100) / 100)}</b>` : ''}</p>` : '';
-  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips three" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}${tot}
+  return `<span class="lbl" id="dur-l">Durasi</span><div class="ochips ${st.simpleSched ? 'two' : 'three'}" role="radiogroup" aria-labelledby="dur-l">${chips}</div>${cal}${tot}
     <hr class="plan-hr"><ul class="plan-sum" aria-live="polite">${when ? `<li>Dibeli otomatis ${when}</li>` : ''}${last ? `<li>${last}</li>` : ''}</ul>`;
 }
 /* PROTO:initial-state END */
@@ -1214,6 +1329,7 @@ const pickRow = st => `<button type="button" class="pick-row" data-a="openStock"
 function hubBody(st) {
   if (st.tab === 'plans') return plansView();
   if (st.done) return successView(st.done, { a: 'tab', v: 'plans', label: 'Lihat Rencana SIP' });
+  if (st.stockFirst) return sfList(st); /* PROTO:initial-state */
   const stock = byT(st.stock), amtOk = !!st.amount && !amtError(st.amount), sd = schedDone(st.s);
   const endOk = st.s.end != null;
   const step = !stock ? 1 : !amtOk ? 2 : !sd ? 3 : !endOk ? 4 : 5;
@@ -1277,7 +1393,7 @@ const hubFooter = st => {
 
 function schedSheet(st) {
   const d = st.draft;
-  return { title: 'Jadwal Pembelian', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-sched>${schedBody(d, st)}</div>
+  return { title: st.simpleSched ? 'Jadwal pembelian' /* Figma 14148:27475 */ : 'Jadwal Pembelian', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-sched>${schedBody(d, st)}</div>
     <div class="footer sh-ft" data-sched-ft>${saveBtn(d)}</div>` };
 }
 const schedBody = (d, st, plan = false) => {
@@ -1294,6 +1410,22 @@ const schedBody = (d, st, plan = false) => {
     note = d.date ? `Dibeli otomatis <b>setiap tanggal ${d.date}.</b>` : 'Pilih tanggal pembelian.';
   }
   if (plan) note = ''; /* PROTO:initial-state — one sheet shows the note in its summary list */
+  /* PROTO:initial-state — Preset: 3 common schedules + Atur sendiri; the day / date pickers only show for Atur sendiri */
+  if (st.simpleSched) {
+    const p = d.preset, rad = ([v, l]) => `<button type="button" class="eopt" role="radio" aria-checked="${p === v}" data-a="preset" data-v="${v}" data-k="preset-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${l}</span></button>`;
+    // Custom: Mingguan / Bulanan, then one or more weekdays or dates (checkboxes, not radios).
+    const tick = (a, v, l, on) => `<button type="button" class="${a === 'tdate' ? 'dcell' : 'ochip'}" role="checkbox" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
+    const days = daysOf(d), dates = datesOf(d);
+    const panel = p !== 'custom' || st.stockFirst ? '' : `<div class="cust" data-k="cust"><div class="ochips two" role="radiogroup" aria-label="Ulangi">${[['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('cfreq', v, l, d.freq === v)).join('')}</div>
+      ${d.freq === 'weekly' ? `<span class="lbl" id="cday-l">Pilih hari <span class="hint">· bisa lebih dari satu</span></span><div class="ochips five" role="group" aria-labelledby="cday-l">${[1, 2, 3, 4, 5].map(x => tick('tday', x, DAY_S[x], days.includes(x))).join('')}</div>`
+      : `<span class="lbl" id="cdate-l">Pilih tanggal <span class="hint">· bisa lebih dari satu</span></span><div class="dgrid" role="group" aria-labelledby="cdate-l">${Array.from({ length: 28 }, (_, i) => i + 1).map(x => tick('tdate', x, x, dates.includes(x))).join('')}</div>`}</div>`;
+    const n = Math.round(perMo(d));
+    const pnote = d.freq === 'daily' && !isRule(d) ? 'Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.' : st.stockFirst && isRule(d) ? `Dibeli otomatis <b>setiap ${whenTxt(d)}</b>.`
+      : !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih minimal satu hari.' : 'Pilih minimal satu tanggal.')
+      : `Dibeli otomatis <b>setiap ${d.freq === 'weekly' ? 'hari ' : ''}${whenTxt(d)}</b>${p === 'custom' && n > 1 ? `, ${d.freq === 'weekly' ? '±' : ''}${n}× per bulan` : ''}.`;
+    return `${plan ? '<span class="lbl" id="freq-l">Frekuensi</span>' : ''}<div class="plist" role="radiogroup" aria-label="Jadwal pembelian">${SCHED_PRESETS.map(rad).join('')}</div>
+      ${panel}${plan ? '' : `<p class="snote" aria-live="polite">${pnote}</p>`}`;
+  }
   return `<span class="lbl" id="freq-l">${plan ? 'Frekuensi' : 'Atur Jadwal'}</span><div class="ochips three" role="radiogroup" aria-labelledby="freq-l">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('freq', v, l, d.freq === v)).join('')}</div>
     ${sub}${note ? `<p class="snote" aria-live="polite">${note}</p>` : ''}`;
 };
@@ -1302,7 +1434,7 @@ function endSheet(st) {
   return { title: 'Durasi Nabung', fit: true, cls: 'sh-ds', body: `<div class="sheet-body" data-endlist>${endList(st, cur)}</div>
     <div class="footer sh-ft"><button type="button" class="cta" data-a="saveEnd" data-k="saveEnd">Simpan</button></div>` };
 }
-const endList = (st, cur) => `<div role="radiogroup" aria-label="Durasi">${END_OPTS.map(([v, l]) => {
+const endList = (st, cur) => st.stockFirst ? sfEndList(cur) /* PROTO:initial-state */ : `<div role="radiogroup" aria-label="Durasi">${endOpts(st).map(([v, l]) => {
   const lastOf = sched => { const last = buyDates(sched).at(-1); return `Pembelian terakhir ${DAY_L[last.getDay()]}, ${last.getDate()} ${MONTHS[last.getMonth()]} ${last.getFullYear()}`; };
   const sub = v === 'forever' ? 'Berjalan terus sampai dihapus' : v === 'custom' ? (cur === 'custom' ? lastOf({ ...st.s, end: 'custom', endDate: st.draftEndDate }) : 'Pilih sendiri tanggal berakhirnya') : lastOf({ ...st.s, end: v });
   return `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span>
@@ -1333,12 +1465,12 @@ function app(V) {
           <div class="page-body">${pg.body}</div></div>`;
       }).join('');
       if (st.sheet) {
-        const sh = st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'plan' ? planSheet(st) /* PROTO:initial-state */ : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
+        const sh = st.sheet === 'csched' ? cschedSheet(st) /* PROTO:initial-state */ : st.sheet === 'sort' || st.sheet === 'cat' || st.sheet === 'period' ? filterSheet(st) : st.sheet === 'sched' ? schedSheet(st) : st.sheet === 'end' ? endSheet(st) : st.sheet === 'plan' ? planSheet(st) /* PROTO:initial-state */ : st.sheet === 'confirm' ? (V.confirmSheet || confirmSheet)(st) : st.sheet === 'success' ? successSheet(st) : V.sheet(st);
         html += `<div class="overlay ${st.enter === 'sheet' ? 'enter' : ''}"><div class="backdrop" data-a="close" aria-hidden="true"></div>
           <div class="sheet ${sh.fit ? 'fit' : ''} ${sh.cls || ''}" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab" aria-hidden="true"></div>
           ${sh.bare ? `<h2 id="sh-t" class="sr-only">${sh.title}</h2>` : sh.closeLeft
             ? `<div class="sheet-hd left"><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', 22, 2)}</button><h2 id="sh-t">${sh.title}</h2></div>`
-            : `<div class="sheet-hd"><h2 id="sh-t">${sh.title}</h2><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', sh.cls ? 24 : 22, 2)}</button></div>`}${sh.body}</div></div>`;
+            : `<div class="sheet-hd${sh.back ? ' has-back' : ''}">${sh.back ? `<button type="button" class="icon-btn" data-a="${sh.back}" data-k="sh-back" aria-label="Kembali">${svg('back', 24, 2)}</button>` : ''}<h2 id="sh-t">${sh.title}</h2><button type="button" class="icon-btn" data-a="close" data-k="close" aria-label="Tutup">${svg('close', sh.cls ? 24 : 22, 2)}</button></div>`}${sh.body}</div></div>`;
       }
       return html;
     }
@@ -1364,7 +1496,7 @@ function app(V) {
       },
       openSheet(name) {
         st.sheet = name; st.enter = 'sheet';
-        if (name === 'sched' || name === 'plan') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; }
+        if (name === 'sched' || name === 'plan') { st.draft = { ...st.s }; if (!st.draft.freq) st.draft.freq = 'daily'; st.draft.preset = presetOf(st.draft); }
         if (name === 'plan' || name === 'end') { st.draftEnd = st.s.end ?? 'forever'; st.draftEndDate = st.s.endDate || null; st.draftCount = st.s.endCount || null; st.calYear = st.draftEndDate ? st.draftEndDate.getFullYear() : null; st.calMonth = st.draftEndDate ? new Date(st.draftEndDate.getFullYear(), st.draftEndDate.getMonth(), 1) : null; }
         else if (name === 'nominal') { st.draftAmt = st.amount || '10'; st.amtErr = ''; }
         ctx.render();
@@ -1401,8 +1533,18 @@ function app(V) {
       openNominal() { V.openNominal(ctx); },
       openSched() { ctx.openSheet('sched'); },
       freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
-      day(v) { st.draft.day = +v; patchSched(); },
-      date(v) { st.draft.date = +v; patchSched(); },
+      preset(v) { /* PROTO:initial-state */
+        if (v === 'custom' && st.stockFirst) return V.act.openCustom(null, ctx); // stock-first: Custom is its own sheet
+        st.draft.preset = v; st.draft.day = st.draft.date = null;
+        if (PRESET_SCHED[v]) Object.assign(st.draft, PRESET_SCHED[v]);
+        else if (st.draft.freq === 'daily') Object.assign(st.draft, PRESET_SCHED.week); // Custom starts from the weekly preset's day
+        patchSched();
+      },
+      cfreq(v) { if (st.draft.freq === v) return; Object.assign(st.draft, v === 'weekly' ? PRESET_SCHED.week : PRESET_SCHED.month, { preset: 'custom' }); patchSched(); },
+      tday(v) { const x = +v, a = daysOf(st.draft); st.draft.days = a.includes(x) ? a.filter(y => y !== x) : [...a, x]; patchSched(); },
+      tdate(v) { const x = +v, a = datesOf(st.draft); st.draft.dates = a.includes(x) ? a.filter(y => y !== x) : [...a, x]; patchSched(); },
+      day(v) { st.draft.day = +v; st.draft.days = null; patchSched(); },
+      date(v) { st.draft.date = +v; st.draft.dates = null; patchSched(); },
       saveSched() { st.s = { ...st.draft }; st.schedErr = ''; if (st.sheet === 'plan') { st.s.end = st.draftEnd ?? 'forever'; st.s.endDate = st.s.end === 'custom' ? st.draftEndDate : null; st.s.endKind = st.calStyle; st.s.endCount = st.calStyle === 'count' ? st.draftCount : null; }
         if (st.s.end === 'custom' && st.s.endKind === 'count') st.s.endDate = allBuys(st.s)[Math.min(st.s.endCount, allBuys(st.s).length) - 1]; /* PROTO:initial-state */
         if (st.s.end === 'custom' && buyDates(st.s).length === 0) st.s.endDate = new Date(firstDebit(st.s)); ctx.closeSheet(() => st.s.end == null ? ctx.openSheet('end') : ctx.focus('[data-k="cta"]')); },
@@ -1480,11 +1622,13 @@ function app(V) {
     phone.addEventListener('click', e => {
       const b = e.target.closest('[data-a]');
       if (!b || !phone.contains(b) || b.disabled) return;
-      H[b.dataset.a]?.(b.dataset.v, b);
+      if (H[b.dataset.a]) H[b.dataset.a](b.dataset.v, b); else V.act?.[b.dataset.a]?.(b.dataset.v, ctx, b);
     });
+    phone.addEventListener('change', e => { if (e.target.matches('[data-unit]')) V.act?.unit(e.target.value, ctx); }); /* PROTO:initial-state */
     phone.addEventListener('submit', e => { e.preventDefault(); if (ready(st.stock, st.s, st.amount)) ctx.submit(); else showFirstError(); });
     phone.addEventListener('input', e => {
       if (e.target.matches('[data-search]')) { st.q = e.target.value; ctx.patch('[data-list]', V.list(st)); }
+      if (e.target.matches('[data-every]')) V.act?.every(e.target.value, ctx); /* PROTO:initial-state */
       if (e.target.matches('[data-amt]')) {
         st.draftAmt = e.target.value; if (st.amtErr) st.amtErr = amtError(st.draftAmt);
         if (e.target.closest('.big-amt')) e.target.style.width = Math.max(2, e.target.value.length) + 0.6 + 'ch';
@@ -1508,7 +1652,7 @@ function app(V) {
 
 /* ================= Confirmation + success (Figma 13945:15637) ================= */
 const FREQ_NAME = { daily: 'Setiap Hari', weekly: 'Setiap Minggu', monthly: 'Setiap Bulan' };
-const routine = s => s.freq === 'daily' ? 'Setiap hari bursa' : s.freq === 'weekly' ? 'Setiap ' + DAY_L[s.day] : 'Setiap Tanggal ' + s.date; // Figma 14123:25142
+const routine = s => s.freq === 'monthly' && s.mmode !== 'lastwd' ? 'Setiap T' + whenTxt(s).slice(1) : 'Setiap ' + whenTxt(s); // Figma 14123:25142
 const term = s => s.end === 'forever' ? 'Sampai dihapus' : s.end === 'custom' ? customLabel(s, true) : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
@@ -1520,11 +1664,11 @@ const termsBox = st => st.terms ? `<ul class="terms">
   <li>Kamu bisa ubah atau hapus rencana SIP kapan saja di tab Rencana SIP.</li></ul>` : '';
 function confirmSheet(st) {
   const s = byT(st.stock), plan = st.s, amt = parseAmt(st.amount), forever = plan.end === 'forever';
-  const dates = upcoming(plan), n = forever ? Math.round(PER_MONTH[plan.freq]) : dates.length, total = usd(Math.round(amt * n * 100) / 100);
+  const dates = upcoming(plan);
   const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-  const rows = [['Jadwal', routine(plan)], ['Durasi', term(plan).replace('bulan', 'Bulan')], ['Pembelian pertama', long(dates[0])],
-    ['Pembelian terakhir', forever ? 'Sampai dihapus' : long(dates.at(-1))], ['Jumlah pembelian', forever ? `≈ ${n}× per bulan` : `${n}×`],
-    [forever ? 'Total dana per bulan' : 'Total dana', forever ? `≈ ${total}` : total, 'cf-total'], ['Sumber Dana', 'Rekening Saham AS']];
+  // Figma 14141:23531: no Jumlah pembelian / Total dana for now; no Pembelian terakhir row for Sampai dihapus.
+  const rows = [['Jadwal Pembelian', routine(plan)], ['Durasi', term(plan).replace('bulan', 'Bulan')], ['Pembelian pertama', long(dates[0])],
+    ...(forever ? [] : [['Pembelian terakhir', long(dates.at(-1))]]), ['Sumber Dana', 'Rekening Saham AS', 'cf-src']];
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
     <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(amt)}</span><span class="s">per pembelian</span></div>
     <dl class="cf-rows">${rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
@@ -1665,8 +1809,8 @@ const cfFoot = st => `<div class="footer" style="padding-top:4px" data-buy>${buy
 const cfStock = (s, right) => `<div class="cf-stock">${logo(s, 'lg')}<span class="row-meta"><span class="t">${s.t}</span><span class="s">${esc(s.n)}</span></span>${right || ''}</div>`;
 // Upcoming purchase dates; "until deleted" plans are projected 12 months out.
 const upcoming = s => buyDates({ ...s, end: s.end === 'forever' ? 12 : s.end });
-const perMonthNum = (s, amt) => parseAmt(amt) * PER_MONTH[s.freq];
-const when = s => s.freq === 'daily' ? 'setiap hari bursa' : s.freq === 'weekly' ? 'setiap ' + DAY_L[s.day] : 'setiap tanggal ' + s.date;
+const perMonthNum = (s, amt) => parseAmt(amt) * perMo(s);
+const when = s => 'setiap ' + whenTxt(s);
 
 // 2 · Sentence
 function confirmSentence(st) {
@@ -1723,7 +1867,7 @@ function confirmStats(st) {
   const tile = (k, v, sub) => `<div class="stat"><span class="hint">${k}</span><span class="v">${v}</span>${sub ? `<span class="hint">${sub}</span>` : ''}</div>`;
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
     ${cfStock(s)}
-    <div class="stats3">${tile('Per pembelian', usd(a), FREQ_NAME[p.freq].toLowerCase())}${tile('Per bulan', '≈ ' + usd(Math.round(perMonthNum(p, a))), p.freq === 'daily' ? '±21 hari bursa' : p.freq === 'weekly' ? '±4 kali' : '1 kali')}${finite ? tile(`Total ${p.end} bulan`, usd(d.length * a), d.length + ' pembelian') : tile('Durasi', 'Terus', 'sampai dihapus')}</div>
+    <div class="stats3">${tile('Per pembelian', usd(a), FREQ_NAME[p.freq].toLowerCase())}${tile('Per bulan', '≈ ' + usd(Math.round(perMonthNum(p, a))), p.freq === 'daily' ? '±21 hari bursa' : `${p.freq === 'weekly' ? '±' : ''}${Math.round(perMo(p))} kali`)}${finite ? tile(`Total ${p.end} bulan`, usd(d.length * a), d.length + ' pembelian') : tile('Durasi', 'Terus', 'sampai dihapus')}</div>
     ${miniCal(p)}
     <dl class="cf-rows"><div><dt>Mulai</dt><dd>${fmtLong(d[0])}</dd></div>${finite ? `<div><dt>Berakhir</dt><dd>${fmtLong(d.at(-1))}</dd></div>` : ''}<div><dt>Sumber Dana</dt><dd>Rekening Saham AS</dd></div></dl>
     ${cfAgree(st)}</div>${cfFoot(st)}` };
@@ -1929,12 +2073,94 @@ const slFigma2 = {
 const figCfg = ({ ...sparkCfg, lightPage: true,
   page: (p, st) => ({ title: slFigma2.title, body: `<div class="fig-head" data-head>${slFigma2.head(st)}</div><div class="scroll" data-list>${slFigma2.list(st)}</div>` }),
   list: slFigma2.list, head: slFigma2.head, init: st => { st.sort = 'top'; st.cat = 'all'; st.period = 1; st.figPeriod = true; } });
+/* PROTO:initial-state BEGIN — Stock first: list → Atur Nabung Rutin page → Jadwal / Custom Jadwal / Durasi sheets
+   Figma 14148:26959 (list), 14143:26715 (page), 14148:28279 (Jadwal + Custom Jadwal), 14148:28280 (Durasi) */
+// Category pills; Figma shows the labels only, so the stock in each is derived.
+const SF_CATS = [['trend', 'Trending'], ['fund', 'Fundamental'], ['ai', 'AI & Tech'], ['etf', 'ETF Pilihan']];
+const SF_IN = { trend: ['NVDA', 'AAPL', 'META', 'MSFT', 'AMZN', 'NFLX', 'PG', 'TSLA', 'GOOGL', 'TSM', 'VOO', 'QQQ', 'KO', 'BRK.B', 'RDDT'],
+  fund: ['BRK.B', 'KO', 'PG', 'MSFT', 'AAPL', 'GOOGL'], ai: ['NVDA', 'MSFT', 'GOOGL', 'META', 'TSM', 'AAPL', 'AMZN'], etf: ['VOO', 'QQQ'] };
+// 40px list logos from Figma (assets/logos-40); META and NFLX are a background + glyph, the rest fall back to the ticker circle.
+const lg40 = x => ({ NVDA: 1, AAPL: 1, AMZN: 1, PG: 1 })[x.t] ? `<span class="lg40"><img src="assets/logos-40/${x.t}.svg" width="40" height="40" alt=""></span>`
+  : x.t === 'MSFT' ? `<span class="lg40"><img src="assets/logos-40/MSFT.png" width="40" height="40" alt=""></span>`
+  : x.t === 'META' ? `<span class="lg40 meta"><img src="assets/logos-40/META-bg.svg" width="40" height="40" alt=""><img src="assets/logos-40/META-glyph.svg" width="25.7143" height="17.1429" alt=""></span>`
+  : x.t === 'NFLX' ? `<span class="lg40 ring"><img src="assets/logos-40/NFLX-glyph.svg" width="15" height="27.2271" alt=""></span>` : logo(x, 'lg');
+const sfRows = st => { const q = st.q.trim(), l = q ? filtered(st.q) : SF_IN[st.sfCat || 'trend'].map(byT);
+  return l.length ? l.map(x => `<button type="button" class="sf-row" data-a="pick" data-v="${x.t}" data-k="pick-${x.t}">${lg40(x)}
+    <span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span>${svg('chev', 20)}</button>`).join('') : noResult(st.q); };
+const sfList = st => `<div class="sf"><p class="sf-hd">Pilih saham untuk nabung rutin</p><div class="sf-top">${searchFig(st, 'qsf')}
+  <div class="sf-pills" role="group" aria-label="Kategori">${SF_CATS.map(([v, l]) => `<button type="button" class="sf-pill" data-a="sfCat" data-v="${v}" data-k="sfcat-${v}" aria-pressed="${(st.sfCat || 'trend') === v}">${l}</button>`).join('')}</div></div>
+  <div class="scroll" data-list>${sfRows(st)}</div></div>`;
+function sfPage(st) {
+  const x = byT(st.stock), a = st.amount || '';
+  const schedLbl = st.s.freq === 'daily' && !isRule(st.s) ? 'Setiap Hari' : schedShort(st.s);
+  const dd = (k, act, label, value) => `<button type="button" class="dd" data-a="${act}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20)}</button>`;
+  return { title: 'Atur Nabung Rutin', body: `<form class="form sf-form" novalidate><div class="scroll">
+    <div class="sf-grey"><div class="sf-card">${lg40(x)}<span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span>
+      <button type="button" class="sf-ubah" data-a="pop" data-k="sf-ubah" aria-label="Ubah saham">Ubah</button></div>
+      <div class="sf-nom"><label for="amt-h">Nominal Nabung Rutin <b>${x.t}</b></label>
+        <div class="big-amt sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
+        <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
+    <div class="sf-white"><div class="dd-group">${dd('sched', 'openSched', 'Jadwal nabung rutin', schedLbl)}${dd('end', 'openEnd', 'Durasi', endLabel(st.s))}</div>
+      ${st.schedErr && !st.amtErr ? `<p class="err sched-err" role="alert">${st.schedErr}</p>` : ''}</div>
+    </div><div class="footer" data-footer>${hubFooter(st)}</div></form>` };
+}
+// Durasi Nabung (14148:28280): plain radios, no Custom.
+const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Durasi">${END_OPTS.filter(([v]) => v !== 'custom').map(([v, l]) =>
+  `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${v === 'forever' ? l : l.replace('bulan', 'Bulan')}</span></button>`).join('')}</div>`;
+// Custom Jadwal (14148:27684 / 28056 / 28175): "Beli setiap [n] [Hari|Minggu|Bulan]", then weekdays or a monthly rule.
+const CS_DATE = TODAY.getDate(), CS_WD = TODAY.getDay();
+const csChip = (a, v, l, on, role = 'radio') => `<button type="button" class="cs-chip" role="${role}" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
+function csRest(st) {
+  const d = st.draft, n = d.every;
+  let body = '';
+  if (d.freq === 'weekly') body = `<div class="cs-grp"><span class="cs-l" id="cs-day-l">Ulangi setiap</span><div class="cs-days" role="group" aria-labelledby="cs-day-l">${[1, 2, 3, 4, 5].map(x => csChip('csDay', x, DAY_L[x], daysOf(d).includes(x), 'checkbox')).join('')}</div></div>`;
+  if (d.freq === 'monthly') body = `<div class="cs-mon" role="radiogroup" aria-label="Tanggal pembelian">${[['date', `Setiap Tanggal ${CS_DATE}`], ['lastwd', `Setiap ${DAY_L[CS_WD]} akhir bulan`], ['pick', 'Pilih Tanggal']].map(([v, l]) => csChip('csMode', v, l, d.mmode === v)).join('')}</div>
+    ${d.mmode === 'pick' ? `<div class="dgrid" role="group" aria-label="Pilih tanggal, bisa lebih dari satu">${Array.from({ length: 28 }, (_, i) => i + 1).map(x =>
+      `<button type="button" class="dcell" role="checkbox" aria-checked="${datesOf(d).includes(x)}" data-a="csDate" data-v="${x}" data-k="csDate-${x}">${x}</button>`).join('')}</div>` : ''}`;
+  const note = !(n >= 1) ? 'Isi angka 1 sampai 12.' : !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih minimal satu hari.' : 'Pilih minimal satu tanggal.')
+    : d.freq === 'daily' && n === 1 ? 'Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.'
+    : `Dibeli otomatis <b>setiap ${d.freq === 'weekly' && n === 1 ? 'hari ' : ''}${whenTxt(d)}</b>, mulai ${DAY_LONG_DATE(firstDebit(d))}.`;
+  return `${body}<p class="snote" aria-live="polite">${note}</p>`;
+}
+const cschedSheet = st => ({ title: 'Custom Jadwal', fit: true, cls: 'sh-ds', back: 'csBack', body: `<div class="sheet-body cs">
+  <div class="cs-grp"><span class="cs-l" id="cs-every-l">Beli setiap</span><div class="cs-every">
+    <input class="cs-n" data-every data-k="cs-n" type="text" inputmode="numeric" maxlength="2" value="${st.draft.every || ''}" aria-labelledby="cs-every-l">
+    <span class="cs-unit"><select data-unit data-k="cs-unit" aria-label="Satuan">${[['daily', 'Hari'], ['weekly', 'Minggu'], ['monthly', 'Bulan']].map(([v, l]) => `<option value="${v}" ${st.draft.freq === v ? 'selected' : ''}>${l}</option>`).join('')}</select>${svg('chevd', 16)}</span></div></div>
+  <div class="cs-rest" data-cs>${csRest(st)}</div></div>
+  <div class="footer sh-ft" data-sched-ft>${saveBtn(st.draft)}</div>` });
+const SF_ACT = {
+  sfCat(v, ctx) { ctx.st.sfCat = v; ctx.st.q = ''; const i = ctx.phone.querySelector('[data-search]'); if (i) i.value = '';
+    ctx.phone.querySelectorAll('[data-a="sfCat"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v))); ctx.patch('[data-list]', sfRows(ctx.st)); },
+  openCustom(_, ctx) { const st = ctx.st; st.draft.preset = 'custom'; st.draft.every ||= 1; st.sheet = 'csched'; ctx.render(); ctx.focus('[data-k="sh-back"]'); },
+  csBack(_, ctx) { ctx.st.sheet = 'sched'; ctx.render(); ctx.focus('[data-k="preset-custom"]'); },
+  unit(v, ctx) { const d = ctx.st.draft; d.freq = v;
+    if (v === 'weekly' && !daysOf(d).length) d.days = [SOON.getDay()];
+    if (v === 'monthly' && !d.mmode) Object.assign(d, { mmode: 'date', dates: [CS_DATE], wd: null });
+    csPatch(ctx); },
+  every(v, ctx) { const n = parseInt(v, 10); ctx.st.draft.every = n >= 1 && n <= 12 ? n : 0; csPatch(ctx); },
+  csDay(v, ctx) { const d = ctx.st.draft, x = +v, a = daysOf(d); d.days = a.includes(x) ? a.filter(y => y !== x) : [...a, x]; d.day = null; csPatch(ctx); },
+  csMode(v, ctx) { Object.assign(ctx.st.draft, v === 'date' ? { mmode: v, dates: [CS_DATE], wd: null } : v === 'lastwd' ? { mmode: v, dates: null, wd: CS_WD } : { mmode: v, dates: [], wd: null }, { date: null }); csPatch(ctx); },
+  csDate(v, ctx) { const d = ctx.st.draft, x = +v, a = datesOf(d); d.dates = a.includes(x) ? a.filter(y => y !== x) : [...a, x]; csPatch(ctx); },
+};
+function csPatch(ctx) { ctx.patch('[data-cs]', csRest(ctx.st)); ctx.patch('[data-sched-ft]', saveBtn(ctx.st.draft)); }
+const sfCfg = { ...figCfg,
+  page: (p, st) => p.id === 'atur' ? sfPage(st) : figCfg.page(p, st),
+  list: sfRows,
+  pick(v, ctx) { const st = ctx.st; st.stock = v; st.amtErr = ''; st.schedErr = ''; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount; ctx.push({ id: 'atur' }); },
+  act: SF_ACT,
+};
+/* PROTO:initial-state END */
 /* PROTO:initial-state BEGIN — picker wiring (PICKER.md) */
 // Two independent axes: how the stock is picked × how Jadwal/Durasi are set. URL: ?pick=chips|row&sched=split|one
-const AXES = { pick: ['chips', 'row'], sched: ['split', 'one'], cal: ['calendar', 'month', 'count'] };
+const AXES = { pick: ['chips', 'row', 'first'], sched: ['split', 'one'], opts: ['preset', 'full'], cal: ['calendar', 'month', 'count'] };
 const params = new URLSearchParams(location.search);
-const sel = { pick: AXES.pick.includes(params.get('pick')) ? params.get('pick') : 'chips', sched: AXES.sched.includes(params.get('sched')) ? params.get('sched') : 'split', cal: AXES.cal.includes(params.get('cal')) ? params.get('cal') : 'month' };
-const build = () => app({ ...figCfg, emptySched: sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.oneSched = sel.sched === 'one'; st.calStyle = sel.cal; } });
+const sel = Object.fromEntries(Object.entries(AXES).map(([k, vs]) => [k, vs.includes(params.get(k)) ? params.get(k) : { pick: 'chips', sched: 'split', opts: 'preset', cal: 'month' }[k]]));
+const build = () => {
+  const first = sel.pick === 'first'; // Stock first ignores the Jadwal / opsi axes: it has its own Figma sheets
+  TAB_L = first ? ['Buat SIP Baru', 'Riwayat SIP'] : ['Mulai Nabung', 'Rencana SIP'];
+  return app({ ...(first ? sfCfg : figCfg), emptySched: !first && sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.stockFirst = first;
+    st.oneSched = !first && sel.sched === 'one'; st.simpleSched = first || sel.opts === 'preset'; st.calStyle = sel.cal; } });
+};
 const stage = document.getElementById('stage');
 const picker = document.querySelector('.proto-picker');
 const groups = [...picker.querySelectorAll('.proto-picker-group')];
@@ -1957,7 +2183,7 @@ function mount() {
 function set(axis, v) {
   sel[axis] = v; paint();
   const url = new URL(location);
-  url.searchParams.delete('v'); url.searchParams.set('pick', sel.pick); url.searchParams.set('sched', sel.sched); url.searchParams.set('cal', sel.cal); url.searchParams.delete('first');
+  url.searchParams.delete('v'); url.searchParams.set('pick', sel.pick); url.searchParams.set('sched', sel.sched); url.searchParams.set('opts', sel.opts); url.searchParams.set('cal', sel.cal); url.searchParams.delete('first');
   history.replaceState(null, '', url);
   mount();
 }
@@ -1975,7 +2201,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !picker.hidden) { setOpen(false); fab.focus(); return; }
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  const keys = { 1: ['pick', 'chips'], 2: ['pick', 'row'], 3: ['sched', 'split'], 4: ['sched', 'one'], 5: ['cal', 'calendar'], 6: ['cal', 'month'], 7: ['cal', 'count'] };
+  const keys = { 0: ['pick', 'first'], 1: ['pick', 'chips'], 2: ['pick', 'row'], 3: ['sched', 'split'], 4: ['sched', 'one'], 5: ['cal', 'calendar'], 6: ['cal', 'month'], 7: ['cal', 'count'], 8: ['opts', 'preset'], 9: ['opts', 'full'] };
   if (keys[e.key]) set(...keys[e.key]);
   else if (e.key === 'r' || e.key === 'R') mount();
 });
