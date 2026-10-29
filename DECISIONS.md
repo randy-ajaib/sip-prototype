@@ -6,6 +6,51 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Stock first — Figma section 14141:22641 "Approach - Stock first" (29 Okt 2026)
+Applies to the Stock first exploration only; the other explorations keep their copy.
+- **Stock first is now the default** when the URL has no `?pick=` (gear panel: Pilih saham → Return chips / Search row still available).
+- **Header / intro:** "SIP Saham AS" and "Lewat SIP (Systematic Investment Plan), beli saham AS otomatis dengan nominal tetap, sesuai jadwal pilihan."
+  - Tabs: **Buat Rencana SIP / Rencana Aktif (n)**.
+  - The initial frame says "SIP Aktif" for the second tab, but the Riwayat frames say "Rencana Aktif (1)". I used the latter, which matches its heading.
+- **List:** title "Pilih saham", search "Cari kode atau nama, misal AAPL".
+- **Atur Rencana** (was Atur Nabung Rutin):
+  - "Nominal per pembelian" (no ticker).
+  - Rows: "Jadwal pembelian — Setiap hari bursa / Setiap hari Selasa / Setiap tanggal 27" and "Jangka waktu — Tanpa batas waktu".
+  - Infobox: "Pembelian pertama **Rabu, 28 Okt 2026**. Selanjutnya dibeli otomatis setiap **hari bursa**."
+  - CTA **Lanjut**.
+- **Jadwal pembelian:**
+  - Options: Setiap hari / Setiap minggu / Setiap bulan / Atur sendiri. Sebulan 2 kali is gone.
+  - Setiap minggu = **today's weekday** and Setiap bulan = **today's date** (sticky notes: "Once a week, today" / "today date").
+  - Notes: "Dibeli otomatis **seminggu sekali**, setiap hari Selasa." / "… **sebulan sekali**, setiap tanggal 27."
+  - The first purchase is still the next matching day after today, so a weekly-today plan starts next week.
+- **Atur Jadwal Sendiri — 14163:77431 / 77671** (replaces Custom Jadwal):
+  - Mingguan | Bulanan tabs. Mingguan: "Beli setiap" + a Senin–Jumat radio list, **one day**. Bulanan: "Beli setiap tanggal" + 1–28 grid, **one date**.
+  - Note: "Dibeli otomatis seminggu sekali, **setiap hari Selasa.**"
+  - The every-N and last-weekday rules are no longer offered; the engine still supports them.
+- **Jangka waktu — 14148:28280:** Tanpa batas waktu / 1 / 3 / 6 / **9 bulan** / **1 tahun**. Labels "Tanpa batas waktu", "1 Tahun".
+- **Konfirmasi — 14141:23739 / 23602 / 23669:**
+  - Weekly reads "Setiap hari Kamis".
+  - **Tanggal Mulai** is back. It shows **today** (the day the plan is created, e.g. "27 Oktober 2026"), next to Pembelian pertama.
+    Figma's "25 November 2025" is a placeholder.
+  - Figma's daily variant shows Pembelian terakhir with Tanpa batas waktu; I kept it hidden when there is no end.
+- **Rencana Aktif — 14153:38170 / 14162:26213 / 14153:38343:**
+  - Heading "Rencana Aktif", subtitle "Pembelian dilakukan saat bursa AS buka di hari yang dijadwalkan."
+  - Cells: Nominal / **Jadwal** / **Pembelian Berikutnya**.
+  - Infobox "Pastikan saldo Rekening Saham AS cukup sebelum jadwal pembelian.", button **Buat Rencana SIP**, alert "Berhasil membuat SIP".
+
+## Atur Nabung Rutin polish — Figma 14143:26715 (29 Okt 2026)
+- The white Jadwal / Jangka waktu section has 12px rounded top corners on the grey page and fills down to the footer.
+- On this page the row label reads **Jangka waktu** (sentence case, like "Jadwal nabung rutin"); row values are black.
+- The footer's "Sumber Dana" label is 12px.
+- Pilih Tanggal in Custom Jadwal now takes **one date only**.
+
+## Riwayat SIP card — Figma 14153:38343 (29 Okt 2026)
+- Card cells are now **Nominal · Jadwal Pembelian · Selanjutnya** (they were Nominal · Frekuensi · Autodebit).
+  Jadwal shows the actual schedule ("Setiap Rabu", "Setiap tanggal 1 & 15", "Setiap Hari"); long ones wrap. Selanjutnya is the next purchase ("—" when paused).
+- This replaces my extra schedule line under the cells and the header chevron (not in Figma).
+  The card is still tappable and opens Detail SIP.
+- Cell labels, the subtitle and the infobox text use the lighter Figma greys (48% / 65% black).
+
 ## Durasi → Jangka Waktu (29 Okt 2026)
 - Every on-screen **Durasi** now reads **Jangka Waktu**, in every exploration. That covers row and field labels, the "Jangka Waktu Nabung" sheet title,
   confirmation and Detail SIP rows, the error "Pilih jangka waktu terlebih dahulu", the guided CTA "Pilih Jangka Waktu", and the gear panel label.
@@ -61,7 +106,7 @@
   - "Beli setiap **[1] [Hari ▾]**". The number accepts 1–12; empty or out of range disables Simpan.
   - Unit **Hari:** every N trading days.
   - Unit **Minggu:** "Ulangi setiap" Senin–Jumat chips, more than one allowed (Figma's Filled chips = 0..many). Every N weeks; the first week with a match counts as week 1.
-  - Unit **Bulan:** **Setiap Tanggal {today}** · **Setiap {today's weekday} akhir bulan** (the last one of each month) · **Pilih Tanggal** (date grid, one or more). Every N months.
+  - Unit **Bulan:** **Setiap Tanggal {today}** · **Setiap {today's weekday} akhir bulan** (the last one of each month) · **Pilih Tanggal** (date grid, **one date only**; tapping another date moves the selection). Every N months.
   - The note names the result and the first purchase ("Dibeli otomatis setiap Senin & Kamis, 2 minggu sekali, mulai Kamis, 29 Okt 2026.").
   - The today-based chips use the prototype's today (27 Okt, Selasa); Figma shows 29 / Kamis because it was drawn on 29 Okt.
 - **Durasi Nabung — 14148:28280:** radios Sampai dihapus / 1 / 3 / 6 / 12 Bulan; no Custom and no subtitles.
