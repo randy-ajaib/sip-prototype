@@ -606,25 +606,31 @@ h1, h2, h3, p { margin: 0; }
 .sip-hd p { font-size: 12px; line-height: 16px; color: rgba(0,0,0,.48); }
 .sip-card { display: flex; flex-direction: column; gap: 16px; width: 100%; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out, transform .16s var(--ease-out); }
 .sip-card:active { background: #fafbfb; transform: scale(.99); }
-.sip-badge.off { background: rgba(0, 0, 0, 0.06); color: rgba(0, 0, 0, 0.65); }
-.sip-det { display: flex; flex-direction: column; gap: 16px; padding: 0 16px 16px; }
-.sip-det .cf-hero .sip-badge { margin: 6px 0 4px; }
-.sip-det .cf-amt { font-size: 32px; line-height: 40px; font-weight: 700; }
-.sip-next { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; }
-.sip-next h2 { font-size: 14px; line-height: 20px; font-weight: 700; }
-.sip-next ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.sip-next li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; line-height: 20px; border-top: 1px solid #f0f2f3; }
-.sip-next li:first-child { border-top: 0; }
-.sip-next li b { font-variant-numeric: tabular-nums; }
-.sip-det-ft { gap: 4px; }
-.cta.sec { background: #fff; color: var(--primary-text); box-shadow: inset 0 0 0 1px #3278f0; }
-.cta.sec:active:not(:disabled) { background: rgba(50, 120, 240, 0.08); }
-.cta.ghost.danger { color: var(--danger); }
-.cta.danger-fill { background: var(--danger); }
-.cta.danger-fill:active:not(:disabled) { filter: brightness(.9); }
+.sip-det { display: flex; flex-direction: column; background: #fff; }
+.sip-det-top { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #f5f5f5; }
+.sip-rows { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.sip-rows div { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 1.35; }
+.sip-rows dt { color: rgba(0, 0, 0, 0.48); }
+.sip-rows dd { margin: 0; font-weight: 700; color: #000; text-align: right; }
+.sip-orders { display: flex; flex-direction: column; gap: 8px; padding: 16px; }
+.sip-orders h2 { font-size: 14px; line-height: 20px; font-weight: 700; color: #171f2c; }
+.sip-order-list { display: flex; flex-direction: column; gap: 16px; }
+.sip-order { display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
+.sip-order b { font-size: 14px; line-height: 20px; color: #171f2c; }
+.sip-order .row-meta > span, .sip-order-r > span:last-child { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sip-order-r { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.otag { display: inline-flex; align-items: center; height: 18px; padding: 2px 3px; border-radius: 4px; background: rgba(0, 0, 0, 0.04); font-size: 11px; line-height: 1.35; font-weight: 700; color: rgba(0, 0, 0, 0.65); }
+.otag.pos { background: rgba(28, 184, 126, 0.11); color: #0c8a5c; }
+.sip-orders-empty { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.sip-orders-empty b { color: #000; }
+.sip-det-ft { flex-direction: row; gap: 16px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+.cta.neutral { background: rgba(0, 0, 0, 0.04); color: #000; }
+.cta.neutral:active:not(:disabled) { background: rgba(0, 0, 0, 0.08); }
+.stop-tx { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.65); }
+.stop-ft { flex-direction: row; gap: 8px; }
 .sip-card-hd { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--text); }
 .sip-badge { margin-left: auto; padding: 0 4px; border-radius: 4px; background: #e1f2fa; color: #3a83f9; font-size: 10px; line-height: 16px; }
-.sip-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: start; }
+.sip-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: stretch; } /* equal heights when a label wraps */
 .sip-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px; border-radius: 8px; background: #f4f6f6; text-align: center; }
 .sip-cell span { font-size: 10px; line-height: 1.35; color: rgba(0,0,0,.48); }
 .sip-cell b { font-size: 12px; line-height: 1.35; color: #000; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
@@ -1124,39 +1130,41 @@ function plansView(st) {
   return `<div class="scroll sip-plans"><div class="sip-hd"><h2>${L.h}</h2><p>${L.p}</p></div>
     ${PLANS.map((p, i) => { const d = firstDebit(p.s); return `<button type="button" class="sip-card" data-a="openSip" data-v="${i}" data-k="sip-${i}" aria-label="Detail SIP ${p.stock.t}">
       <span class="sip-card-hd">${sipLogo(p.stock)}<b>${p.stock.t}</b>${sipBadge(p)}</span>
-      <span class="sip-cells">${cell('Nominal', usd(parseAmt(p.amount)))}${cell(L.j, p.s.freq === 'daily' && !isRule(p.s) ? 'Setiap Hari' : schedShort(p.s))}${cell(L.n, p.paused ? '—' : `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`)}</span></button>`; }).join('')}
+      <span class="sip-cells">${cell('Nominal', usd(parseAmt(p.amount)))}${cell(L.j, p.s.freq === 'daily' && !isRule(p.s) ? 'Setiap Hari' : schedShort(p.s))}${cell(L.n, `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`)}</span></button>`; }).join('')}
     <div class="sip-info">${svg('info', 20)}<div><p>${L.i}</p>
       <button type="button" class="tlink" data-k="deposit">Deposit Rekening Saham AS</button></div></div></div>
     ${st?.stockFirst ? sipFooter(st) : ''}`;
 }
 /* ---- Riwayat SIP improvements (beyond Figma 14067:20096): tappable cards, schedule line, Detail SIP page, pause / stop ---- */
 const sipLogo = x => BRAND_LOGO.has(x.t) ? chipLogo(x) : logo(x, 'sm');
-const sipBadge = p => p.paused ? '<span class="sip-badge off">Dijeda</span>' : '<span class="sip-badge">Aktif</span>';
+const sipBadge = () => '<span class="sip-badge">Aktif</span>';
+const fullDate = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
+// Detail SIP (Figma 14163:81578): summary on grey, Order SIP history, Berhenti SIP / Ubah.
 function sipDetail(st, i) {
-  const p = PLANS[i]; if (!p) return { title: 'Detail SIP', body: '' };
-  const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`, forever = p.s.end === 'forever';
-  const all = buyDates({ ...p.s, end: forever ? 12 : p.s.end }), next = all.slice(0, 3);
-  const rows = [['Jadwal Pembelian', routine(p.s)], ['Jangka Waktu', term(p.s).replace('bulan', 'Bulan')], ['Pembelian berikutnya', p.paused ? 'Dijeda' : long(all[0])],
-    ...(forever ? [] : [['Pembelian terakhir', long(all.at(-1))]]), ['Sumber Dana', 'Rekening Saham AS', 'cf-src']];
-  return { title: 'Detail SIP', body: `<div class="scroll sip-det">
-    <div class="cf-hero">${lg40(p.stock)}<span class="t">${p.stock.t}</span><span class="s">${esc(p.stock.n)}</span>${sipBadge(p)}
-      <span class="cf-amt">${usd(parseAmt(p.amount))}</span><span class="s">per pembelian</span></div>
-    <dl class="cf-rows">${rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
-    ${p.paused ? `<div class="sip-info">${svg('info', 20)}<div><p>SIP sedang dijeda. Tidak ada autodebit sampai kamu lanjutkan lagi.</p></div></div>`
-      : `<section class="sip-next" aria-label="Pembelian berikutnya"><h2>${next.length} pembelian berikutnya</h2><ol>${next.map(d => `<li><span>${long(d)}</span><b>${usd(parseAmt(p.amount))}</b></li>`).join('')}</ol>
-      <p class="cf-note">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</p></section>`}
-    </div><div class="footer sip-det-ft">
-      <button type="button" class="cta sec" data-a="pauseSip" data-v="${i}" data-k="pause-sip">${p.paused ? 'Lanjutkan SIP' : 'Jeda SIP'}</button>
-      <button type="button" class="cta ghost danger" data-a="askStop" data-v="${i}" data-k="stop-sip">Hentikan SIP</button></div>` };
+  const p = PLANS[i]; if (!p) return { title: 'Atur Rencana', body: '' };
+  const rows = [['Nominal', usd(parseAmt(p.amount))], ['Jadwal Pembelian', routine(p.s)], ['Jangka Waktu', term(p.s).replace('bulan', 'Bulan').replace('tahun', 'Tahun')],
+    ['Tanggal Mulai', fullDate(p.created || TODAY)], ['Sumber Dana', 'Rekening Saham AS']];
+  // Orders only exist once a purchase has run; a plan made in this session has none yet.
+  const orders = p.orders || [];
+  return { title: 'Atur Rencana', body: `<div class="scroll sip-det">
+    <div class="sip-det-top"><div class="sf-card">${lg40(p.stock)}<span class="row-meta"><span class="t">${p.stock.t}</span><span class="s">${esc(p.stock.n)}</span></span>${sipBadge(p)}</div>
+      <dl class="sip-rows">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></div>
+    <section class="sip-orders" aria-labelledby="ord-h"><h2 id="ord-h">Order SIP</h2>
+      ${orders.length ? `<div class="sip-order-list">${orders.map(o => `<div class="sip-order"><span class="row-meta"><b>Beli ${p.stock.t}</b><span>${usd(parseAmt(p.amount))}</span></span>
+        <span class="sip-order-r"><span class="otag${o.ok ? ' pos' : ''}">${o.ok ? 'Berhasil' : 'Gagal'}</span><span>${o.at}</span></span></div>`).join('')}</div>`
+      : `<p class="sip-orders-empty">Belum ada order. Pembelian pertama <b>${DAY_LONG_DATE(firstDebit(p.s))}</b>.</p>`}</section></div>
+    <div class="footer sip-det-ft"><button type="button" class="cta neutral" data-a="askStop" data-v="${i}" data-k="stop-sip">Berhenti SIP</button>
+      <button type="button" class="cta neutral" data-a="editSip" data-v="${i}" data-k="edit-sip">Ubah</button></div>` };
 }
-const stopSheet = st => { const p = PLANS[st.stopI]; return { title: 'Hentikan SIP?', fit: true, cls: 'sh-ds', body: `<div class="sheet-body"><p class="snote">SIP <b>${p.stock.t}</b> ${usd(parseAmt(p.amount))} ${routine(p.s).toLowerCase()} akan dihentikan dan tidak ada autodebit lagi. Saham yang sudah dibeli tetap ada di portofoliomu.</p></div>
-  <div class="footer sh-ft"><button type="button" class="cta danger-fill" data-a="stopSip" data-k="stop-yes">Hentikan SIP</button><button type="button" class="cta ghost" data-a="close" data-k="stop-no">Batal</button></div>` }; };
+// Berhenti Nabung dengan SIP (Figma 14170:82168)
+const stopSheet = () => ({ title: 'Berhenti Nabung dengan SIP', fit: true, cls: 'sh-ds', body: `<div class="sheet-body"><p class="stop-tx">Setelah berhenti, Ajaib tidak akan menarik saldo untuk pembelian aset ini.</p></div>
+  <div class="footer sh-ft stop-ft"><button type="button" class="cta neutral" data-a="close" data-k="stop-no">Kembali</button><button type="button" class="cta" data-a="stopSip" data-k="stop-yes">Berhenti SIP</button></div>` });
 /* PROTO:initial-state — Riwayat SIP (Figma 14067:20096): sticky "Buat SIP baru" + "Berhasil membuat SIP" alert (~5 s) after creating a plan */
-const sipFooter = st => `<div class="footer sip-ft">${st.toast ? `<div class="toast" role="status"><img src="assets/ic-success-20.svg" width="20" height="20" alt=""><span>Berhasil membuat SIP</span>
+const sipFooter = st => `<div class="footer sip-ft">${st.toast ? `<div class="toast" role="status"><img src="assets/ic-success-20.svg" width="20" height="20" alt=""><span>${st.toast}</span>
     <button type="button" class="icon-btn" data-a="toastX" data-k="toast-x" aria-label="Tutup">${svg('close', 20)}</button></div>` : ''}
   <button type="button" class="cta" data-a="tab" data-v="new" data-k="new-sip"><img src="assets/ic-auto-sip-20.svg" width="20" height="20" alt="">${SF ? 'Buat Rencana SIP' : 'Buat SIP baru'}</button></div>`;
 
-const baseState = () => ({ stockErr: false, schedErr: '', stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
+const baseState = () => ({ editI: null, stockErr: false, schedErr: '', stock: null, s: { freq: null, day: null, date: null }, amount: '10', amtErr: '', q: '', submitting: false, done: null, tab: 'new' });
 
 /* ================= 1-year recurring-buy simulation ================= */
 const RISK = { AAPL: [.32, .035], NVDA: [.44, .06], TSM: [.38, .05], MSFT: [.11, .03], GOOGL: [.29, .045], AMZN: [.44, .04], 'BRK.B': [.05, .022], VOO: [.15, .022], META: [.21, .05], TSLA: [.24, .08], KO: [-.04, .02], QQQ: [.19, .03], NFLX: [.36, .055], PG: [-.07, .02], RDDT: [.85, .09] };
@@ -1588,10 +1596,12 @@ function app(V) {
         if (!st.agree || st.submitting) return;
         st.submitting = true; ctx.patch('[data-buy]', buyBtn(st));
         setTimeout(() => {
-          PLANS.unshift({ stock: byT(st.stock), s: { ...st.s }, amount: st.amount });
+          const editing = st.editI != null && PLANS[st.editI];
+          if (editing) Object.assign(PLANS[st.editI], { s: { ...st.s }, amount: st.amount });
+          else PLANS.unshift({ stock: byT(st.stock), s: { ...st.s }, amount: st.amount, created: new Date(TODAY) });
           st.submitting = false; st.created = PLANS[0];
           if (st.stockFirst) return ctx.closeSheet(() => { /* PROTO:initial-state */
-            Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null, toast: true }); ctx.render(); ctx.focus('[data-k="new-sip"]');
+            Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null, toast: editing ? 'Berhasil mengubah SIP' : 'Berhasil membuat SIP' }); ctx.render(); ctx.focus('[data-k="new-sip"]');
             clearTimeout(st.toastT); st.toastT = setTimeout(() => { st.toast = false; phone.querySelector('.toast')?.remove(); }, 5000);
           });
           ctx.closeSheet(() => ctx.openSheet('success'));
@@ -1600,7 +1610,8 @@ function app(V) {
       seePlans() { ctx.closeSheet(() => { Object.assign(st, baseState(), { s: freshS(), amount: '', tab: 'plans', pages: [], sheet: null }); ctx.render(); ctx.focus('[data-k="tab-plans"]'); }); },
       openStock() { st.q = ''; ctx.push({ id: 'stock' }); },
       openSip(v) { ctx.push({ id: 'sip', i: +v }); },
-      pauseSip(v) { const p = PLANS[+v]; p.paused = !p.paused; ctx.render(); ctx.focus('[data-k="pause-sip"]'); },
+      // Ubah: reopen Atur Rencana prefilled; saving replaces this plan (stock stays the same).
+      editSip(v) { const p = PLANS[+v]; Object.assign(st, { editI: +v, stock: p.stock.t, amount: p.amount, draftAmt: p.amount, s: { ...p.s }, amtErr: '', schedErr: '' }); ctx.push({ id: 'atur' }); },
       askStop(v) { st.stopI = +v; ctx.openSheet('stop'); },
       stopSip() { PLANS.splice(st.stopI, 1); ctx.closeSheet(() => ctx.pop(() => ctx.focus('[data-k="tab-plans"]'))); },
       openNominal() { V.openNominal(ctx); },
@@ -1728,7 +1739,7 @@ const routine = s => SF ? 'Setiap ' + sfWhen(s) : s.freq === 'monthly' && s.mmod
 const term = s => s.end === 'forever' ? (SF ? 'Tanpa batas waktu' : 'Sampai dihapus') : s.end === 'custom' ? customLabel(s, true) : SF && s.end === 12 ? '1 tahun' : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
-  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>Buat SIP</button>`;
+  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>${st.editI != null ? 'Simpan Perubahan' : 'Buat SIP'}</button>`;
 const termsBox = st => st.terms ? `<ul class="terms">
   <li>Rekening Saham AS didebit otomatis sesuai jadwal. Pastikan saldo cukup sebelum hari pembelian.</li>
   <li>Pembelian memakai harga pasar saat order dieksekusi, jadi jumlah lembar bisa berbeda tiap pembelian.</li>
@@ -1740,7 +1751,7 @@ function confirmSheet(st) {
   const long = d => `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   // Figma 14141:23531: no Jumlah pembelian / Total dana for now; no Pembelian terakhir row for Sampai dihapus.
   const rows = [['Jadwal Pembelian', routine(plan)], ['Jangka Waktu', term(plan).replace('bulan', 'Bulan').replace('tahun', 'Tahun')],
-    ...(SF ? [['Tanggal Mulai', `${TODAY.getDate()} ${MONTHS_LONG[TODAY.getMonth()]} ${TODAY.getFullYear()}`]] : []), ['Pembelian pertama', long(dates[0])],
+    ...(SF ? [['Tanggal Mulai', fullDate(st.editI != null ? PLANS[st.editI].created : TODAY)]] : []), ['Pembelian pertama', long(dates[0])],
     ...(forever ? [] : [['Pembelian terakhir', long(dates.at(-1))]]), ['Sumber Dana', 'Rekening Saham AS', 'cf-src']];
   return { title: 'Konfirmasi SIP', fit: true, closeLeft: true, body: `<div class="sheet-body confirm">
     <div class="cf-hero">${logo(s, 'lg')}<span class="t">${s.t}</span><span class="s">${esc(s.n)}</span><span class="cf-amt">${usd(amt)}</span><span class="s">per pembelian</span></div>
@@ -2169,7 +2180,7 @@ function sfPage(st) {
   const dd = (k, act, label, value) => `<button type="button" class="dd" data-a="${act}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20)}</button>`;
   return { title: 'Atur Rencana', body: `<form class="form sf-form" novalidate><div class="scroll">
     <div class="sf-grey"><div class="sf-card">${lg40(x)}<span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span>
-      <button type="button" class="sf-ubah" data-a="pop" data-k="sf-ubah" aria-label="Ubah saham">Ubah</button></div>
+      ${st.editI != null ? '' : '<button type="button" class="sf-ubah" data-a="pop" data-k="sf-ubah" aria-label="Ubah saham">Ubah</button>'}</div>
       <div class="sf-nom"><label for="amt-h">Nominal per pembelian</label>
         <div class="big-amt sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
         <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>

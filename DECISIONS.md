@@ -6,6 +6,21 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Detail SIP, Berhenti SIP, Ubah — Figma 14163:81578 / 14170:82168 (29 Okt 2026)
+- **Rencana Aktif cards:** the three cells stretch to the same height when one label wraps (Figma 14153:38343).
+- **Detail SIP** (tap a plan card), titled "Atur Rencana" as in Figma. This replaces my earlier Detail SIP page and its pause:
+  - Grey block: stock card with Aktif tag, then Nominal / Jadwal Pembelian / Jangka Waktu / **Tanggal Mulai** (the day the plan was created) / Sumber Dana.
+  - **Order SIP:** one card per executed purchase ("Beli NVDA", amount, Berhasil (green) / Gagal (grey) tag, date and time).
+    A plan made in this session has not bought anything yet, so the list shows
+    "Belum ada order. Pembelian pertama **Kamis, 5 Nov 2026**." instead of invented history.
+  - Footer: two grey buttons **Berhenti SIP** | **Ubah**. Jeda / Lanjutkan SIP is removed (not in Figma).
+- **Berhenti Nabung dengan SIP** sheet: "Setelah berhenti, Ajaib tidak akan menarik saldo untuk pembelian aset ini."
+  Buttons **Kembali** (grey) | **Berhenti SIP** (blue). Confirming removes the plan and returns to Rencana Aktif.
+- **Ubah** (not drawn in Figma; derived):
+  - Opens Atur Rencana prefilled with the plan's amount, jadwal and jangka waktu. The stock can't be changed (no stock Ubah link).
+  - Lanjut → Konfirmasi, where the CTA reads **Simpan Perubahan** and Tanggal Mulai keeps the original date.
+  - Saving updates the plan in place and shows "Berhasil mengubah SIP".
+
 ## Stock first — Figma section 14141:22641 "Approach - Stock first" (29 Okt 2026)
 Applies to the Stock first exploration only; the other explorations keep their copy.
 - **"Today" is the real current date** (it was pinned to Selasa, 27 Okt 2026). Setiap minggu = today's weekday (Senin on a weekend),
