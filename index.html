@@ -1122,7 +1122,7 @@ const EMPTY_ILL = `<div class="empty-ill" aria-hidden="true">${[
 function plansView(st) {
   if (!PLANS.length) return `<div class="plans-empty">${EMPTY_ILL}<div class="plans-empty-tx"><b>Belum ada rencana nabung rutin</b>
     <p>Yuk, mulai nabung rutin dengan SIP dan tingkatkan aset investasimu secara konsisten.</p></div>
-    <button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">Mulai Nabung</button></div>`;
+    <button type="button" class="cta" data-a="tab" data-v="new" data-k="empty-cta">${SF ? '<img src="assets/ic-auto-sip-20.svg" width="20" height="20" alt="">Buat Rencana SIP' : 'Mulai Nabung'}</button></div>`; // Figma 14162:26213
   // Figma 14153:38343: one card per plan (Nominal / Jadwal Pembelian / Selanjutnya), then the deposit infobox.
   const cell = (k, v) => `<span class="sip-cell"><span>${k}</span><b>${v}</b></span>`;
   const L = SF ? { h: 'Rencana Aktif', p: 'Pembelian dilakukan saat bursa AS buka di hari yang dijadwalkan.', j: 'Jadwal', n: 'Pembelian Berikutnya', i: 'Pastikan saldo Rekening Saham AS cukup sebelum jadwal pembelian.' }

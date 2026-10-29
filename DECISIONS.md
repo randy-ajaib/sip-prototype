@@ -14,6 +14,7 @@
     A plan made in this session has not bought anything yet, so the list shows
     "Belum ada order. Pembelian pertama **Kamis, 5 Nov 2026**." instead of invented history.
   - Footer: two grey buttons **Berhenti SIP** | **Ubah**. Jeda / Lanjutkan SIP is removed (not in Figma).
+- **Rencana Aktif empty state — Figma 14162:26213:** same illustration and copy; the button now reads **Buat Rencana SIP** with the auto-plan icon (was "Mulai Nabung"), back to the stock list. Stock first only.
 - **Berhenti Nabung dengan SIP** sheet: "Setelah berhenti, Ajaib tidak akan menarik saldo untuk pembelian aset ini."
   Buttons **Kembali** (grey) | **Berhenti SIP** (blue). Confirming removes the plan and returns to Rencana Aktif.
 - **Ubah** (not drawn in Figma; derived):
