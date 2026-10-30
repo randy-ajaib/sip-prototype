@@ -19,7 +19,9 @@ python3 -m http.server 4317
 ```
 
 ## Notes
-- Single self-contained HTML file (no build step).
+- Single self-contained HTML file (no build step). Images live in `assets/` but are also embedded in `index.html`
+  as data URIs, so the page works where its folder isn't reachable (e.g. the Claude browser panel's file preview).
+  **After adding or changing a file in `assets/`, run `python3 tools/inline_assets.py`** and reference it in code as `A('assets/…')`.
 - Prices, returns and popularity are **simulated** placeholder data.
 - US market holidays are not yet included in the date calculations.
 - Design decisions and rejected options are recorded in [DECISIONS.md](DECISIONS.md).

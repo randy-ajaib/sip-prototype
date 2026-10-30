@@ -6,6 +6,31 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Konfirmasi dividers, Detail Rencana update — Figma 14141:23739 / 14163:81578 (30 Okt 2026)
+- **Konfirmasi:** dividers now group the rows. Jadwal + Jangka Waktu, then Pembelian pertama / terakhir, then Sumber Dana. Applies to every exploration.
+- **Detail Rencana:**
+  - Rows: **Nominal per pembelian**, Jadwal Pembelian, Jangka Waktu ("3 bulan", lowercase), **Pembelian pertama**, **Pembelian terakhir**
+    (only when there is an end; full dates like "30 Oktober 2026"), Sumber Dana. **Tanggal Mulai is removed** here too.
+  - **Riwayat order SIP:** a flat list with dividers (no cards). The empty line is just "Belum ada order."
+  - Footer buttons are outlined, with icons: **× Berhenti SIP**, **✎ Ubah**.
+
+## Embedded images (30 Okt 2026)
+- Stock logos showed as broken frames in the Claude browser panel's file preview, which opens `index.html` without access to `assets/`.
+- All 37 images are now embedded as data URIs by `tools/inline_assets.py` (the block between ASSETS:BEGIN / ASSETS:END).
+  Code looks them up with `A('assets/…')`, and the three CSS backgrounds (radio on / off, selected date) use `--img-*` variables set from the same map.
+- `assets/empty-plan/rect.png` was resized from 1024px to 288px (266 KB → 24 KB; it is drawn at about 143px), keeping `index.html` at about 360 KB,
+  under the app's 512 KB preview limit.
+
+## First purchase can be today; Tanggal Mulai off Konfirmasi; Detail Rencana (30 Okt 2026)
+- **Stock first:** the first purchase can fall on **today**.
+  - If the chosen weekday or date is today or still ahead this week / month, the plan buys then instead of waiting for next week / month.
+    For example, Setiap minggu made on Jumat buys this Jumat, and Setiap hari Senin buys this coming Senin.
+  - Days and dates already past roll to the next week / month; weekends roll to the next trading day.
+  - The other explorations still start tomorrow.
+  - Purchases run at the US market open (21.30 WIB). The prototype doesn't model a cut-off time after 21.30.
+- **Konfirmasi:** Tanggal Mulai removed; it sat next to Pembelian pertama and read like a second start date. It stays on the detail page.
+- **Detail page title:** "Detail Rencana" (was "Atur Rencana", the same as the create page).
+
 ## Detail SIP, Berhenti SIP, Ubah — Figma 14163:81578 / 14170:82168 (29 Okt 2026)
 - **Rencana Aktif cards:** the three cells stretch to the same height when one label wraps (Figma 14153:38343).
 - **Detail SIP** (tap a plan card), titled "Atur Rencana" as in Figma. This replaces my earlier Detail SIP page and its pause:
