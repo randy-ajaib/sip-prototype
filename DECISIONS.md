@@ -6,6 +6,91 @@
   pencil (change stock), arrow-up-right ("Potensi kenaikan" strip), alert (error messages), backspace (keypad).
 - Not in the repo yet, kept as the prototype's own outline icons: **info** (neutral notes and the info box) and the confetti/success art.
 
+## Rencana Aktif card — Figma 14197:28046 (30 Okt 2026)
+- Stock first, Rencana Aktif → Figma (the default):
+  - The card cells are **Nominal · Jadwal · Jangka waktu** ("3 Bulan", "Tanpa Batas", "Sampai Nov 2026") on #f5f5f5.
+  - The next purchase moved to a footer line: calendar icon + "Pembelian berikutnya **Hari ini, 30 Okt 2026**" (Hari ini / Besok / weekday).
+  - The header keeps the Aktif tag + chevron. The border is rgba(0,0,0,.1).
+- Cards are **sorted by next purchase** (today first, as in the frame).
+- Figma copy slips not copied: "30 **Oct**" (English) and "Senin, 3 Nov 2026" (3 Nov 2026 is a Tuesday). Real Indonesian dates are used.
+
+## Jadwal view (Figma 14197:27293 + fixes); stopped plans are removed (30 Okt 2026)
+- **Stopped plans are removed, not listed.** Berhenti SIP deletes the plan. There are no Berhenti cards, no "Rencana dihentikan" section,
+  no stopped detail and no Aktifkan lagi. The GOOGL sample is now an active $10 "Setiap tanggal 1" plan, so Contoh has 5 active plans.
+  This supersedes the stopped-plan notes below.
+- **Usulan → Layout list → Jadwal** (was "Tanggal"; `lay=date`): a **Jadwal | Rencana** switch under the heading.
+  - **Jadwal** is the Figma date list: month headings, a date column (weekday + outlined circle; today blue and filled),
+    white plan cards (logo, ticker, "$5 • Setiap Hari", chevron).
+  - Fixes on top of Figma:
+    - **Daily plans show once per week** on their first purchase day ("Setiap hari bursa · 5× minggu ini") instead of every day.
+    - **"Hari ini · $5"** above today's purchases.
+    - More space between days (16px) than between cards in a day (8px).
+    - Limited to **4 weeks**, ending with "Menampilkan pembelian 4 minggu ke depan."
+    - The failed-order tag still shows.
+  - **Rencana** is the plan cards with status, last order and progress, so the overview isn't lost.
+  - Figma's sample dates were off (1 Nov 2026 is a Sunday); the prototype computes real dates. GOOGL's tanggal 1 rolls to Senin 2 Nov.
+
+## Rencana Aktif list — Figma 14153:38343 (update); sample plans; gear shows only what applies (30 Okt 2026)
+- **Rencana Aktif list (Stock first, Figma mode):**
+  - The infobox sits under the heading.
+  - A black chevron follows the Aktif tag.
+  - Stopped plans stay in the list as a compact card (logo, ticker, red **Berhenti** tag #f65858 on #ffe0e0, chevron).
+  - The button reads **Tambah Rencana SIP**.
+  - The tab count is active plans only. The GOOGL logo is from the frame (`assets/logos-40/GOOGL-glyph.svg`).
+- **Stopped plan detail** (tap a Berhenti card; derived, not in Figma): the Berhenti tag and a **Dihentikan** date row
+  replace Pembelian pertama / terakhir; the order history runs up to the stop. The only button is **Aktifkan lagi**, which moves the plan back to active.
+- **Riwayat order → Contoh** now loads **5 sample plans**, one per case:
+  - **NVDA** $25 Setiap Kamis, 3 bulan: last order **Gagal**.
+  - **META** $5 Setiap Hari: all Berhasil.
+  - **AAPL** $10 Setiap tanggal 15, 6 bulan: one Gagal in the middle.
+  - **MSFT** $15 Setiap Senin: **ends in 10 days**.
+  - **GOOGL** $5 Setiap Kamis: **Berhenti** 9 days ago.
+  - Order dates follow each plan's schedule back from yesterday (or the stop date).
+  - **Kosong** removes the samples. Plans you create get no invented history ("Belum ada order").
+- **Gear panel** only shows chip groups that change something: **Layout list** shows only with Rencana Aktif → Usulan.
+
+## Gear changes keep the current page (30 Okt 2026)
+- Changing any gear option now keeps you where you are: tab, open pages (Atur Rencana, Detail Rencana, stock picker),
+  the picked stock, amount and schedule, the category pill and the search text. Created plans already persisted.
+- Open sheets close, since their content depends on the option just changed.
+- Pages that only exist in one flow are dropped when switching flow: Atur Rencana is Stock first only, the stock picker page is the other explorations only.
+  Detail Rencana works in both.
+- **Reset (R)** still starts fresh.
+
+## Usulan revised: no invested / value, neutral infobox, list layouts (30 Okt 2026)
+- **Removed "Diinvestasikan / Nilai".** SIP buys land in the same holding as stock bought outside SIP, so a per-plan amount or return
+  can't be attributed. Each card shows the latest order instead: "Order terakhir **Berhasil** · 23 Okt" (or Gagal, red), or "Belum ada order".
+- **Infobox is neutral.** The page doesn't know the balance, so it doesn't judge it:
+  "Pembelian 7 hari ke depan **$35**. Pastikan saldo Rekening Saham AS cukup sebelum 21.30 WIB di hari pembelian." + Deposit.
+  The mock $20 balance now only drives which sample orders fail.
+- **Gear "Layout list"** (Usulan only, `lay=card|row|group`):
+  - **Kartu:** the Figma card + last order line + progress bar.
+  - **Baris:** one compact row per plan in a bordered list. Logo 40, ticker, "$25 · Setiap Jumat", failed tag, progress; "Berikutnya / Hari ini" on the right.
+  - **Grup:** the same rows under **Hari ini / 7 hari ke depan / Nanti** (with counts), by next purchase date.
+  - **Tanggal** (added 30 Okt; reference: Google Calendar's schedule view): every purchase in the next **4 weeks**, one row per day that has purchases.
+    - Left column: 3-letter weekday (SEN, SEL…) over a big date; **today** is a blue circle.
+    - Right: a blue outlined chip per purchase, "Beli NVDA · $25" / "21.30 WIB · Setiap Kamis" + logo; today's chips are tinted.
+    - Week separators ("2 – 8 NOV") and a month label when the month changes; days without purchases are skipped.
+    - Trade-off: a daily plan shows on every weekday, like a daily event in a calendar.
+- These replace the earlier balance check ("Saldo kurang …") and the Diinvestasikan / Nilai line.
+
+## Rencana Aktif "Usulan", Riwayat order samples, gear panel by flow (30 Okt 2026)
+- **Gear panel:** with **Stock first** picked, Jadwal / Opsi jadwal / Custom jangka waktu are hidden (they don't affect it).
+  Two Stock first chips show instead. The other explorations show their old chips. URL params `ra=figma|plus`, `ord=none|sample`.
+- **Riwayat order → Contoh** (`ord=sample`): each plan gets its last 5 scheduled purchases as past orders, 21:30 each.
+  - The 3rd most recent is **Gagal**. The most recent is also Gagal when the plan's amount is above the mock balance (**$20**).
+  - Detail Rencana's Riwayat order SIP lists them. With **Kosong**, a new plan shows "Belum ada order."
+- **Rencana Aktif → Usulan** (`ra=plus`; not in Figma, all copy derived):
+  - **Balance check** replaces the generic infobox. It totals the purchases due in the next 7 days and compares them with the mock $20 balance.
+    Short: red box "Saldo kurang $10 untuk pembelian 7 hari ke depan. Butuh $30 · Saldo $20 · Deposit". Enough: green "Saldo $20 cukup …".
+  - **Header line:** "3 rencana · ≈ $323.25 per bulan · dibeli saat bursa AS buka (21.30 WIB)".
+  - **Cards** are sorted by next purchase. "Berikutnya" reads **Hari ini / Besok / Senin, 2 Nov**, and a chevron shows the card is tappable.
+  - **Results:** "Diinvestasikan $75 · Nilai $76.58 +2,1%". Value is simulated from the stock's 1-year return over the plan's age. Without orders it reads "Belum ada pembelian".
+  - **Order terakhir gagal** tag (red) replaces Aktif when the latest order failed.
+  - **Progress** for plans with an end: a bar plus "5 dari 10 pembelian · berakhir 27 Nov 2026", or "**berakhir N hari lagi**" within 14 days.
+  - **Rencana dihentikan (n):** stopped plans stay listed (dashed rows) with **Aktifkan lagi**, which restores the plan.
+- Card logos: MSFT / META / NFLX / PG now use the Figma 40px logos scaled to 24px instead of the ticker circle (every exploration).
+
 ## Konfirmasi dividers, Detail Rencana update — Figma 14141:23739 / 14163:81578 (30 Okt 2026)
 - **Konfirmasi:** dividers now group the rows. Jadwal + Jangka Waktu, then Pembelian pertama / terakhir, then Sumber Dana. Applies to every exploration.
 - **Detail Rencana:**
