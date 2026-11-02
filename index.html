@@ -842,15 +842,14 @@ h1, h2, h3, p { margin: 0; }
 .rh-sum .t { flex: 1; font-size: 14px; line-height: 1.35; font-weight: 700; color: #171f2c; }
 .page.fade-in { animation: fadeIn .18s ease-out; box-shadow: none; }
 .page.fading { animation: fadeOut .15s ease-in forwards; box-shadow: none; pointer-events: none; }
-.rh-amtbox { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
+/* Money input in a card (Figma 14245:102695): label 6px above the field, chips 12px below */
+.rh-amtbox { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
 .rh-amtbox label { font-size: 12px; line-height: 1.35; font-weight: 700; color: #000; }
 .rh-amtbox .err { margin: 0; }
 .rh-amtbox .err:empty { display: none; }
-.rh-amtbox .pchips { width: 100%; gap: 8px; margin-top: 16px; }
+.rh-amtbox .pchips { width: 100%; gap: 8px; margin-top: 6px; }
 .rh-amtbox .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
 .rh-amtbox .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
-.big-amt.rh-amt { gap: 4px; padding: 0; font-size: 36px; line-height: 40px; color: #06090d; }
-.big-amt.rh-amt input { font-size: 36px; line-height: 40px; border-bottom: 0; caret-color: #3a83f9; color: #06090d; }
 .rh-ft .keypad { margin: 2px -16px 0; padding-top: 12px; border-top: 1px solid #e3e8ea; }
 .rh-row { cursor: pointer; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
 .rh-row > span:first-child { flex: 1; }
@@ -2078,7 +2077,7 @@ const routine = s => SF ? 'Setiap ' + sfWhen(s) : s.freq === 'monthly' && s.mmod
 const term = s => s.end === 'forever' ? (SF ? 'Tanpa batas waktu' : 'Sampai dihapus') : s.end === 'custom' ? customLabel(s, true) : SF && s.end === 12 ? '1 tahun' : `${s.end} bulan`;
 const buyBtn = st => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
-  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>${st.editI != null ? 'Simpan Perubahan' : st.buyLabel || 'Buat SIP'}</button>`;
+  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>${st.editI != null ? 'Simpan Perubahan' : 'Buat SIP'}</button>`;
 const termsBox = st => st.terms ? `<ul class="terms">
   <li>Rekening Saham AS didebit otomatis sesuai jadwal. Pastikan saldo cukup sebelum hari pembelian.</li>
   <li>Pembelian memakai harga pasar saat order dieksekusi, jadi jumlah lembar bisa berbeda tiap pembelian.</li>
@@ -2590,9 +2589,10 @@ const RH_OPTS = [['daily', 'Setiap hari'], ['week', 'Seminggu sekali'], ['month'
 const rhSub = (v, s) => v === 'daily' ? 'Dibeli otomatis setiap hari bursa, Senin–Jumat.' : v === 'week' ? `Dibeli otomatis setiap ${DAY_L[SF_DAY]}.`
   : v === 'month' ? `Dibeli otomatis setiap tanggal ${SF_DATE}.` : presetOf(s) === 'custom' && schedDone(s) ? `Dibeli otomatis setiap ${sfWhen(s)}.` : '';
 const rhStock = x => `<div class="sf-card">${lg40(x)}<span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span></div>`;
+// Tentukan nominal (14245:90472): stock card, then the PD Money input with quick chips; the on-page keypad types into it.
 const rhNom = (st, p) => { const a = st.draftAmt, id = p.edit ? 'amt-re' : 'amt-r'; return { title: 'Tentukan nominal', big: true, body: `<div class="scroll rh"><h1 class="rh-h">Tentukan nominal</h1>${rhStock(byT(st.stock))}
   <div class="rh-amtbox"><label for="${id}">Nominal per pembelian</label>
-    <div class="big-amt rh-amt"><span aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="none" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="${id}-err"></div>
+    <div class="sf-amt"><span aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="none" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="${id}-err"></div>
     <p class="err" id="${id}-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
   <div class="footer rh-ft">${confirmBtn(st, p.edit ? 'Simpan' : 'Lanjut')}${keypad()}</div>` }; };
 // Figma's "Beli NVDA 10$" is written "$10".
@@ -2650,7 +2650,7 @@ const build = (keep = null) => {
     if (!st.stock) st.pages = st.pages.filter(p => p.id === 'sip'); });
   return app({ ...(rh ? rhCfg : first ? sfCfg : figCfg), restore, emptySched: !first && sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.stockFirst = first;
     st.oneSched = !first && sel.sched === 'one'; st.simpleSched = first || sel.opts === 'preset'; st.calStyle = sel.cal;
-    st.host = sel.entry === 'home' ? ['home'] : ['home', sel.entry]; st.buyLabel = rh ? 'Lanjut' : null;
+    st.host = sel.entry === 'home' ? ['home'] : ['home', sel.entry];
     st.raPlus = first && sel.ra === 'plus'; st.raLayout = sel.lay; st.demoOrders = first && sel.ord === 'sample'; } });
 };
 const stage = document.getElementById('stage');

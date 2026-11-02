@@ -2,7 +2,7 @@
 
 ## Robinhood order, in-place edits, fixed stock from USDP / Portfolio (2 Nov 2026)
 - **Robinhood is now nominal first** (Figma 14245:90472 → 14245:90649 → 14237:29565):
-  - **Tentukan nominal** shows the stock card (no Ubah) and the amount with keypad.
+  - **Tentukan nominal** shows the stock card (no Ubah), then a card with the PD **Money input** (label, grey 40px field, as in Stock first) and quick chips; the keypad types into it (Figma 14245:90472, updated 2 Nov).
   - **Tentukan jadwal** shows a "Beli AAPL $10 · **Ubah Nominal**" card (Figma's "10$" is written "$10"); Ubah Nominal goes back a step.
   - Switching Approach mid-setup maps Atur Rencana ↔ Tentukan nominal.
 - **Changing a value on Konfirmasi no longer slides back through the steps.** Nominal / Jadwal open that step over Konfirmasi with a short fade (180 ms in, 150 ms out).
@@ -17,7 +17,7 @@
 - **Gear "Pilih saham" is now "Approach"**, with a new **Robinhood** option (`pick=rh`, Figma section 14237:28057).
   - Same SIP page, stock list, Rencana Aktif, Atur sendiri and Jangka waktu sheets as Stock first; after picking a stock it's one step per page:
     **Tentukan jadwal Beli Rutin** (14237:28679, radios) → **Tentukan Nominal** (14237:29364, keypad on the page) → **Konfirmasi Nabung Rutin** (14237:29565).
-  - Konfirmasi rows go back to their step (Nominal, Jadwal) or open the Jangka waktu sheet. Lanjut stays disabled until the T&C box is ticked, then the plan is created and Rencana Aktif opens with the toast, as in Stock first.
+  - Konfirmasi rows go back to their step (Nominal, Jadwal) or open the Jangka waktu sheet. The button (**Buat SIP**, was Lanjut in Figma) stays disabled until the T&C box is ticked, then the plan is created and Rencana Aktif opens with the toast, as in Stock first.
   - Copy: Figma's lowercase "setiap senin" is written "Senin"; weekly / monthly presets use today's weekday / date, as in Stock first.
   - Switching between Stock first and Robinhood mid-setup lands on the other flow's setup page (Atur Rencana ↔ Tentukan jadwal).
   - Not built: the "Nabung Rutin dengan SIP 👍 / Coba Sekarang" banner (14237:86346) in the section, since its placement isn't shown.
