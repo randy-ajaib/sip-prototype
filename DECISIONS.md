@@ -1,5 +1,52 @@
 # SIP creation — decisions from /sip-prototype
 
+## Robinhood order, in-place edits, fixed stock from USDP / Portfolio (2 Nov 2026)
+- **Robinhood is now nominal first** (Figma 14245:90472 → 14245:90649 → 14237:29565):
+  - **Tentukan nominal** shows the stock card (no Ubah) and the amount with keypad.
+  - **Tentukan jadwal** shows a "Beli AAPL $10 · **Ubah Nominal**" card (Figma's "10$" is written "$10"); Ubah Nominal goes back a step.
+  - Switching Approach mid-setup maps Atur Rencana ↔ Tentukan nominal.
+- **Changing a value on Konfirmasi no longer slides back through the steps.** Nominal / Jadwal open that step over Konfirmasi with a short fade (180 ms in, 150 ms out).
+  The button reads **Simpan** and returns to Konfirmasi with the new value. Back discards the change. Ubah Nominal is hidden while editing the schedule.
+  Jangka Waktu still opens its sheet.
+- **Stock first: the stock "Ubah" link is hidden when SIP was opened for a stock** from USDP or Portfolio (Beli Rutin). From the SIP page's stock list it stays.
+  Robinhood has no stock Ubah in either case.
+- Escape now does what the page's back button does (exit to USDP / Portfolio, cancel an edit), not always a plain pop.
+- Fix: when Nominal is edited from Konfirmasi, the quick chips and keypad now update the visible input. Before, they updated the Tentukan nominal page still mounted underneath.
+
+## Robinhood approach, Portfolio entry point, USDP alert (2 Nov 2026)
+- **Gear "Pilih saham" is now "Approach"**, with a new **Robinhood** option (`pick=rh`, Figma section 14237:28057).
+  - Same SIP page, stock list, Rencana Aktif, Atur sendiri and Jangka waktu sheets as Stock first; after picking a stock it's one step per page:
+    **Tentukan jadwal Beli Rutin** (14237:28679, radios) → **Tentukan Nominal** (14237:29364, keypad on the page) → **Konfirmasi Nabung Rutin** (14237:29565).
+  - Konfirmasi rows go back to their step (Nominal, Jadwal) or open the Jangka waktu sheet. Lanjut stays disabled until the T&C box is ticked, then the plan is created and Rencana Aktif opens with the toast, as in Stock first.
+  - Copy: Figma's lowercase "setiap senin" is written "Senin"; weekly / monthly presets use today's weekday / date, as in Stock first.
+  - Switching between Stock first and Robinhood mid-setup lands on the other flow's setup page (Atur Rencana ↔ Tentukan jadwal).
+  - Not built: the "Nabung Rutin dengan SIP 👍 / Coba Sekarang" banner (14237:86346) in the section, since its placement isn't shown.
+- **Entry point → Portfolio** (`entry=porto`, Figma 14237:88544): "Yuk, nabung rutin dengan SIP" → SIP page.
+  META, TSLA, NVDA and NFLX open the stock sheet (14237:89186, built in HTML so it works for each stock; the figures are the frame's samples).
+  The sheet's **Beli Rutin** opens SIP with that stock; back returns to Portfolio. Lihat Selengkapnya, Take Profit / Stop Loss, Jual and Beli do nothing.
+- **USDP** now uses frame 14237:89583: the alert (bell) icon is in the top bar, between search and star. It isn't tappable.
+
+## Entry points: Saham AS home and USDP (2 Nov 2026)
+- The prototype now **opens on the Saham AS home** (Figma 14163:78084), not the SIP page.
+  - **SIP** shortcut and the Nabung Rutin **Mulai Nabung** button → SIP page (Buat Rencana SIP). SIP's back arrow returns to home.
+  - **AAPL** in Paling Banyak Dibeli → **USDP** (14237:86068). **Beli Rutin** → Atur Rencana with AAPL already picked.
+    Back returns to USDP; **Ubah** goes to the SIP stock list instead.
+- These two screens are **Figma renders with tappable areas** (`assets/entry/`, cut into fixed top, scrolling body and fixed bottom bar),
+  not rebuilt in HTML: they're host screens, only there to enter SIP. Other taps on them do nothing.
+  Trade-off: the exports are 1x (360px) scaled to 390px, so they're slightly soft on retina screens.
+- Coming back to home keeps its scroll position.
+- **Gear → Entry point: Discovery | USDP** (`entry=home|usdp`) picks the start screen. USDP starts on the stock page; its back still goes to home.
+  Switching it starts over on that screen; other gear changes keep the current screen; Reset (R) starts on the chosen entry point.
+
+## Figma update: SIP page, nominal, Rencana Aktif (2 Nov 2026)
+- **Pilih saham (14148:26959):** the category pills are now PD **Chips, Filled M** (grey rgba(0,0,0,.04), 13px, radius 6;
+  selected: blue tint, #3278f0 border, #2264d4 text). New category **Dividen Rutin** (KO, PG, MSFT, AAPL, TSM, VOO; derived, Figma shows the label only).
+- **Atur Rencana (14143:26715):** the big centred amount is replaced by the **Money input** (14197:28710): left label
+  "Nominal per pembelian" (12px bold), a 40px grey field with "$" in text-2 and the amount in black (16px), quick chips 6px below.
+  Focus shows a #3278f0 border, an invalid amount a red border. The grey section is #f5f5f5 (ui/page/flat-2).
+- **Rencana Aktif (14197:28046):** the "Pembelian berikutnya" calendar icon is 16px.
+  The frame still shows a Berhenti GOOGL card; stopped plans stay removed (see 30 Okt), so it isn't added back.
+
 ## Icons — friz-xc/pd-design-artifacts (28 Okt 2026)
 - Icons come from `assets/icons` in the PD design-artifacts repo (filled, 24px, recolored to the text color), embedded in `index.html`:
   chevron-left (back), chevron-right, chevron-down (dropdowns), search, check, x (close), calendar, sort-list, filter,
