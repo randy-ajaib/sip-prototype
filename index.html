@@ -607,15 +607,17 @@ h1, h2, h3, p { margin: 0; }
 .sip-card { display: flex; flex-direction: column; gap: 16px; width: 100%; padding: 12px; border: 1px solid #e3e8ea; border-radius: 12px; background: #fff; text-align: left; cursor: pointer; transition: background-color .15s ease-out, transform .16s var(--ease-out); }
 .sip-card:active { background: #fafbfb; transform: scale(.99); }
 .sip-det { display: flex; flex-direction: column; background: #fff; }
-.sip-det-top { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #f5f5f5; }
+.sip-det-top { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #fff; }
+.sip-det-top .sf-card { border: 0; background: #f5f5f5; }
 .sip-rows { margin: 0; display: flex; flex-direction: column; gap: 12px; }
 .sip-rows div { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 1.35; }
 .sip-rows dt { color: rgba(0, 0, 0, 0.48); }
 .sip-rows dd { margin: 0; font-weight: 700; color: #000; text-align: right; }
 .sip-orders { display: flex; flex-direction: column; }
-.sip-orders h2 { padding: 16px 16px 0; font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.sip-orders h2 { padding: 16px 16px 0; font-size: 16px; line-height: 1.35; font-weight: 700; color: #000; }
 .sip-order-list { display: flex; flex-direction: column; }
-.sip-order { display: flex; align-items: center; gap: 8px; padding: 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+.sip-order { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+.sip-order-tp { display: flex; align-items: center; gap: 8px; }
 .sip-order b { font-size: 14px; line-height: 1.35; color: #000; }
 .sip-orders-empty { padding: 8px 16px 16px; }
 .sip-order .row-meta > span, .sip-order-r > span:last-child { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
@@ -691,6 +693,7 @@ h1, h2, h3, p { margin: 0; }
 .sip-next b { color: #000; }
 .sip-plans:not(.plus) .sip-card-hd > svg { flex: none; margin-left: 8px; color: #000; }
 .sip-badge { margin-left: auto; padding: 0 4px; border-radius: 4px; background: #e1f2fa; color: #3a83f9; font-size: 10px; line-height: 16px; }
+.sip-badge.stop { background: #ffe0e0; color: #f65858; }
 .sip-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: stretch; } /* equal heights when a label wraps */
 .sip-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px; border-radius: 8px; background: #f4f6f6; text-align: center; }
 .sip-cell span { font-size: 10px; line-height: 1.35; color: rgba(0,0,0,.48); }
@@ -880,9 +883,11 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .lg40.meta img + img { position: absolute; left: 7.14px; top: 11.43px; }
 .lg40.ring { display: grid; place-items: center; background: #fff; border: 1px solid rgba(0, 0, 0, 0.1); }
 .lg40.ring.g { border-color: #f4f6f6; }
-.sf-grey { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #f5f5f5; }
+/* Atur Rencana (14272:33497): one white page, 24px between the stock card, Nominal and the dropdowns. */
+.sf-grey { display: flex; flex-direction: column; gap: 24px; padding: 16px 16px 0; background: #fff; }
 .sf-card { display: flex; align-items: center; gap: 8px; padding: 12px; background: #fff; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
 .sf-card .t { font-size: 14px; line-height: 20px; font-weight: 700; color: #171f2c; }
+.sf-grey .sf-card { padding: 13px; }
 .sf-ubah { position: relative; flex: none; border: 0; background: none; padding: 0; font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; cursor: pointer; }
 .sf-ubah::before { content: ""; position: absolute; inset: -14px -12px; }
 /* Money input (Figma 14197:28710): label, grey 40px field, quick chips 6px below */
@@ -895,11 +900,11 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .sf-amt input:focus { outline: none; }
 .sf-amt:focus-within { border-color: #3278f0; }
 .sf-amt:has(input[aria-invalid="true"]) { border-color: var(--danger); }
-.sf-nom .pchips { width: 100%; gap: 8px; }
+.sf-nom .pchips { width: 100%; gap: 8px; margin-top: 6px; }
 .sf-nom .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
 .sf-nom .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
-.sf-form .scroll { display: flex; flex-direction: column; background: #f5f5f5; }
-.sf-white { flex: 1; padding: 16px; background: #fff; border-radius: 12px 12px 0 0; }
+.sf-form .scroll { display: flex; flex-direction: column; background: #fff; }
+.sf-white { flex: 1; padding: 24px 16px 16px; background: #fff; }
 .sf-white .dd-l, .sf-white .dd b { line-height: 1.35; }
 .sf-white .dd b { color: #000; }
 .sf-form .fund .k { font-size: 12px; line-height: 1.35; }
@@ -1208,7 +1213,7 @@ let TAB_L = ['Mulai Nabung', 'Rencana SIP']; // stock-first (Figma 14141:22641):
 let SF = false; // Stock first exploration: its own copy (Figma section 14141:22641 "Approach - Stock first")
 const tabs = tab => `<div class="tabs" role="tablist" aria-label="SIP">
   <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">${TAB_L[0]}</button>
-  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">${TAB_L[1]}${PLANS.length ? ` (${PLANS.length})` : ''}</button></div>`;
+  <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">${TAB_L[1]}${PLANS.some(p => !p.stopped) ? ` (${PLANS.filter(p => !p.stopped).length})` : ''}</button></div>`;
 
 const intro = tab => `<div class="intro">${SF ? 'Lewat SIP (Systematic Investment Plan), beli saham AS otomatis dengan nominal tetap, sesuai jadwal pilihan.' : 'Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).'}${tabs(tab)}</div>`;
 
@@ -1315,24 +1320,28 @@ ${SF ? '' : info}</div>
 }
 // Rencana Aktif list, Stock first (Figma 14197:28046): Nominal / Jadwal / Jangka waktu cells, then "Pembelian berikutnya" with a calendar icon.
 // Sorted by next purchase. Figma's "30 Oct" / "Senin, 3 Nov 2026" are copy slips; real Indonesian dates are used.
+// Stopped plans (GOOGL in 14197:28046) come last, as a header-only card with the Berhenti tag.
 function sfPlanCards() {
   const cell = (k, v) => `<span class="sip-cell"><span>${k}</span><b>${v}</b></span>`;
-  return PLANS.map((p, i) => ({ p, i, next: firstDebit(p.s) })).sort((a, b) => a.next - b.next).map(({ p, i, next }) => {
+  const all = PLANS.map((p, i) => ({ p, i, next: firstDebit(p.s) }));
+  const stopped = all.filter(x => x.p.stopped).map(({ p, i }) => `<button type="button" class="sip-card sf2 stop" data-a="openSip" data-v="${i}" data-k="sip-${i}" aria-label="Detail SIP ${p.stock.t}, berhenti">
+      <span class="sip-card-hd">${sipLogo(p.stock)}<b>${p.stock.t}</b>${sipBadge(p)}${svg('chev', 20)}</span></button>`).join('');
+  return all.filter(x => !x.p.stopped).sort((a, b) => a.next - b.next).map(({ p, i, next }) => {
     const n = Math.round((next - TODAY) / 864e5), when = `${n === 0 ? 'Hari ini' : n === 1 ? 'Besok' : DAY_L[next.getDay()]}, ${next.getDate()} ${MONTHS[next.getMonth()]} ${next.getFullYear()}`;
     return `<button type="button" class="sip-card sf2" data-a="openSip" data-v="${i}" data-k="sip-${i}" aria-label="Detail SIP ${p.stock.t}">
       <span class="sip-card-hd">${sipLogo(p.stock)}<b>${p.stock.t}</b>${sipBadge(p)}${svg('chev', 20)}</span>
       <span class="sip-cells">${cell('Nominal', usd(parseAmt(p.amount)))}${cell('Jadwal', p.s.freq === 'daily' && !isRule(p.s) ? 'Setiap Hari' : schedShort(p.s))}${cell('Jangka waktu', p.s.end === 'forever' ? 'Tanpa Batas' : endLabel(p.s))}</span>
       <span class="sip-next">${svg('cal', 16)}<span>Pembelian berikutnya</span><b>${when}</b></span></button>`;
-  }).join('');
+  }).join('') + stopped;
 }
 /* ---- Rencana Aktif "Usulan" (not in Figma): balance check, relative next dates sorted, results, failed-order tag, progress, stopped plans ---- */
 const relDay = d => { const n = Math.round((d - TODAY) / 864e5); return n === 0 ? 'Hari ini' : n === 1 ? 'Besok' : `${DAY_L[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
 function plansPlus(st) {
   const cell = (k, v) => `<span class="sip-cell"><span>${k}</span><b>${v}</b></span>`;
   const wk = new Date(TODAY); wk.setDate(wk.getDate() + 7);
-  const items = PLANS.map((p, i) => ({ p, i, next: firstDebit(p.s), orders: ordersOf(p) })).sort((a, b) => a.next - b.next);
-  const need = PLANS.reduce((t, p) => t + upcoming(p.s).filter(d => d < wk).length * parseAmt(p.amount), 0);
-  const perMonth = PLANS.reduce((t, p) => t + perMonthNum(p.s, p.amount), 0);
+  const items = PLANS.map((p, i) => ({ p, i, next: firstDebit(p.s), orders: ordersOf(p) })).filter(x => !x.p.stopped).sort((a, b) => a.next - b.next);
+  const need = PLANS.filter(p => !p.stopped).reduce((t, p) => t + upcoming(p.s).filter(d => d < wk).length * parseAmt(p.amount), 0);
+  const perMonth = PLANS.filter(p => !p.stopped).reduce((t, p) => t + perMonthNum(p.s, p.amount), 0);
   // Neutral: what the next 7 days will debit. The page doesn't know the balance, so it doesn't judge it.
   const info = `<div class="sip-info">${svg('info', 20)}<div><p>${need ? `Pembelian 7 hari ke depan <b>${usd(need)}</b>. Pastikan saldo Rekening Saham AS cukup sebelum 21.30 WIB di hari pembelian.` : 'Tidak ada pembelian dalam 7 hari ke depan.'}</p>
     <button type="button" class="tlink" data-k="deposit">Deposit Rekening Saham AS</button></div></div>`;
@@ -1397,7 +1406,7 @@ function plansPlus(st) {
 /* ---- Riwayat SIP improvements (beyond Figma 14067:20096): tappable cards, schedule line, Detail SIP page, pause / stop ---- */
 // 24px card logo: the Figma 24px logo when there is one, else the 40px list logo scaled down (MSFT, META, NFLX, PG), else the ticker circle.
 const sipLogo = x => BRAND_LOGO.has(x.t) ? chipLogo(x) : ['MSFT', 'META', 'NFLX', 'PG', 'GOOGL'].includes(x.t) ? `<span class="lg24" aria-hidden="true">${lg40(x)}</span>` : logo(x, 'sm');
-const sipBadge = () => '<span class="sip-badge">Aktif</span>';
+const sipBadge = p => p?.stopped ? '<span class="sip-badge stop">Berhenti</span>' : '<span class="sip-badge">Aktif</span>';
 const fullDate = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
 // Gear "Riwayat order → Contoh": each plan gets its last 5 scheduled purchases as past orders.
 // The 3rd most recent failed; the most recent also failed when the amount is above the mock balance.
@@ -1421,14 +1430,15 @@ const SAMPLE_PLANS = () => [
   { t: 'META', amount: '5', s: { freq: 'daily', days: null, dates: null, every: 1, preset: 'daily', end: 'forever' }, hist: [true, true, true, true, true, true], note: 'daily, all succeeded' },
   { t: 'AAPL', amount: '10', s: mo(15, 6), hist: [true, false, true], note: 'monthly, one failure in the middle' },
   { t: 'MSFT', amount: '15', s: { ...wk(1, 'custom'), endDate: daysAgo(-10), endKind: 'calendar' }, hist: [true, true, true], note: 'ends in 10 days' },
-  { t: 'GOOGL', amount: '10', s: mo(1, 'forever'), hist: [true, true, false, true], note: 'monthly, early in the month' },
-].map(x => ({ stock: byT(x.t), amount: x.amount, s: x.s, hist: x.hist, sample: true, created: daysAgo(40) }));
+  { t: 'GOOGL', amount: '10', s: mo(1, 'forever'), hist: [false, true, false, true], stopped: true, note: 'stopped, last order failed' },
+].map(x => ({ stock: byT(x.t), amount: x.amount, s: x.s, hist: x.hist, stopped: x.stopped, sample: true, created: daysAgo(40) }));
 function syncSamples(on) {
   PLANS = PLANS.filter(p => !p.sample);
   if (on) PLANS.push(...SAMPLE_PLANS());
 }
 const orderTime = d => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}, 21:30`;
-// Detail SIP (Figma 14163:81578): summary on grey, Order SIP history, Berhenti SIP / Ubah.
+// Detail Rencana (Figma 14272:34197 active, 14235:27839 stopped): grey stock card on white, rows, Riwayat order SIP, Berhenti / Ubah.
+// A failed latest order gets the "Saldo tidak cukup" infobox with Coba lagi (14235:27839); older failures don't.
 function sipDetail(st, i) {
   const p = PLANS[i]; if (!p) return { title: 'Detail Rencana', body: '' };
   const dates = upcoming(p.s), forever = p.s.end === 'forever';
@@ -1440,10 +1450,11 @@ function sipDetail(st, i) {
     <div class="sip-det-top"><div class="sf-card">${lg40(p.stock)}<span class="row-meta"><span class="t">${p.stock.t}</span><span class="s">${esc(p.stock.n)}</span></span>${sipBadge(p)}</div>
       <dl class="sip-rows">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></div>
     <section class="sip-orders" aria-labelledby="ord-h"><h2 id="ord-h">Riwayat order SIP</h2>
-      ${orders.length ? `<div class="sip-order-list">${orders.map(o => `<div class="sip-order"><span class="row-meta"><b>Beli ${p.stock.t}</b><span>${usd(parseAmt(p.amount))}</span></span>
-        <span class="sip-order-r"><span class="otag${o.ok ? ' pos' : ''}">${o.ok ? 'Berhasil' : 'Gagal'}</span><span>${orderTime(o.at)}</span></span></div>`).join('')}</div>`
+      ${orders.length ? `<div class="sip-order-list">${orders.map((o, k) => `<div class="sip-order"><div class="sip-order-tp"><span class="row-meta"><b>Beli ${p.stock.t}</b><span>${usd(parseAmt(p.amount))}</span></span>
+        <span class="sip-order-r"><span class="otag${o.ok ? ' pos' : ''}">${o.ok ? 'Berhasil' : 'Gagal'}</span><span>${orderTime(o.at)}</span></span></div>${k === 0 && !o.ok ? `<div class="sip-info">${svg('info', 20)}<div><p>Saldo tidak cukup untuk pembelian ini. Deposit ke rekening saham AS lalu coba lagi</p>
+          <button type="button" class="tlink" data-a="retryOrder" data-v="${i}" data-k="retry-order">Coba lagi</button></div></div>` : ''}</div>`).join('')}</div>`
       : `<p class="sip-orders-empty">Belum ada order.</p>`}</section></div>
-    <div class="footer sip-det-ft"><button type="button" class="cta outline" data-a="askStop" data-v="${i}" data-k="stop-sip">${svg('close', 20)}Berhenti SIP</button>
+    <div class="footer sip-det-ft"><button type="button" class="cta outline" data-a="askStop" data-v="${i}" data-k="stop-sip">${svg('close', 20)}${p.stopped ? 'Berhenti SIP' : 'Berhenti'}</button>
       <button type="button" class="cta outline" data-a="editSip" data-v="${i}" data-k="edit-sip">${svg('edit', 20)}Ubah</button></div>` };
 }
 // Berhenti Nabung dengan SIP (Figma 14170:82168)
@@ -1946,8 +1957,10 @@ function app(V) {
       // Ubah: reopen Atur Rencana prefilled; saving replaces this plan (stock stays the same).
       editSip(v) { const p = PLANS[+v]; Object.assign(st, { editI: +v, stock: p.stock.t, amount: p.amount, draftAmt: p.amount, s: { ...p.s }, amtErr: '', schedErr: '', agree: false, terms: false }); ctx.push({ id: V.editPage || 'atur' }); },
       askStop(v) { st.stopI = +v; ctx.openSheet('stop'); },
-      // A stopped plan is removed, not kept as "Berhenti".
-      stopSip() { PLANS.splice(st.stopI, 1); ctx.closeSheet(() => ctx.pop(() => ctx.focus('[data-k="tab-plans"]'))); },
+      // A stopped plan stays in Rencana Aktif, tagged Berhenti, after the active ones (14197:28046).
+      stopSip() { PLANS[st.stopI].stopped = TODAY; ctx.closeSheet(() => ctx.pop(() => ctx.focus(`[data-k="sip-${st.stopI}"]`))); },
+      // Coba lagi (14235:27839, not specified further): the purchase is retried and succeeds now.
+      retryOrder(v) { const p = PLANS[+v]; if (p.hist) p.hist[0] = true; else if (p.orders?.[0]) p.orders[0].ok = true; ctx.render(); ctx.focus('[data-k="stop-sip"]'); },
       openNominal() { V.openNominal(ctx); },
       openSched() { ctx.openSheet('sched'); },
       freq(v) { st.draft.freq = v; if (v === 'weekly' && !st.draft.day) st.draft.day = 1; if (v === 'monthly' && !st.draft.date) st.draft.date = Math.min(TODAY.getDate(), 28); patchSched(); },
