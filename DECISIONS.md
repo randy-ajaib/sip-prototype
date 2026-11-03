@@ -11,6 +11,12 @@
 - **Stock first: the stock "Ubah" link is hidden when SIP was opened for a stock** from USDP or Portfolio (Beli Rutin). From the SIP page's stock list it stays.
   Robinhood has no stock Ubah in either case.
 - Escape now does what the page's back button does (exit to USDP / Portfolio, cancel an edit), not always a plain pop.
+- **Ubah on Detail Rencana (Robinhood) opens Ubah Nabung Rutin** (Figma 14245:102793): the Konfirmasi page with that title, a divider under Sumber Dana
+  and **Simpan Perubahan**. Rows edit in place as on Konfirmasi; saving updates the plan and returns to Rencana Aktif with "Berhasil mengubah SIP".
+  The Konfirmasi page title is **Konfirmasi Beli Rutin** (was Konfirmasi Nabung Rutin in Figma).
+  Stock first still edits on Atur Rencana. A daily plan reads "Setiap Hari Bursa" and the note "hari bursa, Senin–Jumat" on both pages.
+- **Konfirmasi Beli Rutin updated to Figma 14237:29565**: the divider under Sumber Dana now shows on Konfirmasi too (was edit only), and the grey info box
+  adds "Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya." (also on Ubah Nabung Rutin).
 - Fix: when Nominal is edited from Konfirmasi, the quick chips and keypad now update the visible input. Before, they updated the Tentukan nominal page still mounted underneath.
 
 ## Robinhood approach, Portfolio entry point, USDP alert (2 Nov 2026)

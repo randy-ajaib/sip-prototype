@@ -856,6 +856,7 @@ h1, h2, h3, p { margin: 0; }
 .rh-row b { display: inline-flex; align-items: center; font-weight: 700; color: #000; }
 .rh-row svg { flex: none; color: #000; }
 div.rh-row { border-bottom: 0; cursor: default; }
+div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .rh-row .tag { margin-left: 4px; padding: 0 4px; background: #e1f2fa; color: #3a83f9; font-weight: 400; }
 /* Stock first — Figma 14148:26959 (list), 14143:26715 (Atur Nabung Rutin), 14148:28279 (Custom Jadwal) */
 .sf { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #fff; }
@@ -1943,7 +1944,7 @@ function app(V) {
       openStock() { st.q = ''; ctx.push({ id: 'stock' }); },
       openSip(v) { ctx.push({ id: 'sip', i: +v }); },
       // Ubah: reopen Atur Rencana prefilled; saving replaces this plan (stock stays the same).
-      editSip(v) { const p = PLANS[+v]; Object.assign(st, { editI: +v, stock: p.stock.t, amount: p.amount, draftAmt: p.amount, s: { ...p.s }, amtErr: '', schedErr: '' }); ctx.push({ id: 'atur' }); },
+      editSip(v) { const p = PLANS[+v]; Object.assign(st, { editI: +v, stock: p.stock.t, amount: p.amount, draftAmt: p.amount, s: { ...p.s }, amtErr: '', schedErr: '', agree: false, terms: false }); ctx.push({ id: V.editPage || 'atur' }); },
       askStop(v) { st.stopI = +v; ctx.openSheet('stop'); },
       // A stopped plan is removed, not kept as "Berhenti".
       stopSip() { PLANS.splice(st.stopI, 1); ctx.closeSheet(() => ctx.pop(() => ctx.focus('[data-k="tab-plans"]'))); },
@@ -2582,7 +2583,8 @@ const sfCfg = { ...figCfg,
   act: SF_ACT,
 };
 /* Robinhood reference (Figma section 14237:28057): stock → Tentukan nominal (14245:90472) → Tentukan jadwal (14245:90649)
-   → Konfirmasi Nabung Rutin (14237:29565) → Rencana Aktif. List, Atur sendiri, Jangka waktu and Rencana Aktif are Stock first's.
+   → Konfirmasi Beli Rutin (14237:29565) → Rencana Aktif. List, Atur sendiri, Jangka waktu and Rencana Aktif are Stock first's.
+   Ubah on Detail Rencana opens the same page as Ubah Nabung Rutin (14245:102793): Simpan Perubahan, a divider under Sumber Dana.
    Changing Nominal or Jadwal from Konfirmasi fades that step in over it, with Simpan; back discards the change. */
 const RH_OPTS = [['daily', 'Setiap hari'], ['week', 'Seminggu sekali'], ['month', 'Sebulan sekali'], ['custom', 'Atur sendiri']];
 // Weekly / monthly presets use today's weekday / date, as in Stock first. Figma's lowercase "senin" is capitalised.
@@ -2601,17 +2603,18 @@ const rhSched = (st, p) => { const cur = presetOf(st.s), x = byT(st.stock); retu
   <div class="rh-opts" role="radiogroup" aria-label="Jadwal pembelian">${RH_OPTS.map(([v, l]) => { const sub = rhSub(v, st.s);
     return `<button type="button" class="rh-opt" role="radio" aria-checked="${cur === v}" data-a="rhPreset" data-v="${v}" data-k="rh-${v}"><span class="row-meta"><span class="t">${l}</span>${sub ? `<span class="s">${sub}</span>` : ''}</span><span class="radio" aria-hidden="true"></span></button>`; }).join('')}</div></div>
   <div class="footer rh-ft"><p class="rh-note">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</p><button type="button" class="cta" data-a="${p.edit ? 'rhDone' : 'rhNext'}" data-k="cta">${p.edit ? 'Simpan' : 'Lanjut'}</button></div>` }; };
-const rhConf = st => { const x = byT(st.stock), s = st.s;
+const rhConf = st => { const x = byT(st.stock), s = st.s, edit = st.editI != null, h = edit ? 'Ubah Nabung Rutin' : 'Konfirmasi Beli Rutin';
   const row = (k, v, a, val = '') => `<button type="button" class="rh-row" data-a="${a}" data-v="${val}" data-k="rh-row-${a}-${val}"><span>${k}</span><b>${v}</b>${svg('chev', 20)}</button>`;
-  return { title: 'Konfirmasi Nabung Rutin', big: true, body: `<div class="scroll rh"><h1 class="rh-h">Konfirmasi Nabung Rutin</h1>${rhStock(x)}
-  <div class="rh-rows">${row('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom')}${row('Jadwal Pembelian', s.freq === 'daily' && !isRule(s) ? 'Setiap Hari' : schedShort(s), 'rhEdit', 'sched')}${row('Jangka Waktu', term(s), 'openEnd')}
-    <div class="rh-row"><span>Sumber Dana</span><b>Rekening Saham AS<span class="tag">Autodebit</span></b></div></div>
-  <div class="sf-info">Pembelian pertama <b>${DAY_LONG_DATE(firstDebit(s))}</b>. Selanjutnya dibeli otomatis setiap <b>${sfWhen(s)}</b>.</div></div>
+  return { title: h, big: true, body: `<div class="scroll rh"><h1 class="rh-h">${h}</h1>${rhStock(x)}
+  <div class="rh-rows">${row('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom')}${row('Jadwal Pembelian', s.freq === 'daily' && !isRule(s) ? 'Setiap Hari Bursa' : schedShort(s), 'rhEdit', 'sched')}${row('Jangka Waktu', term(s), 'openEnd')}
+    <div class="rh-row rule"><span>Sumber Dana</span><b>Rekening Saham AS<span class="tag">Autodebit</span></b></div></div>
+  <div class="sf-info">Pembelian pertama <b>${DAY_LONG_DATE(firstDebit(s))}</b>. Selanjutnya dibeli otomatis setiap <b>${sfWhen(s)}${s.freq === 'daily' && !isRule(s) ? ', Senin–Jumat' : ''}</b>.<br>Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</div></div>
   <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st)}</div></div>` }; };
 const rhCfg = { ...sfCfg,
   page: (p, st) => p.id === 'rhNom' ? rhNom(st, p) : p.id === 'rhSched' ? rhSched(st, p) : p.id === 'rhConf' ? rhConf(st) : sfCfg.page(p, st),
   pick(v, ctx) { const st = ctx.st; st.stock = v; st.amtErr = ''; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount; ctx.push({ id: 'rhNom' }); },
   confirm(ctx) { const st = ctx.st; st.amount = st.draftAmt; st.pages.at(-1).edit ? ctx.pop(null, true) : ctx.push({ id: 'rhSched' }); },
+  editPage: 'rhConf',
   act: { ...SF_ACT,
     rhPreset(v, ctx) { const st = ctx.st;
       if (v === 'custom') { st.draft = { ...st.s }; st.enter = 'sheet'; return SF_ACT.openCustom(null, ctx); }
@@ -2639,14 +2642,15 @@ const snapshot = st => st && { ...Object.fromEntries(KEEP.map(k => [k, st[k]])),
 // Pages only some flows have: Atur Rencana is Stock first, the stock picker page is the other explorations; Detail Rencana exists in both.
 // Robinhood reuses Stock first's list, sheets and Rencana Aktif; only the setup after picking a stock differs.
 const isFirst = () => sel.pick === 'first' || sel.pick === 'rh';
-// Switching between Stock first and Robinhood mid-setup lands on the other flow's setup: Atur Rencana ↔ Tentukan nominal (its later steps fold into Atur Rencana).
-const swapSetup = (p, rh) => rh && p.id === 'atur' ? { ...p, id: 'rhNom' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
+// Switching between Stock first and Robinhood mid-setup lands on the other flow's setup: Atur Rencana ↔ Tentukan nominal (its later steps fold into Atur Rencana);
+// while editing a plan, Atur Rencana ↔ Ubah Nabung Rutin.
+const swapSetup = (p, rh, editing) => rh && p.id === 'atur' ? { ...p, id: editing ? 'rhConf' : 'rhNom' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
 const pageFits = (p, first, rh) => p.id === 'sip' ? !!PLANS[p.i] : p.id === 'atur' ? first : p.id === 'stock' ? !first : p.id.startsWith('rh') ? rh : false;
 const build = (keep = null) => {
   const rh = sel.pick === 'rh', first = isFirst(); // Stock first (and Robinhood, built on it) ignores the Jadwal / opsi axes: it has its own Figma sheets
   syncSamples(first && sel.ord === 'sample');
   SF = first; TAB_L = first ? ['Buat Rencana SIP', 'Rencana Aktif'] : ['Mulai Nabung', 'Rencana SIP'];
-  const restore = keep && (st => { Object.assign(st, keep, { s: { ...st.s, ...keep.s }, pages: keep.pages.map(p => swapSetup(p, rh)).filter((p, i, a) => pageFits(p, first, rh) && !(p.id === 'atur' && a[i - 1]?.id === 'atur')) });
+  const restore = keep && (st => { Object.assign(st, keep, { s: { ...st.s, ...keep.s }, pages: keep.pages.map(p => swapSetup(p, rh, keep.editI != null)).filter((p, i, a) => pageFits(p, first, rh) && !(p.id === 'atur' && a[i - 1]?.id === 'atur')) });
     if (!st.stock) st.pages = st.pages.filter(p => p.id === 'sip'); });
   return app({ ...(rh ? rhCfg : first ? sfCfg : figCfg), restore, emptySched: !first && sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.stockFirst = first;
     st.oneSched = !first && sel.sched === 'one'; st.simpleSched = first || sel.opts === 'preset'; st.calStyle = sel.cal;
