@@ -1,5 +1,18 @@
 # SIP creation — decisions from /sip-prototype
 
+## Beli Rutin entry points and one confirmation order (6 Nov 2026)
+- **Robinhood confirmation (14385:17621):** Nominal first, then Jadwal, same as Stock first. Schedule copy has no full stop
+  ("Setiap tanggal 22"), which settles the earlier unknown.
+- **Saham AS home (14245:91944):** the SIP shortcut is now **Beli Rutin**, third in the row. The "Yuk, Nabung Rutin dengan SIP" banner
+  and its Mulai Nabung entry are gone (Trending is followed directly by Analyst Picks). The frame cuts off after Paling Banyak Dibeli,
+  so Trending and Analyst Picks come from the earlier render.
+- **USDP dock (14237:89583):** Beli Rutin without the BARU badge.
+
+## Review: chips and Stock first Jadwal (6 Nov 2026)
+- Quick amount chips look the same selected as unselected (grey outline, no fill); the amount itself shows the choice.
+- Stock first's Jadwal row opens Robinhood's Jadwal page (Simpan / back), not the Jadwal Pembelian sheet; Atur sendiri opens its sheet over it.
+  The Jadwal Pembelian sheet (14383:15323) is no longer reached in Stock first; its code is kept.
+
 ## Stock first uses the Robinhood confirmation page (Figma 14385:17797, 6 Nov 2026)
 - Stock first and Robinhood now share one "Beli Rutin X" page. Stock first shows everything up front (opens on it with $10 and Setiap bulan);
   Robinhood is progressive disclosure (Jadwal → Nominal → the same page).
