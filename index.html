@@ -840,19 +840,32 @@ h1, h2, h3, p { margin: 0; }
 .rh-opt .radio::after { display: none; }
 .rh-opt[aria-checked="true"] .radio { background-image: var(--img-radio-on); background-size: 20px 20px; }
 .rh-ft { position: sticky; bottom: 0; z-index: 1; gap: 10px; margin-top: auto; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); }
-.rh-note { font-size: 12px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
-.rh-sum { gap: 12px; }
-.rh-sum .t { flex: 1; font-size: 14px; line-height: 1.35; font-weight: 700; color: #171f2c; }
 .page.fade-in { animation: fadeIn .18s ease-out; box-shadow: none; }
 .page.fading { animation: fadeOut .15s ease-in forwards; box-shadow: none; pointer-events: none; }
-/* Money input in a card (Figma 14245:102695): label 6px above the field, chips 12px below */
-.rh-amtbox { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; }
-.rh-amtbox label { font-size: 12px; line-height: 1.35; font-weight: 700; color: #000; }
-.rh-amtbox .err { margin: 0; }
-.rh-amtbox .err:empty { display: none; }
-.rh-amtbox .pchips { width: 100%; gap: 8px; margin-top: 6px; }
-.rh-amtbox .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
-.rh-amtbox .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+/* Nominal Beli Rutin (14245:90472): large centred amount, "$" in text-2, chips below */
+.rh-big { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.rh-amt { padding: 0; gap: 0; font-size: 44px; line-height: 1.2; font-weight: 400; color: rgba(0, 0, 0, 0.65); }
+.rh-amt input { max-width: 8ch; border-bottom: 0; font-size: 44px; font-weight: 400; color: #000; caret-color: #3278f0; }
+.rh-amt input[aria-invalid="true"] { color: var(--danger); }
+.rh-big .err { margin: 0; text-align: center; }
+.rh-big .err:empty { display: none; }
+.rh-big .pchips, .bl .sf-nom .pchips { width: 100%; gap: 8px; }
+.rh-big .pchip { height: 26px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
+.rh-big .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+/* Beli Rutin pages (14380:15604 / 15899 / 16024): title with a 32px logo; stacked label / value rows 16px apart with dividers */
+.bl { padding: 16px; }
+.bl.wide { gap: 24px; }
+.bl-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bl-rows { display: flex; flex-direction: column; gap: 16px; }
+.bl-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 0 16px; border: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: none; text-align: left; cursor: pointer; }
+div.bl-row { padding: 0; border-bottom: 0; cursor: default; }
+.bl-row .row-meta { flex: 1; gap: 4px; }
+.bl-row .k { font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
+.bl-row b { font-size: 14px; line-height: 1.35; font-weight: 700; color: #000; }
+.bl-row .tag { margin-left: 4px; padding: 0 4px; background: #e1f2fa; color: #3a83f9; font-weight: 400; }
+.bl-row svg, .rh-opt svg { flex: none; color: #000; }
+.rh-opt > .row-meta, .rh-opt > .t { flex: 1; }
+.rh-ubah { font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; }
 .rh-ft .keypad { margin: 2px -16px 0; padding-top: 12px; border-top: 1px solid #e3e8ea; }
 .rh-row { cursor: pointer; font-size: 14px; line-height: 1.35; color: rgba(0, 0, 0, 0.48); }
 .rh-row > span:first-child { flex: 1; }
@@ -863,6 +876,10 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .rh-row .tag { margin-left: 4px; padding: 0 4px; background: #e1f2fa; color: #3a83f9; font-weight: 400; }
 /* Stock first — Figma 14148:26959 (list), 14143:26715 (Atur Nabung Rutin), 14148:28279 (Custom Jadwal) */
 .sf { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #fff; }
+.tabs-in { padding: 16px 16px 0; background: #fff; }
+.tabs-in .tabs { margin-top: 0; }
+.tabs-in .tab { color: rgba(0,0,0,.65); }
+.tabs-in .tab[aria-selected="true"] { color: #2264d4; }
 .sf-hd { padding: 16px 16px 0; font-size: 16px; line-height: 1.35; font-weight: 700; color: #000; }
 /* Search + pills stay pinned under the status bar while the page scrolls; the title scrolls away. */
 .sf-top { position: sticky; top: 0; z-index: 2; display: flex; flex-direction: column; gap: 12px; padding: 12px 0 8px; background: #fff; }
@@ -934,7 +951,22 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cs-unit select:focus { outline: none; }
 .cs-unit svg { position: absolute; right: 8px; pointer-events: none; color: rgba(0, 0, 0, 0.65); }
 .cs-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.cs-mon { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+/* Atur Jadwal Sendiri (14349:302305): segmented Harian | Mingguan | Bulanan, 1–31 calendar, Jangka waktu with a date field */
+.sh-ds .cs { display: flex; flex-direction: column; gap: 16px; }
+.cs-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 2px; border-radius: 10px; background: rgba(0, 0, 0, 0.15); }
+.cs-seg .cs-chip { height: 31px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; color: #000; }
+.cs-seg .cs-chip[aria-checked="true"] { background: #fff; color: #000; }
+.cs-daily { font-size: 13px; line-height: 1.35; color: #000; }
+.cs-cal { display: grid; grid-template-columns: repeat(7, 40px); justify-content: space-between; }
+.cs-hr { width: 100%; height: 1px; margin: 0; border: 0; background: rgba(0, 0, 0, 0.1); }
+.sh-ds .cs-end { gap: 12px; }
+.sh-ds .cs-end .cs-l { font-size: 13px; }
+.cs-ends { display: flex; flex-direction: column; gap: 12px; }
+.cs-date { position: relative; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 16px; line-height: 1.35; color: #000; cursor: pointer; }
+.cs-date span { flex: 1; }
+.cs-date svg { flex: none; color: rgba(0, 0, 0, 0.65); }
+.cs-date input { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+.cs-date:focus-within { box-shadow: inset 0 0 0 1px #3278f0; }
 .cs-chip { height: 32px; padding: 4px 8px; border: 1px solid transparent; border-radius: 6px; background: rgba(0, 0, 0, 0.04); font-size: 13px; line-height: 1.35; font-weight: 700; color: rgba(0, 0, 0, 0.65); white-space: nowrap; cursor: pointer; transition: background-color .15s ease-out, border-color .15s ease-out; }
 .cs-chip[aria-checked="true"] { background: rgba(50, 120, 240, 0.1); border-color: #3278f0; color: #2264d4; }
 /* Preset jadwal — Figma 14148:27475: 24px radios, 12px to the label, 16px between rows */
@@ -1215,7 +1247,8 @@ const tabs = tab => `<div class="tabs" role="tablist" aria-label="SIP">
   <button type="button" class="tab" role="tab" aria-selected="${tab === 'new'}" data-a="tab" data-v="new" data-k="tab-new">${TAB_L[0]}</button>
   <button type="button" class="tab" role="tab" aria-selected="${tab === 'plans'}" data-a="tab" data-v="plans" data-k="tab-plans">${TAB_L[1]}${PLANS.some(p => !p.stopped) ? ` (${PLANS.filter(p => !p.stopped).length})` : ''}</button></div>`;
 
-const intro = tab => `<div class="intro">${SF ? 'Lewat SIP (Systematic Investment Plan), beli saham AS otomatis dengan nominal tetap, sesuai jadwal pilihan.' : 'Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).'}${tabs(tab)}</div>`;
+// Stock first (Figma 14148:26959): the tabs sit at the top of the white sheet, not in the blue header.
+const intro = tab => `<div class="intro">${SF ? 'Beli Rutin saham AS otomatis dengan nominal tetap, sesuai jadwal yang kamu pilih.' : `Investasi Saham AS jadi lebih konsisten dan mudah lewat SIP (Systematic Investment Plan).${tabs(tab)}`}</div>`;
 
 const logo = (s, cls = '') => `<span class="logo ${cls}" style="background:${s.c}${s.t.length > 4 ? ';font-size:7.5px;letter-spacing:-.02em' : s.t.length > 3 ? ';font-size:8.5px' : ''}" aria-hidden="true">${esc(s.t)}</span>`;
 
@@ -1862,7 +1895,7 @@ function app(V) {
     function view() {
       const top = st.pages.length - 1;
       let html = !st.sip ? hostView(st.host.at(-1), !!st.sheet) : statusBar(top >= 0 && V.lightPage);
-      if (st.sip) html += `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header(SF ? 'SIP Saham AS' : 'SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${hubBody(st)}</div></div>`;
+      if (st.sip) html += `<div class="main" ${top >= 0 || st.sheet ? 'inert' : ''}>${header(SF ? 'Beli Rutin Saham AS' : 'SIP Nabung Rutin 👍')}${intro(st.tab)}<div class="body">${SF ? `<div class="tabs-in">${tabs(st.tab)}</div>` : ''}${hubBody(st)}</div></div>`;
       if (st.sip) html += st.pages.map((p, i) => {
         const pg = p.id === 'sip' ? sipDetail(st, p.i) : V.page(p, st);
         return `<div class="page ${i !== top ? '' : st.enter === 'page' ? 'enter' : st.enter === 'fade' ? 'fade-in' : ''}" ${i < top || st.sheet ? 'inert' : ''} role="dialog" aria-label="${esc(pg.title)}">
@@ -1937,6 +1970,7 @@ function app(V) {
       terms() { st.terms = !st.terms; ctx.patch('[data-terms]', termsBox(st)); },
       buy() {
         if (!st.agree || st.submitting) return;
+        if (amtError(st.amount)) { st.amtErr = amtError(st.amount); syncAmt(); return ctx.focus('[data-amt]'); }
         st.submitting = true; ctx.patch('[data-buy]', buyBtn(st));
         setTimeout(() => {
           const editing = st.editI != null && PLANS[st.editI];
@@ -1967,6 +2001,7 @@ function app(V) {
       preset(v) { /* PROTO:initial-state */
         if (v === 'custom' && st.stockFirst) return V.act.openCustom(null, ctx); // stock-first: Custom is its own sheet
         st.draft.preset = v; st.draft.day = st.draft.date = null;
+        if (st.stockFirst) Object.assign(st.draft, { end: 'forever', endDate: null });
         const P = st.stockFirst ? SF_PRESET_SCHED : PRESET_SCHED;
         if (P[v]) Object.assign(st.draft, P[v]);
         else if (st.draft.freq === 'daily') Object.assign(st.draft, PRESET_SCHED.week); // Custom starts from the weekly preset's day
@@ -2068,6 +2103,7 @@ function app(V) {
         syncAmt();
       }
     });
+    phone.addEventListener('change', e => { const a = e.target.dataset.on; if (a) V.act?.[a]?.(e.target.value, ctx, e.target); });
     phone.addEventListener('focusout', e => { if (e.target.matches('[data-amt]')) { st.amtErr = amtError(st.draftAmt); syncAmt(); } });
     phone.addEventListener('keydown', e => {
       if (e.key === 'Enter' && e.target.matches('[data-search]')) {
@@ -2089,9 +2125,9 @@ function app(V) {
 const FREQ_NAME = { daily: 'Setiap Hari', weekly: 'Setiap Minggu', monthly: 'Setiap Bulan' };
 const routine = s => SF ? 'Setiap ' + sfWhen(s) : s.freq === 'monthly' && s.mmode !== 'lastwd' ? 'Setiap T' + whenTxt(s).slice(1) : 'Setiap ' + whenTxt(s); // Figma 14123:25142
 const term = s => s.end === 'forever' ? (SF ? 'Tanpa batas waktu' : 'Sampai dihapus') : s.end === 'custom' ? customLabel(s, true) : SF && s.end === 12 ? '1 tahun' : `${s.end} bulan`;
-const buyBtn = st => st.submitting
+const buyBtn = (st, label = 'Buat SIP') => st.submitting
   ? `<button type="button" class="cta" data-k="buy" data-loading aria-busy="true" disabled><span class="spin" aria-hidden="true"></span>Memproses…</button>`
-  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>${st.editI != null ? 'Simpan Perubahan' : 'Buat SIP'}</button>`;
+  : `<button type="button" class="cta" data-a="buy" data-k="buy" ${st.agree ? '' : 'disabled'}>${st.editI != null ? 'Simpan Perubahan' : label}</button>`;
 const termsBox = st => st.terms ? `<ul class="terms">
   <li>Rekening Saham AS didebit otomatis sesuai jadwal. Pastikan saldo cukup sebelum hari pembelian.</li>
   <li>Pembelian memakai harga pasar saat order dieksekusi, jadi jumlah lembar bisa berbeda tiap pembelian.</li>
@@ -2529,19 +2565,26 @@ const sfRows = st => { const q = st.q.trim(), l = q ? filtered(st.q) : SF_IN[st.
 const sfList = st => `<div class="sf"><p class="sf-hd">Pilih saham</p><div class="sf-top">${searchFig(st, 'qsf', 'Cari kode atau nama, misal AAPL')}
   <div class="sf-pills" role="group" aria-label="Kategori">${SF_CATS.map(([v, l]) => `<button type="button" class="sf-pill" data-a="sfCat" data-v="${v}" data-k="sfcat-${v}" aria-pressed="${(st.sfCat || 'trend') === v}">${l}</button>`).join('')}</div></div>
   <div class="scroll" data-list>${sfRows(st)}</div></div>`;
+// Beli Rutin pages (Figma 14380:15604, 14380:15899, 14380:16024): title with the 32px logo, stacked label / value rows.
+const blHead = (h, x) => `<div class="bl-hd"><h1 class="rh-h">${h}</h1><span class="lg32">${lg40(x)}</span></div>`;
+const blRow = (k, v, a, val, key) => `<button type="button" class="bl-row" data-a="${a}" data-v="${val}" data-k="${key}"><span class="row-meta"><span class="k">${k}</span><b>${v}</b></span>${svg('chev', 20)}</button>`;
+const blFund = '<div class="bl-row"><span class="row-meta"><span class="k">Sumber Dana</span><b>Rekening Saham AS<span class="tag">Autodebit</span></b></span></div>';
+const blHoliday = '<div class="sf-info">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</div>';
+// "5 Desember 2026"; the last purchase day of a plan with an end, else null.
+const longDate = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
+const endDay = s => s.end == null || s.end === 'forever' ? null : s.end === 'custom' ? s.endDate : buyDates(s).at(-1);
+// Jadwal Pembelian value: "Setiap hari bursa Senin - Jumat." / "Seminggu sekali, setiap hari Kamis." / "Sebulan sekali, setiap tanggal 22. Berakhir 5 Desember 2026"
+const schedLine = s => { const e = endDay(s);
+  return (s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `${s.freq === 'weekly' ? 'Seminggu' : 'Sebulan'} sekali, setiap ${sfWhen(s)}.`) + (e ? ` Berakhir ${longDate(e)}` : ''); };
+// One page, no confirmation sheet: Nominal, Jadwal Pembelian (its sheet also sets the end date), Sumber Dana, then agree + Beli Rutin.
 function sfPage(st, p) {
-  const x = byT(st.stock), a = st.amount || '';
-  const schedLbl = 'Setiap ' + sfWhen(st.s);
-  const dd = (k, act, label, value) => `<button type="button" class="dd" data-a="${act}" data-k="row-${k}" aria-haspopup="dialog"><span class="dd-l">${label}</span><b>${value}</b>${svg('chevd', 20)}</button>`;
-  return { title: 'Atur Rencana', body: `<form class="form sf-form" novalidate><div class="scroll">
-    <div class="sf-grey"><div class="sf-card">${lg40(x)}<span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span>
-      ${st.editI != null || p?.exit /* opened for a stock from USDP / Portfolio: the stock is fixed */ ? '' : '<button type="button" class="sf-ubah" data-a="pop" data-k="sf-ubah" aria-label="Ubah saham">Ubah</button>'}</div>
-      <div class="sf-nom"><label for="amt-h">Nominal per pembelian</label>
-        <div class="sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
-        <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
-    <div class="sf-white"><div class="dd-group">${dd('sched', 'openSched', 'Jadwal pembelian', schedLbl)}${dd('end', 'openEnd', 'Jangka waktu', endLabel(st.s))}</div>
-      ${st.schedErr && !st.amtErr ? `<p class="err sched-err" role="alert">${st.schedErr}</p>` : ''}</div>
-    </div><div class="footer" data-footer>${hubFooter(st)}</div></form>` };
+  const x = byT(st.stock), a = st.amount || '', h = `Beli Rutin ${x.t}`;
+  return { title: h, big: true, body: `<div class="scroll rh bl wide">${blHead(h, x)}
+    <div class="sf-nom"><label for="amt-h">Nominal per pembelian</label>
+      <div class="sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
+      <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div>
+    <div class="bl-rows">${blRow('Jadwal Pembelian', schedLine(st.s), 'openSched', '', 'row-sched')}${blFund}${blHoliday}</div></div>
+    <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Beli Rutin')}</div></div>` };
 }
 // "hari bursa" / "hari Selasa" / "tanggal 22"
 const sfWhen = s => (s.freq === 'weekly' && !isRule(s) ? 'hari ' : '') + whenTxt(s);
@@ -2550,29 +2593,35 @@ const sfFooter = st => `${schedDone(st.s) ? `<div class="sf-info">Pembelian pert
 // Jadwal pembelian (14148:27475, 14163:77136 / 77220): weekly and monthly presets use today's weekday / date.
 // Today's weekday (Senin on a weekend, when US markets are closed) and today's date; 29–31 fall back to the month's last day.
 const SF_DAY = TODAY.getDay() % 6 ? TODAY.getDay() : 1, SF_DATE = TODAY.getDate();
-const SF_PRESETS = [['daily', 'Setiap hari'], ['week', 'Setiap minggu'], ['month', 'Setiap bulan'], ['custom', 'Atur sendiri']];
+const SF_PRESETS = [['month', 'Setiap bulan'], ['week', 'Setiap minggu'], ['daily', 'Setiap hari'], ['custom', 'Atur sendiri']];
 const SF_PRESET_SCHED = { daily: PRESET_SCHED.daily, week: { ...PRESET_SCHED.week, days: [SF_DAY] }, month: { ...PRESET_SCHED.month, dates: [SF_DATE] } };
 const sfNote = d => !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih hari pembelian.' : 'Pilih tanggal pembelian.')
+  : d.preset === 'custom' ? csNote(d)
   : d.freq === 'daily' ? 'Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.'
-  : d.preset === 'custom' ? `Dibeli otomatis ${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali, <b>setiap ${sfWhen(d)}.</b>`
   : `Dibeli otomatis <b>${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali</b>, setiap ${sfWhen(d)}.`;
 // Jangka waktu (14148:28280): plain radios, no Custom.
 const SF_END = [['forever', 'Tanpa batas waktu'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [9, '9 bulan'], [12, '1 tahun']];
 const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Jangka waktu">${SF_END.map(([v, l]) =>
   `<button type="button" class="eopt" role="radio" aria-checked="${cur === v}" data-a="endpick" data-v="${v}" data-k="endpick-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${l}</span></button>`).join('')}</div>`;
-// Atur Jadwal Sendiri (14163:77431 weekly / 14163:77671 monthly): Mingguan | Bulanan, then one weekday or one date.
+// Atur Jadwal Sendiri (14349:302305): Harian | Mingguan | Bulanan, one weekday or one date (1–31), then Jangka waktu with an optional end date.
 const csChip = (a, v, l, on) => `<button type="button" class="cs-chip" role="radio" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
+const isoDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const csNote = d => { const e = d.end === 'custom' && d.endDate ? `Berakhir ${longDate(d.endDate)}` : 'Tanpa batas waktu.';
+  return d.freq === 'daily' ? `Dibeli otomatis <b>setiap hari bursa Senin - Jumat. ${e}</b>` : `Dibeli otomatis ${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali, <b>setiap ${sfWhen(d)}. ${e}</b>`; };
 function csRest(st) {
-  const d = st.draft;
-  const body = d.freq === 'weekly'
-    ? `<div class="cs-grp"><span class="cs-l" id="cs-day-l">Beli setiap</span><div class="plist" role="radiogroup" aria-labelledby="cs-day-l">${[1, 2, 3, 4, 5].map(x =>
-      `<button type="button" class="eopt" role="radio" aria-checked="${daysOf(d).includes(x)}" data-a="csDay" data-v="${x}" data-k="csDay-${x}"><span class="radio" aria-hidden="true"></span><span class="t">${DAY_L[x]}</span></button>`).join('')}</div></div>`
-    : `<div class="cs-grp"><span class="cs-l" id="cs-date-l">Beli setiap tanggal</span><div class="dgrid" role="radiogroup" aria-labelledby="cs-date-l">${Array.from({ length: 28 }, (_, i) => i + 1).map(x =>
-      `<button type="button" class="dcell" role="radio" aria-checked="${datesOf(d).includes(x)}" data-a="csDate" data-v="${x}" data-k="csDate-${x}">${x}</button>`).join('')}</div></div>`;
-  return `${body}<p class="snote" aria-live="polite">${sfNote(d)}</p>`;
+  const d = st.draft, endOn = d.end === 'custom';
+  const body = d.freq === 'daily' ? '<p class="cs-daily">Beli setiap Hari Bursa, Senin - Jumat.</p>'
+    : d.freq === 'weekly' ? `<div class="cs-grp"><span class="cs-l" id="cs-day-l">Beli setiap</span><div class="cs-days" role="radiogroup" aria-labelledby="cs-day-l">${[1, 2, 3, 4, 5].map(x => csChip('csDay', x, DAY_L[x], daysOf(d).includes(x))).join('')}</div></div>`
+    : `<div class="cs-cal" role="radiogroup" aria-label="Beli setiap tanggal">${Array.from({ length: 31 }, (_, i) => i + 1).map(x =>
+      `<button type="button" class="dcell" role="radio" aria-checked="${datesOf(d).includes(x)}" data-a="csDate" data-v="${x}" data-k="csDate-${x}">${x}</button>`).join('')}</div>`;
+  const rad = (v, l) => `<button type="button" class="eopt" role="radio" aria-checked="${endOn === (v === 'custom')}" data-a="csEnd" data-v="${v}" data-k="csEnd-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${l}</span></button>`;
+  // The field opens the browser's date picker; the earliest end is the first purchase.
+  const field = !endOn ? '' : `<label class="cs-date"><span>${longDate(d.endDate)}</span>${svg('cal', 20)}<input type="date" data-a="csDatePick" data-on="csEndDate" aria-label="Tanggal berakhir" min="${isoDate(firstDebit(d))}" value="${isoDate(d.endDate)}"></label>`;
+  return `${body}<hr class="cs-hr"><div class="cs-grp cs-end"><span class="cs-l" id="cs-end-l">Jangka waktu</span><div class="cs-ends" role="radiogroup" aria-labelledby="cs-end-l">${rad('forever', 'Tanpa batas waktu')}${rad('custom', 'Tentukan Tanggal Berakhir')}</div>${field}</div>
+    <hr class="cs-hr"><p class="snote" aria-live="polite">${csNote(d)}</p>`;
 }
 const cschedSheet = st => ({ title: 'Atur Jadwal Sendiri', fit: true, cls: 'sh-ds', back: 'csBack', body: `<div class="sheet-body cs">
-  <div class="cs-mon" role="radiogroup" aria-label="Ulangi">${[['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => csChip('csUnit', v, l, st.draft.freq === v)).join('')}</div>
+  <div class="cs-seg" role="radiogroup" aria-label="Ulangi">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => csChip('csUnit', v, l, st.draft.freq === v)).join('')}</div>
   <div class="cs-rest" data-cs>${csRest(st)}</div></div>
   <div class="footer sh-ft" data-sched-ft>${saveBtn(st.draft)}</div>` });
 const SF_ACT = {
@@ -2580,62 +2629,66 @@ const SF_ACT = {
   toastX(_, ctx) { ctx.st.toast = false; ctx.phone.querySelector('.toast')?.remove(); ctx.focus('[data-k="new-sip"]'); },
   sfCat(v, ctx) { ctx.st.sfCat = v; ctx.st.q = ''; const i = ctx.phone.querySelector('[data-search]'); if (i) i.value = '';
     ctx.phone.querySelectorAll('[data-a="sfCat"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v))); ctx.patch('[data-list]', sfRows(ctx.st)); },
-  // Opens on Mingguan with today's weekday unless a weekly / monthly schedule is already picked.
-  openCustom(_, ctx) { const st = ctx.st; if (st.draft.freq === 'daily') Object.assign(st.draft, SF_PRESET_SCHED.week); st.draft.preset = 'custom'; st.sheet = 'csched'; ctx.render(); ctx.focus('[data-k="sh-back"]'); },
+  // Opens on the schedule already picked (Harian for Setiap hari); the end date is kept from an earlier custom plan.
+  openCustom(_, ctx) { const st = ctx.st; st.draft.preset = 'custom'; if (st.draft.end == null) st.draft.end = 'forever'; st.sheet = 'csched'; ctx.render(); ctx.focus('[data-k="sh-back"]'); },
   csBack(_, ctx) { ctx.st.sheet = 'sched'; ctx.render(); ctx.focus('[data-k="preset-custom"]'); },
-  csUnit(v, ctx) { const d = ctx.st.draft; if (d.freq === v) return; Object.assign(d, v === 'weekly' ? SF_PRESET_SCHED.week : SF_PRESET_SCHED.month, { preset: 'custom' });
+  csUnit(v, ctx) { const d = ctx.st.draft; if (d.freq === v) return; Object.assign(d, v === 'daily' ? PRESET_SCHED.daily : v === 'weekly' ? SF_PRESET_SCHED.week : SF_PRESET_SCHED.month, { preset: 'custom' });
     ctx.phone.querySelectorAll('[data-a="csUnit"]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === v))); csPatch(ctx); },
   csDay(v, ctx) { Object.assign(ctx.st.draft, { days: [+v], day: null }); csPatch(ctx); },
   csDate(v, ctx) { Object.assign(ctx.st.draft, { dates: [+v], date: null }); csPatch(ctx); },
+  // Tentukan Tanggal Berakhir starts one month after the first purchase.
+  csEnd(v, ctx) { const d = ctx.st.draft; d.end = v; d.endDate = v === 'custom' ? d.endDate || addMonths(firstDebit(d), 1) : null; csPatch(ctx); ctx.focus(`[data-k="csEnd-${v}"]`); },
+  csDatePick(_, ctx, el) { try { el.showPicker(); } catch { /* older browsers open it on click */ } },
+  csEndDate(v, ctx) { if (!v) return; const [y, m, dd] = v.split('-').map(Number), d = ctx.st.draft, min = firstDebit(d), x = new Date(y, m - 1, dd); d.endDate = x < min ? min : x; csPatch(ctx); },
 };
 function csPatch(ctx) { ctx.patch('[data-cs]', csRest(ctx.st)); ctx.patch('[data-sched-ft]', saveBtn(ctx.st.draft)); }
+// A new plan starts on Setiap bulan with today's date (Figma 14380:15899, 14163:77220).
+function sfStart(st, v) { st.stock = v; st.amtErr = ''; st.schedErr = ''; st.agree = false; st.terms = false; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount;
+  if (st.editI == null && !st.s.preset) st.s = { ...st.s, ...SF_PRESET_SCHED.month, preset: 'month', end: 'forever', endDate: null }; }
 const sfCfg = { ...figCfg,
   page: (p, st) => p.id === 'atur' ? sfPage(st, p) : figCfg.page(p, st),
   list: sfRows,
-  pick(v, ctx) { const st = ctx.st; st.stock = v; st.amtErr = ''; st.schedErr = ''; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount; ctx.push({ id: 'atur' }); },
+  pick(v, ctx) { const st = ctx.st; sfStart(st, v); ctx.push({ id: 'atur' }); },
   act: SF_ACT,
 };
-/* Robinhood reference (Figma section 14237:28057): stock → Tentukan nominal (14245:90472) → Tentukan jadwal (14245:90649)
-   → Konfirmasi Beli Rutin (14237:29565) → Rencana Aktif. List, Atur sendiri, Jangka waktu and Rencana Aktif are Stock first's.
-   Ubah on Detail Rencana opens the same page as Ubah Nabung Rutin (14245:102793): Simpan Perubahan, a divider under Sumber Dana.
-   Changing Nominal or Jadwal from Konfirmasi fades that step in over it, with Simpan; back discards the change. */
-const RH_OPTS = [['daily', 'Setiap hari'], ['week', 'Seminggu sekali'], ['month', 'Sebulan sekali'], ['custom', 'Atur sendiri']];
+/* Robinhood reference (Figma section 14237:28057), schedule first: stock → Jadwal Beli Rutin (14380:15899) → Nominal Beli Rutin (14245:90472)
+   → Beli Rutin X confirmation (14380:16024) → Rencana Aktif. List, Atur Jadwal Sendiri and Rencana Aktif are Stock first's.
+   Ubah on Detail Rencana opens the confirmation page as Ubah Nabung Rutin with Simpan Perubahan.
+   Changing Nominal or Jadwal from the confirmation fades that step in over it, with Simpan; back discards the change. */
+const RH_OPTS = [['month', 'Sebulan sekali'], ['week', 'Seminggu sekali'], ['daily', 'Setiap hari'], ['custom', 'Atur sendiri']];
 // Weekly / monthly presets use today's weekday / date, as in Stock first. Figma's lowercase "senin" is capitalised.
-const rhSub = (v, s) => v === 'daily' ? 'Dibeli otomatis setiap hari bursa, Senin–Jumat.' : v === 'week' ? `Dibeli otomatis setiap ${DAY_L[SF_DAY]}.`
-  : v === 'month' ? `Dibeli otomatis setiap tanggal ${SF_DATE}.` : presetOf(s) === 'custom' && schedDone(s) ? `Dibeli otomatis setiap ${sfWhen(s)}.` : '';
-const rhStock = x => `<div class="sf-card">${lg40(x)}<span class="row-meta"><span class="t">${x.t}</span><span class="s">${esc(x.n)}</span></span></div>`;
-// Tentukan nominal (14245:90472): stock card, then the PD Money input with quick chips; the on-page keypad types into it.
-const rhNom = (st, p) => { const a = st.draftAmt, id = p.edit ? 'amt-re' : 'amt-r'; return { title: 'Tentukan nominal', big: true, body: `<div class="scroll rh"><h1 class="rh-h">Tentukan nominal</h1>${rhStock(byT(st.stock))}
-  <div class="rh-amtbox"><label for="${id}">Nominal per pembelian</label>
-    <div class="sf-amt"><span aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="none" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="${id}-err"></div>
+const rhSub = v => v === 'daily' ? 'Dibeli otomatis setiap hari bursa, Senin–Jumat.' : v === 'week' ? `Dibeli otomatis setiap ${DAY_L[SF_DAY]}.` : `Dibeli otomatis setiap tanggal ${SF_DATE}.`;
+// Atur sendiri, once set, shows the schedule with an Ubah link instead of the chevron.
+const rhOpts = st => { const cur = presetOf(st.s), custom = cur === 'custom' && schedDone(st.s);
+  return RH_OPTS.map(([v, l]) => v === 'custom'
+    ? `<button type="button" class="rh-opt" role="radio" aria-checked="${custom}" data-a="rhPreset" data-v="custom" data-k="rh-custom"><span class="radio" aria-hidden="true"></span><span class="t">${custom ? schedLine(st.s) : l}</span>${custom ? '<span class="rh-ubah">Ubah</span>' : svg('chev', 20)}</button>`
+    : `<button type="button" class="rh-opt" role="radio" aria-checked="${cur === v}" data-a="rhPreset" data-v="${v}" data-k="rh-${v}"><span class="radio" aria-hidden="true"></span><span class="row-meta"><span class="t">${l}</span><span class="s">${rhSub(v)}</span></span></button>`).join(''); };
+const rhSched = (st, p) => { const x = byT(st.stock), h = `Jadwal Beli Rutin ${x.t}`; return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
+  <div class="rh-opts" role="radiogroup" aria-label="Jadwal pembelian" data-rhopts>${rhOpts(st)}</div>${blHoliday}</div>
+  <div class="footer rh-ft"><button type="button" class="cta" data-a="${p.edit ? 'rhDone' : 'rhNext'}" data-k="cta">${p.edit ? 'Simpan' : 'Lanjut'}</button></div>` }; };
+// Nominal Beli Rutin (14245:90472): a large centred amount with quick chips; the on-page keypad types into it.
+const rhNom = (st, p) => { const a = st.draftAmt, id = p.edit ? 'amt-re' : 'amt-r', x = byT(st.stock), h = `Nominal Beli Rutin ${x.t}`;
+  return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
+  <div class="rh-big"><label class="sr-only" for="${id}">Nominal per pembelian</label>
+    <div class="big-amt rh-amt"><span aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="none" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="${id}-err"></div>
     <p class="err" id="${id}-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
   <div class="footer rh-ft">${confirmBtn(st, p.edit ? 'Simpan' : 'Lanjut')}${keypad()}</div>` }; };
-// Figma's "Beli NVDA 10$" is written "$10".
-const rhSched = (st, p) => { const cur = presetOf(st.s), x = byT(st.stock); return { title: 'Tentukan jadwal Beli Rutin', big: true, body: `<div class="scroll rh"><h1 class="rh-h">Tentukan jadwal Beli Rutin</h1>
-  <div class="sf-card rh-sum">${lg40(x)}<span class="t">Beli ${x.t} ${usd(parseAmt(st.amount))}</span>${p.edit ? '' : '<button type="button" class="sf-ubah" data-a="pop" data-k="rh-ubah">Ubah Nominal</button>'}</div>
-  <div class="rh-opts" role="radiogroup" aria-label="Jadwal pembelian">${RH_OPTS.map(([v, l]) => { const sub = rhSub(v, st.s);
-    return `<button type="button" class="rh-opt" role="radio" aria-checked="${cur === v}" data-a="rhPreset" data-v="${v}" data-k="rh-${v}"><span class="row-meta"><span class="t">${l}</span>${sub ? `<span class="s">${sub}</span>` : ''}</span><span class="radio" aria-hidden="true"></span></button>`; }).join('')}</div></div>
-  <div class="footer rh-ft"><p class="rh-note">Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</p><button type="button" class="cta" data-a="${p.edit ? 'rhDone' : 'rhNext'}" data-k="cta">${p.edit ? 'Simpan' : 'Lanjut'}</button></div>` }; };
-const rhConf = st => { const x = byT(st.stock), s = st.s, edit = st.editI != null, h = edit ? 'Ubah Nabung Rutin' : 'Konfirmasi Beli Rutin';
-  const row = (k, v, a, val = '') => `<button type="button" class="rh-row" data-a="${a}" data-v="${val}" data-k="rh-row-${a}-${val}"><span>${k}</span><b>${v}</b>${svg('chev', 20)}</button>`;
-  return { title: h, big: true, body: `<div class="scroll rh"><h1 class="rh-h">${h}</h1>${rhStock(x)}
-  <div class="rh-rows">${row('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom')}${row('Jadwal Pembelian', s.freq === 'daily' && !isRule(s) ? 'Setiap Hari Bursa' : schedShort(s), 'rhEdit', 'sched')}${row('Jangka Waktu', term(s), 'openEnd')}
-    <div class="rh-row rule"><span>Sumber Dana</span><b>Rekening Saham AS<span class="tag">Autodebit</span></b></div></div>
-  <div class="sf-info">Pembelian pertama <b>${DAY_LONG_DATE(firstDebit(s))}</b>. Selanjutnya dibeli otomatis setiap <b>${sfWhen(s)}${s.freq === 'daily' && !isRule(s) ? ', Senin–Jumat' : ''}</b>.<br>Jika bursa AS libur, pembelian dilakukan di hari bursa berikutnya.</div></div>
-  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st)}</div></div>` }; };
+const rhConf = st => { const x = byT(st.stock), edit = st.editI != null, h = edit ? 'Ubah Nabung Rutin' : `Beli Rutin ${x.t}`;
+  return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
+  <div class="bl-rows">${blRow('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom', 'rh-row-nom')}${blRow('Jadwal Pembelian', schedLine(st.s), 'rhEdit', 'sched', 'rh-row-sched')}${blFund}${blHoliday}</div></div>
+  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi')}</div></div>` }; };
 const rhCfg = { ...sfCfg,
   page: (p, st) => p.id === 'rhNom' ? rhNom(st, p) : p.id === 'rhSched' ? rhSched(st, p) : p.id === 'rhConf' ? rhConf(st) : sfCfg.page(p, st),
-  pick(v, ctx) { const st = ctx.st; st.stock = v; st.amtErr = ''; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount; ctx.push({ id: 'rhNom' }); },
-  confirm(ctx) { const st = ctx.st; st.amount = st.draftAmt; st.pages.at(-1).edit ? ctx.pop(null, true) : ctx.push({ id: 'rhSched' }); },
+  pick(v, ctx) { sfStart(ctx.st, v); ctx.push({ id: 'rhSched' }); },
+  confirm(ctx) { const st = ctx.st; st.amount = st.draftAmt; if (st.pages.at(-1).edit) return ctx.pop(null, true); st.agree = false; st.terms = false; ctx.push({ id: 'rhConf' }); },
   editPage: 'rhConf',
   act: { ...SF_ACT,
     rhPreset(v, ctx) { const st = ctx.st;
       if (v === 'custom') { st.draft = { ...st.s }; st.enter = 'sheet'; return SF_ACT.openCustom(null, ctx); }
-      st.s = { ...st.s, day: null, date: null, ...SF_PRESET_SCHED[v], preset: v };
-      ctx.phone.querySelectorAll('[data-a="rhPreset"]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === v)));
-      ctx.patch('[data-k="rh-custom"] .row-meta', '<span class="t">Atur sendiri</span>'); },
-    rhNext(_, ctx) { const st = ctx.st; st.agree = false; st.terms = false; ctx.push({ id: 'rhConf' }); },
-    // Konfirmasi rows open their step over it (fade, not the slide back through the steps); Simpan / back return to Konfirmasi.
+      st.s = { ...st.s, day: null, date: null, ...SF_PRESET_SCHED[v], preset: v, end: 'forever', endDate: null };
+      ctx.patch('[data-rhopts]', rhOpts(st)); ctx.focus(`[data-k="rh-${v}"]`); },
+    rhNext(_, ctx) { const st = ctx.st; st.draftAmt = st.amount; st.amtErr = ''; ctx.push({ id: 'rhNom' }); },
+    // Confirmation rows open their step over it (fade, not the slide back through the steps); Simpan / back return to it.
     rhEdit(v, ctx) { const st = ctx.st; st.editBak = { s: { ...st.s } }; st.draftAmt = st.amount; st.amtErr = ''; ctx.push({ id: v === 'nom' ? 'rhNom' : 'rhSched', edit: true, back: 'rhCancel' }, true); },
     rhDone(_, ctx) { ctx.pop(null, true); },
     rhCancel(_, ctx) { ctx.st.s = ctx.st.editBak.s; ctx.pop(null, true); },
@@ -2657,12 +2710,12 @@ const snapshot = st => st && { ...Object.fromEntries(KEEP.map(k => [k, st[k]])),
 const isFirst = () => sel.pick === 'first' || sel.pick === 'rh';
 // Switching between Stock first and Robinhood mid-setup lands on the other flow's setup: Atur Rencana ↔ Tentukan nominal (its later steps fold into Atur Rencana);
 // while editing a plan, Atur Rencana ↔ Ubah Nabung Rutin.
-const swapSetup = (p, rh, editing) => rh && p.id === 'atur' ? { ...p, id: editing ? 'rhConf' : 'rhNom' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
+const swapSetup = (p, rh, editing) => rh && p.id === 'atur' ? { ...p, id: editing ? 'rhConf' : 'rhSched' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
 const pageFits = (p, first, rh) => p.id === 'sip' ? !!PLANS[p.i] : p.id === 'atur' ? first : p.id === 'stock' ? !first : p.id.startsWith('rh') ? rh : false;
 const build = (keep = null) => {
   const rh = sel.pick === 'rh', first = isFirst(); // Stock first (and Robinhood, built on it) ignores the Jadwal / opsi axes: it has its own Figma sheets
   syncSamples(first && sel.ord === 'sample');
-  SF = first; TAB_L = first ? ['Buat Rencana SIP', 'Rencana Aktif'] : ['Mulai Nabung', 'Rencana SIP'];
+  SF = first; TAB_L = first ? ['Mulai Beli Rutin', 'Rencana SIP'] : ['Mulai Nabung', 'Rencana SIP'];
   const restore = keep && (st => { Object.assign(st, keep, { s: { ...st.s, ...keep.s }, pages: keep.pages.map(p => swapSetup(p, rh, keep.editI != null)).filter((p, i, a) => pageFits(p, first, rh) && !(p.id === 'atur' && a[i - 1]?.id === 'atur')) });
     if (!st.stock) st.pages = st.pages.filter(p => p.id === 'sip'); });
   return app({ ...(rh ? rhCfg : first ? sfCfg : figCfg), restore, emptySched: !first && sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.stockFirst = first;

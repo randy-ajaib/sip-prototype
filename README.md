@@ -6,11 +6,12 @@ Interactive prototype of the SIP (Systematic Investment Plan) creation flow for 
 
 ## Flow
 0. **Entry points:** the prototype opens on the Saham AS home. The **SIP** shortcut and **Mulai Nabung** (Nabung Rutin section) open SIP;
-   **AAPL** (Paling Banyak Dibeli) opens the stock page, where **Beli Rutin** opens Atur Rencana with AAPL already picked.
+   **AAPL** (Paling Banyak Dibeli) opens the stock page, where **Beli Rutin** opens the setup with AAPL already picked.
    **Portfolio:** "Yuk, nabung rutin dengan SIP" opens SIP; a stock opens its sheet, where **Beli Rutin** opens SIP with that stock.
    Gear → **Entry point** picks where it starts: **Discovery**, **USDP** or **Portfolio** (`?entry=home|usdp|porto`).
-   Gear → **Approach** (`?pick=`) picks the setup flow: Return chips, Search row, **Stock first** (default) or **Robinhood**
-   (Tentukan nominal with keypad → Tentukan jadwal → Konfirmasi Beli Rutin, one step per page).
+   Gear → **Approach** (`?pick=`) picks the setup flow: Return chips, Search row, **Stock first** (default: one "Beli Rutin X" page
+   with nominal, Jadwal Pembelian sheet and Beli Rutin) or **Robinhood** (Jadwal → Nominal with keypad → Beli Rutin X with Konfirmasi,
+   one step per page). In both, **Atur sendiri** sets Harian / Mingguan / Bulanan and an optional end date.
 1. **Pilih Saham:** stock list with search, return period (1 / 3 / 5 tahun), category and sort
 2. **Nominal Pembelian:** amount sheet with quick chips and keypad
 3. **Jadwal Pembelian:** Harian / Mingguan / Bulanan (dates 1–28)

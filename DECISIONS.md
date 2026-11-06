@@ -1,5 +1,29 @@
 # SIP creation — decisions from /sip-prototype
 
+## Beli Rutin pages, schedule-first Robinhood, Atur Jadwal Sendiri with end date (6 Nov 2026)
+- **SIP page (Figma 14148:26959):** title **Beli Rutin Saham AS**, new intro line, and the tabs (**Mulai Beli Rutin** / **Rencana SIP**)
+  moved from the blue header to the top of the white sheet as a grey segmented control.
+- **Stock first is one page, "Beli Rutin X" (14380:15604):** title with the 32px logo, Nominal (Money input + chips), Jadwal Pembelian
+  (a sentence such as "Sebulan sekali, setiap tanggal 22. Berakhir 5 Desember 2026", opens the schedule sheet), Sumber Dana,
+  the market-holiday infobox, then the agreement and **Beli Rutin**, which creates the plan. The confirmation sheet and the
+  Jangka waktu row are gone; the stock card and its Ubah link too (back returns to the list).
+  An empty or invalid amount shows its error when Beli Rutin is tapped. Editing a plan uses the same page with Simpan Perubahan.
+- **Jadwal pembelian sheet (14163:77220):** Setiap bulan (default for a new plan, today's date), Setiap minggu, Setiap hari, Atur sendiri.
+  Picking a preset clears an end date set under Atur sendiri.
+- **Atur Jadwal Sendiri (14349:302305):** Harian | Mingguan | Bulanan segmented control. Harian reads "Beli setiap Hari Bursa, Senin - Jumat.";
+  Mingguan picks one weekday; Bulanan shows a 1–31 calendar. Then **Jangka waktu**: Tanpa batas waktu or Tentukan Tanggal Berakhir,
+  which shows a date field (the browser's date picker; starts one month after the first purchase, no earlier than it).
+  Tanggal 29–31 fall back to the month's last day. The summary line follows Figma ("…setiap tanggal 22. Berakhir 5 Desember 2026").
+- **Robinhood is now schedule first (14380:15899 → 14245:90472 → 14380:16024):**
+  - **Jadwal Beli Rutin X:** radios on the left — Sebulan sekali (default), Seminggu sekali, Setiap hari, Atur sendiri (chevron);
+    once Atur sendiri is set the row shows the schedule sentence with **Ubah**. Infobox, Lanjut.
+  - **Nominal Beli Rutin X:** a large centred "$10" with quick chips and the keypad (replaces the Money input card).
+  - **Beli Rutin X:** stacked rows (Nominal, Jadwal Pembelian, Sumber Dana), infobox, agreement, **Konfirmasi**. The Jangka Waktu row
+    and the "Pembelian pertama" text are gone; the end date is part of the Jadwal sentence. Ubah on Detail Rencana still opens it
+    as Ubah Nabung Rutin with Simpan Perubahan.
+- Unknown / not in Figma: the edit-mode title of the Stock first page (kept "Beli Rutin X"), and the day picker's look on Mingguan
+  for the sheet (reused the grey chips with the blue selected state).
+
 ## Robinhood order, in-place edits, fixed stock from USDP / Portfolio (2 Nov 2026)
 - **Robinhood is now nominal first** (Figma 14245:90472 → 14245:90649 → 14237:29565):
   - **Tentukan nominal** shows the stock card (no Ubah), then a card with the PD **Money input** (label, grey 40px field, as in Stock first) and quick chips; the keypad types into it (Figma 14245:90472, updated 2 Nov).
