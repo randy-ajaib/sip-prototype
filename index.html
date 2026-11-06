@@ -851,7 +851,7 @@ h1, h2, h3, p { margin: 0; }
 .rh-big .err:empty { display: none; }
 .rh-big .pchips, .bl .sf-nom .pchips { width: 100%; gap: 8px; }
 .rh-big .pchip { height: 26px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
-.rh-big .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+.rh-big .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #c9d5db; color: #06090d; }
 /* Beli Rutin pages (14380:15604 / 15899 / 16024): title with a 32px logo; stacked label / value rows 16px apart with dividers */
 .bl { padding: 16px; }
 .bl.wide { gap: 24px; }
@@ -919,7 +919,7 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .sf-amt:has(input[aria-invalid="true"]) { border-color: var(--danger); }
 .sf-nom .pchips { width: 100%; gap: 8px; margin-top: 6px; }
 .sf-nom .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
-.sf-nom .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #3a83f9; color: #06090d; }
+.sf-nom .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #c9d5db; color: #06090d; }
 .sf-form .scroll { display: flex; flex-direction: column; background: #fff; }
 .sf-white { flex: 1; padding: 24px 16px 16px; background: #fff; }
 .sf-white .dd-l, .sf-white .dd b { line-height: 1.35; }
@@ -956,11 +956,12 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cs-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 2px; border-radius: 10px; background: rgba(0, 0, 0, 0.15); }
 .cs-seg .cs-chip { height: 31px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; color: #000; }
 .cs-seg .cs-chip[aria-checked="true"] { background: #fff; color: #000; }
-.cs-daily { font-size: 13px; line-height: 1.35; color: #000; }
+.cs-daily { font-size: 13px; line-height: 1.35; font-weight: 600; color: #000; }
+.sh-ds .cs-l { font-size: 13px; font-weight: 600; }
+.sh-ds .snote.sf-note, .sh-ds .snote.cs-note { font-weight: 400; color: #000; }
 .cs-cal { display: grid; grid-template-columns: repeat(7, 40px); justify-content: space-between; }
 .cs-hr { width: 100%; height: 1px; margin: 0; border: 0; background: rgba(0, 0, 0, 0.1); }
 .sh-ds .cs-end { gap: 12px; }
-.sh-ds .cs-end .cs-l { font-size: 13px; }
 .cs-ends { display: flex; flex-direction: column; gap: 12px; }
 .cs-date { position: relative; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 16px; line-height: 1.35; color: #000; cursor: pointer; }
 .cs-date span { flex: 1; }
@@ -1831,7 +1832,7 @@ const schedBody = (d, st, plan = false) => {
       : !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih minimal satu hari.' : 'Pilih minimal satu tanggal.')
       : `Dibeli otomatis <b>setiap ${d.freq === 'weekly' ? 'hari ' : ''}${whenTxt(d)}</b>${p === 'custom' && n > 1 ? `, ${d.freq === 'weekly' ? '±' : ''}${n}× per bulan` : ''}.`;
     return `${plan ? '<span class="lbl" id="freq-l">Frekuensi</span>' : ''}<div class="plist" role="radiogroup" aria-label="Jadwal pembelian">${(st.stockFirst ? SF_PRESETS : SCHED_PRESETS).map(rad).join('')}</div>
-      ${panel}${plan ? '' : `<p class="snote" aria-live="polite">${st.stockFirst ? sfNote(d) : pnote}</p>`}`;
+      ${panel}${plan ? '' : st.stockFirst ? `<hr class="cs-hr"><p class="snote sf-note" aria-live="polite">${sfNote(d)}</p>` : `<p class="snote" aria-live="polite">${pnote}</p>`}`;
   }
   return `<span class="lbl" id="freq-l">${plan ? 'Frekuensi' : 'Atur Jadwal'}</span><div class="ochips three" role="radiogroup" aria-labelledby="freq-l">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => opt('freq', v, l, d.freq === v)).join('')}</div>
     ${sub}${note ? `<p class="snote" aria-live="polite">${note}</p>` : ''}`;
@@ -2574,8 +2575,8 @@ const blHoliday = '<div class="sf-info">Jika bursa AS libur, pembelian dilakukan
 const longDate = d => `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
 const endDay = s => s.end == null || s.end === 'forever' ? null : s.end === 'custom' ? s.endDate : buyDates(s).at(-1);
 // Jadwal Pembelian value: "Setiap hari bursa Senin - Jumat." / "Seminggu sekali, setiap hari Kamis." / "Sebulan sekali, setiap tanggal 22. Berakhir 5 Desember 2026"
-const schedLine = s => { const e = endDay(s);
-  return (s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `${s.freq === 'weekly' ? 'Seminggu' : 'Sebulan'} sekali, setiap ${sfWhen(s)}.`) + (e ? ` Berakhir ${longDate(e)}` : ''); };
+const schedBase = s => s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `${s.freq === 'weekly' ? 'Seminggu' : 'Sebulan'} sekali, setiap ${sfWhen(s)}.`;
+const schedLine = s => { const e = endDay(s); return schedBase(s) + (e ? ` Berakhir ${longDate(e)}` : ''); };
 // One page, no confirmation sheet: Nominal, Jadwal Pembelian (its sheet also sets the end date), Sumber Dana, then agree + Beli Rutin.
 function sfPage(st, p) {
   const x = byT(st.stock), a = st.amount || '', h = `Beli Rutin ${x.t}`;
@@ -2584,7 +2585,7 @@ function sfPage(st, p) {
       <div class="sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
       <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div>
     <div class="bl-rows">${blRow('Jadwal Pembelian', schedLine(st.s), 'openSched', '', 'row-sched')}${blFund}${blHoliday}</div></div>
-    <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Beli Rutin')}</div></div>` };
+    <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi Beli Rutin')}</div></div>` };
 }
 // "hari bursa" / "hari Selasa" / "tanggal 22"
 const sfWhen = s => (s.freq === 'weekly' && !isRule(s) ? 'hari ' : '') + whenTxt(s);
@@ -2597,8 +2598,8 @@ const SF_PRESETS = [['month', 'Setiap bulan'], ['week', 'Setiap minggu'], ['dail
 const SF_PRESET_SCHED = { daily: PRESET_SCHED.daily, week: { ...PRESET_SCHED.week, days: [SF_DAY] }, month: { ...PRESET_SCHED.month, dates: [SF_DATE] } };
 const sfNote = d => !schedDone(d) ? (d.freq === 'weekly' ? 'Pilih hari pembelian.' : 'Pilih tanggal pembelian.')
   : d.preset === 'custom' ? csNote(d)
-  : d.freq === 'daily' ? 'Dibeli otomatis <b>setiap hari bursa</b>, Senin–Jumat.'
-  : `Dibeli otomatis <b>${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali</b>, setiap ${sfWhen(d)}.`;
+  : d.freq === 'daily' ? 'Dibeli otomatis setiap hari bursa, Senin–Jumat.'
+  : `Dibeli otomatis ${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali, setiap ${sfWhen(d)}.`;
 // Jangka waktu (14148:28280): plain radios, no Custom.
 const SF_END = [['forever', 'Tanpa batas waktu'], [1, '1 bulan'], [3, '3 bulan'], [6, '6 bulan'], [9, '9 bulan'], [12, '1 tahun']];
 const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Jangka waktu">${SF_END.map(([v, l]) =>
@@ -2606,19 +2607,20 @@ const sfEndList = cur => `<div class="plist" role="radiogroup" aria-label="Jangk
 // Atur Jadwal Sendiri (14349:302305): Harian | Mingguan | Bulanan, one weekday or one date (1–31), then Jangka waktu with an optional end date.
 const csChip = (a, v, l, on) => `<button type="button" class="cs-chip" role="radio" aria-checked="${on}" data-a="${a}" data-v="${v}" data-k="${a}-${v}">${l}</button>`;
 const isoDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-const csNote = d => { const e = d.end === 'custom' && d.endDate ? `Berakhir ${longDate(d.endDate)}` : 'Tanpa batas waktu.';
-  return d.freq === 'daily' ? `Dibeli otomatis <b>setiap hari bursa Senin - Jumat. ${e}</b>` : `Dibeli otomatis ${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali, <b>setiap ${sfWhen(d)}. ${e}</b>`; };
+// Only an end date is mentioned; without one the line stops after the schedule.
+const csNote = d => { const e = d.end === 'custom' && d.endDate ? ` Berakhir ${longDate(d.endDate)}` : '';
+  return d.freq === 'daily' ? `Dibeli otomatis setiap hari bursa Senin - Jumat.${e}` : `Dibeli otomatis ${d.freq === 'weekly' ? 'seminggu' : 'sebulan'} sekali, setiap ${sfWhen(d)}.${e}`; };
 function csRest(st) {
   const d = st.draft, endOn = d.end === 'custom';
-  const body = d.freq === 'daily' ? '<p class="cs-daily">Beli setiap Hari Bursa, Senin - Jumat.</p>'
+  const body = d.freq === 'daily' ? '<p class="cs-daily">Beli setiap hari bursa, Senin - Jumat.</p>'
     : d.freq === 'weekly' ? `<div class="cs-grp"><span class="cs-l" id="cs-day-l">Beli setiap</span><div class="cs-days" role="radiogroup" aria-labelledby="cs-day-l">${[1, 2, 3, 4, 5].map(x => csChip('csDay', x, DAY_L[x], daysOf(d).includes(x))).join('')}</div></div>`
-    : `<div class="cs-cal" role="radiogroup" aria-label="Beli setiap tanggal">${Array.from({ length: 31 }, (_, i) => i + 1).map(x =>
-      `<button type="button" class="dcell" role="radio" aria-checked="${datesOf(d).includes(x)}" data-a="csDate" data-v="${x}" data-k="csDate-${x}">${x}</button>`).join('')}</div>`;
+    : `<div class="cs-grp"><span class="cs-l" id="cs-date-l">Beli setiap tanggal</span><div class="cs-cal" role="radiogroup" aria-labelledby="cs-date-l">${Array.from({ length: 31 }, (_, i) => i + 1).map(x =>
+      `<button type="button" class="dcell" role="radio" aria-checked="${datesOf(d).includes(x)}" data-a="csDate" data-v="${x}" data-k="csDate-${x}">${x}</button>`).join('')}</div></div>`;
   const rad = (v, l) => `<button type="button" class="eopt" role="radio" aria-checked="${endOn === (v === 'custom')}" data-a="csEnd" data-v="${v}" data-k="csEnd-${v}"><span class="radio" aria-hidden="true"></span><span class="t">${l}</span></button>`;
   // The field opens the browser's date picker; the earliest end is the first purchase.
   const field = !endOn ? '' : `<label class="cs-date"><span>${longDate(d.endDate)}</span>${svg('cal', 20)}<input type="date" data-a="csDatePick" data-on="csEndDate" aria-label="Tanggal berakhir" min="${isoDate(firstDebit(d))}" value="${isoDate(d.endDate)}"></label>`;
   return `${body}<hr class="cs-hr"><div class="cs-grp cs-end"><span class="cs-l" id="cs-end-l">Jangka waktu</span><div class="cs-ends" role="radiogroup" aria-labelledby="cs-end-l">${rad('forever', 'Tanpa batas waktu')}${rad('custom', 'Tentukan Tanggal Berakhir')}</div>${field}</div>
-    <hr class="cs-hr"><p class="snote" aria-live="polite">${csNote(d)}</p>`;
+    <hr class="cs-hr"><p class="snote cs-note" aria-live="polite">${csNote(d)}</p>`;
 }
 const cschedSheet = st => ({ title: 'Atur Jadwal Sendiri', fit: true, cls: 'sh-ds', back: 'csBack', body: `<div class="sheet-body cs">
   <div class="cs-seg" role="radiogroup" aria-label="Ulangi">${[['daily', 'Harian'], ['weekly', 'Mingguan'], ['monthly', 'Bulanan']].map(([v, l]) => csChip('csUnit', v, l, st.draft.freq === v)).join('')}</div>
@@ -2658,10 +2660,10 @@ const sfCfg = { ...figCfg,
 const RH_OPTS = [['month', 'Sebulan sekali'], ['week', 'Seminggu sekali'], ['daily', 'Setiap hari'], ['custom', 'Atur sendiri']];
 // Weekly / monthly presets use today's weekday / date, as in Stock first. Figma's lowercase "senin" is capitalised.
 const rhSub = v => v === 'daily' ? 'Dibeli otomatis setiap hari bursa, Senin–Jumat.' : v === 'week' ? `Dibeli otomatis setiap ${DAY_L[SF_DAY]}.` : `Dibeli otomatis setiap tanggal ${SF_DATE}.`;
-// Atur sendiri, once set, shows the schedule with an Ubah link instead of the chevron.
+// Atur sendiri, once set, shows the schedule with an Ubah link.
 const rhOpts = st => { const cur = presetOf(st.s), custom = cur === 'custom' && schedDone(st.s);
   return RH_OPTS.map(([v, l]) => v === 'custom'
-    ? `<button type="button" class="rh-opt" role="radio" aria-checked="${custom}" data-a="rhPreset" data-v="custom" data-k="rh-custom"><span class="radio" aria-hidden="true"></span><span class="t">${custom ? schedLine(st.s) : l}</span>${custom ? '<span class="rh-ubah">Ubah</span>' : svg('chev', 20)}</button>`
+    ? `<button type="button" class="rh-opt" role="radio" aria-checked="${custom}" data-a="rhPreset" data-v="custom" data-k="rh-custom"><span class="radio" aria-hidden="true"></span>${custom ? `<span class="row-meta"><span class="t">${schedBase(st.s)}</span>${endDay(st.s) ? `<span class="s">Berakhir ${longDate(endDay(st.s))}</span>` : ''}</span><span class="rh-ubah">Ubah</span>` : `<span class="t">${l}</span>`}</button>`
     : `<button type="button" class="rh-opt" role="radio" aria-checked="${cur === v}" data-a="rhPreset" data-v="${v}" data-k="rh-${v}"><span class="radio" aria-hidden="true"></span><span class="row-meta"><span class="t">${l}</span><span class="s">${rhSub(v)}</span></span></button>`).join(''); };
 const rhSched = (st, p) => { const x = byT(st.stock), h = `Jadwal Beli Rutin ${x.t}`; return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
   <div class="rh-opts" role="radiogroup" aria-label="Jadwal pembelian" data-rhopts>${rhOpts(st)}</div>${blHoliday}</div>

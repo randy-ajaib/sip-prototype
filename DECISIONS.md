@@ -1,5 +1,19 @@
 # SIP creation — decisions from /sip-prototype
 
+## Review tweaks (6 Nov 2026)
+- Robinhood **Atur sendiri** row has no chevron (it opens the sheet like the other options).
+- Stock first page button reads **Konfirmasi Beli Rutin** (was Beli Rutin); editing still reads Simpan Perubahan.
+
+## Schedule sheets and Robinhood Atur sendiri row per Figma (6 Nov 2026)
+- **Quick amount chips:** the selected chip keeps the grey outline with the light blue fill (no blue border), on both nominal inputs.
+- **Jadwal pembelian sheet (14383:15323):** a divider above the summary, which is plain 14px regular black (Figma has semibold; regular per review)
+  ("Dibeli otomatis seminggu sekali, setiap hari Kamis.").
+- **Atur Jadwal Sendiri (14349:302927):** Harian reads "Beli setiap hari bursa, Senin - Jumat."; Bulanan has a "Beli setiap tanggal" label;
+  labels are 13px semibold; the summary is plain 14px regular black.
+  The summary only mentions an end date when one is set; "Tanpa batas waktu." is not added (per review).
+- **Robinhood Atur sendiri row (14380:15747):** the schedule is the title ("Sebulan sekali, setiap tanggal 22.") with "Berakhir 5 Desember 2026"
+  below it when there is an end date, and Ubah on the right.
+
 ## Beli Rutin pages, schedule-first Robinhood, Atur Jadwal Sendiri with end date (6 Nov 2026)
 - **SIP page (Figma 14148:26959):** title **Beli Rutin Saham AS**, new intro line, and the tabs (**Mulai Beli Rutin** / **Rencana SIP**)
   moved from the blue header to the top of the white sheet as a grey segmented control.
