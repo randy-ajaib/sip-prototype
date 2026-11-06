@@ -9,9 +9,10 @@ Interactive prototype of the SIP (Systematic Investment Plan) creation flow for 
    **AAPL** (Paling Banyak Dibeli) opens the stock page, where **Beli Rutin** opens the setup with AAPL already picked.
    **Portfolio:** "Yuk, nabung rutin dengan SIP" opens SIP; a stock opens its sheet, where **Beli Rutin** opens SIP with that stock.
    Gear → **Entry point** picks where it starts: **Discovery**, **USDP** or **Portfolio** (`?entry=home|usdp|porto`).
-   Gear → **Approach** (`?pick=`) picks the setup flow: Return chips, Search row, **Stock first** (default: one "Beli Rutin X" page
-   with nominal, Jadwal Pembelian sheet and Beli Rutin) or **Robinhood** (Jadwal → Nominal with keypad → Beli Rutin X with Konfirmasi,
-   one step per page). In both, **Atur sendiri** sets Harian / Mingguan / Bulanan and an optional end date.
+   Gear → **Approach** (`?pick=`) picks the setup flow: Return chips, Search row, **Stock first** or **Robinhood**. The last two share the
+   "Beli Rutin X" confirmation page. **Stock first** (default) opens on it straight away with $10 and Setiap bulan filled in (all up front);
+   Nominal opens the keypad page, Jadwal the Jadwal Pembelian sheet. **Robinhood** reaches it step by step (Jadwal → Nominal with keypad →
+   confirmation; progressive disclosure). In both, **Atur sendiri** sets Harian / Mingguan / Bulanan and an optional end date.
 1. **Pilih Saham:** stock list with search, return period (1 / 3 / 5 tahun), category and sort
 2. **Nominal Pembelian:** amount sheet with quick chips and keypad
 3. **Jadwal Pembelian:** Harian / Mingguan / Bulanan (dates 1–28)

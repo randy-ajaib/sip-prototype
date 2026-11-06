@@ -1,5 +1,13 @@
 # SIP creation — decisions from /sip-prototype
 
+## Stock first uses the Robinhood confirmation page (Figma 14385:17797, 6 Nov 2026)
+- Stock first and Robinhood now share one "Beli Rutin X" page. Stock first shows everything up front (opens on it with $10 and Setiap bulan);
+  Robinhood is progressive disclosure (Jadwal → Nominal → the same page).
+- Stock first orders the rows Nominal then Jadwal (per Figma); Robinhood keeps Jadwal then Nominal, its step order.
+- Stock first's inline amount input is gone: Nominal opens Robinhood's keypad page over the confirmation (Simpan / back);
+  Jadwal still opens the Jadwal Pembelian sheet.
+- Schedule copy follows the Robinhood page ("Setiap tanggal 22."); Figma 14385:17797 omits the full stop. **Unknown** which is intended.
+
 ## Robinhood confirmation per Figma 14380:16024 (6 Nov 2026)
 - Rows reordered: **Jadwal Pembelian** first, then **Nominal per pembelian** (schedule-first, matching the flow order).
 - Schedule copy is short ("Setiap tanggal 22.", "Setiap hari Kamis.", "Setiap hari bursa Senin - Jumat.");

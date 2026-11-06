@@ -849,12 +849,11 @@ h1, h2, h3, p { margin: 0; }
 .rh-amt input[aria-invalid="true"] { color: var(--danger); }
 .rh-big .err { margin: 0; text-align: center; }
 .rh-big .err:empty { display: none; }
-.rh-big .pchips, .bl .sf-nom .pchips { width: 100%; gap: 8px; }
+.rh-big .pchips { width: 100%; gap: 8px; }
 .rh-big .pchip { height: 26px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
 .rh-big .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #c9d5db; color: #06090d; }
 /* Beli Rutin pages (14380:15604 / 15899 / 16024): title with a 32px logo; stacked label / value rows 16px apart with dividers */
 .bl { padding: 16px; }
-.bl.wide { gap: 24px; }
 .bl-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .bl-rows { display: flex; flex-direction: column; gap: 16px; }
 .bl-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 0 16px; border: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: none; text-align: left; cursor: pointer; }
@@ -908,18 +907,6 @@ div.rh-row.rule { border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .sf-ubah { position: relative; flex: none; border: 0; background: none; padding: 0; font-size: 12px; line-height: 1.35; font-weight: 700; color: #2264d4; cursor: pointer; }
 .sf-ubah::before { content: ""; position: absolute; inset: -14px -12px; }
 /* Money input (Figma 14197:28710): label, grey 40px field, quick chips 6px below */
-.sf-nom { display: flex; flex-direction: column; gap: 6px; }
-.sf-nom label { font-size: 12px; line-height: 1.35; font-weight: 700; color: #000; }
-.sf-nom .err { margin: 0; }
-.sf-nom .err:empty { display: none; }
-.sf-amt { display: flex; align-items: center; height: 40px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; background: rgba(0, 0, 0, 0.04); font-size: 16px; line-height: 1.35; font-weight: 700; color: rgba(0, 0, 0, 0.65); font-variant-numeric: tabular-nums; transition: border-color .15s ease-out; }
-.sf-amt input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; font: inherit; color: #000; caret-color: #3278f0; }
-.sf-amt input:focus { outline: none; }
-.sf-amt:focus-within { border-color: #3278f0; }
-.sf-amt:has(input[aria-invalid="true"]) { border-color: var(--danger); }
-.sf-nom .pchips { width: 100%; gap: 8px; margin-top: 6px; }
-.sf-nom .pchip { height: 28px; border: 1px solid #c9d5db; border-radius: 8px; background: transparent; font-size: 12px; line-height: 18px; font-weight: 700; color: #445b70; }
-.sf-nom .pchip[aria-pressed="true"] { background: #e1f2fa; border-color: #c9d5db; color: #06090d; }
 .sf-form .scroll { display: flex; flex-direction: column; background: #fff; }
 .sf-white { flex: 1; padding: 24px 16px 16px; background: #fff; }
 .sf-white .dd-l, .sf-white .dd b { line-height: 1.35; }
@@ -2577,16 +2564,15 @@ const endDay = s => s.end == null || s.end === 'forever' ? null : s.end === 'cus
 // Jadwal Pembelian value: "Setiap hari bursa Senin - Jumat." / "Seminggu sekali, setiap hari Kamis." / "Sebulan sekali, setiap tanggal 22. Berakhir 5 Desember 2026"
 const schedBase = s => s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `${s.freq === 'weekly' ? 'Seminggu' : 'Sebulan'} sekali, setiap ${sfWhen(s)}.`;
 const schedLine = s => { const e = endDay(s); return schedBase(s) + (e ? ` Berakhir ${longDate(e)}` : ''); };
-// One page, no confirmation sheet: Nominal, Jadwal Pembelian (its sheet also sets the end date), Sumber Dana, then agree + Beli Rutin.
-function sfPage(st, p) {
-  const x = byT(st.stock), a = st.amount || '', h = `Beli Rutin ${x.t}`;
-  return { title: h, big: true, body: `<div class="scroll rh bl wide">${blHead(h, x)}
-    <div class="sf-nom"><label for="amt-h">Nominal per pembelian</label>
-      <div class="sf-amt"><span aria-hidden="true">$</span><input id="amt-h" data-amt data-inline type="text" inputmode="decimal" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" aria-invalid="${!!st.amtErr}" aria-describedby="amt-h-err"></div>
-      <p class="err" id="amt-h-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div>
-    <div class="bl-rows">${blRow('Jadwal Pembelian', schedLine(st.s), 'openSched', '', 'row-sched')}${blFund}${blHoliday}</div></div>
-    <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi Beli Rutin')}</div></div>` };
-}
+// Stock first (Figma 14385:17797) and Robinhood (14380:16024) share one confirmation page. Stock first opens on it with defaults
+// ($10, Setiap bulan) and Nominal first (all up front); Robinhood reaches it after its Jadwal and Nominal steps, Jadwal first.
+// Nominal opens the keypad page over it; Jadwal opens the Jadwal Pembelian sheet (Stock first) or Robinhood's Jadwal page.
+const confPage = (st, sf) => { const x = byT(st.stock), h = st.editI != null ? 'Ubah Nabung Rutin' : `Beli Rutin ${x.t}`;
+  const nom = blRow('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom', 'rh-row-nom'),
+    sched = sf ? blRow('Jadwal Pembelian', rhSchedLine(st.s), 'openSched', '', 'row-sched') : blRow('Jadwal Pembelian', rhSchedLine(st.s), 'rhEdit', 'sched', 'rh-row-sched');
+  return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
+  <div class="bl-rows">${sf ? nom + sched : sched + nom}${blFund}${blHoliday}</div></div>
+  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi Beli Rutin')}</div></div>` }; };
 // "hari bursa" / "hari Selasa" / "tanggal 22"
 const sfWhen = s => (s.freq === 'weekly' && !isRule(s) ? 'hari ' : '') + whenTxt(s);
 // Footer (14143:26715): first purchase + schedule infobox, Sumber Dana, Lanjut.
@@ -2641,6 +2627,10 @@ const SF_ACT = {
   // Tentukan Tanggal Berakhir starts one month after the first purchase.
   csEnd(v, ctx) { const d = ctx.st.draft; d.end = v; d.endDate = v === 'custom' ? d.endDate || addMonths(firstDebit(d), 1) : null; csPatch(ctx); ctx.focus(`[data-k="csEnd-${v}"]`); },
   csDatePick(_, ctx, el) { try { el.showPicker(); } catch { /* older browsers open it on click */ } },
+  // Confirmation rows open their step over it (fade, not the slide back through the steps); Simpan / back return to it.
+  rhEdit(v, ctx) { const st = ctx.st; st.editBak = { s: { ...st.s } }; st.draftAmt = st.amount; st.amtErr = ''; ctx.push({ id: v === 'nom' ? 'rhNom' : 'rhSched', edit: true, back: 'rhCancel' }, true); },
+  rhDone(_, ctx) { ctx.pop(null, true); },
+  rhCancel(_, ctx) { ctx.st.s = ctx.st.editBak.s; ctx.pop(null, true); },
   csEndDate(v, ctx) { if (!v) return; const [y, m, dd] = v.split('-').map(Number), d = ctx.st.draft, min = firstDebit(d), x = new Date(y, m - 1, dd); d.endDate = x < min ? min : x; csPatch(ctx); },
 };
 function csPatch(ctx) { ctx.patch('[data-cs]', csRest(ctx.st)); ctx.patch('[data-sched-ft]', saveBtn(ctx.st.draft)); }
@@ -2648,9 +2638,10 @@ function csPatch(ctx) { ctx.patch('[data-cs]', csRest(ctx.st)); ctx.patch('[data
 function sfStart(st, v) { st.stock = v; st.amtErr = ''; st.schedErr = ''; st.agree = false; st.terms = false; if (!st.amount) st.amount = '10'; st.draftAmt = st.amount;
   if (st.editI == null && !st.s.preset) st.s = { ...st.s, ...SF_PRESET_SCHED.month, preset: 'month', end: 'forever', endDate: null }; }
 const sfCfg = { ...figCfg,
-  page: (p, st) => p.id === 'atur' ? sfPage(st, p) : figCfg.page(p, st),
+  page: (p, st) => p.id === 'atur' ? confPage(st, true) : p.id === 'rhNom' ? rhNom(st, p) : figCfg.page(p, st),
   list: sfRows,
   pick(v, ctx) { const st = ctx.st; sfStart(st, v); ctx.push({ id: 'atur' }); },
+  confirm(ctx) { ctx.st.amount = ctx.st.draftAmt; ctx.pop(null, true); }, // Simpan on the keypad page opened from Nominal
   act: SF_ACT,
 };
 /* Robinhood reference (Figma section 14237:28057), schedule first: stock → Jadwal Beli Rutin (14380:15899) → Nominal Beli Rutin (14245:90472)
@@ -2678,12 +2669,8 @@ const rhNom = (st, p) => { const a = st.draftAmt, id = p.edit ? 'amt-re' : 'amt-
 // Figma 14380:16024: short schedule copy, end date on its own line.
 const rhSchedLine = s => { const e = endDay(s);
   return (s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `Setiap ${sfWhen(s)}.`) + (e ? `<br>Berakhir ${longDate(e)}` : ''); };
-const rhConf = st => { const x = byT(st.stock), edit = st.editI != null, h = edit ? 'Ubah Nabung Rutin' : `Beli Rutin ${x.t}`;
-  return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
-  <div class="bl-rows">${blRow('Jadwal Pembelian', rhSchedLine(st.s), 'rhEdit', 'sched', 'rh-row-sched')}${blRow('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom', 'rh-row-nom')}${blFund}${blHoliday}</div></div>
-  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi Beli Rutin')}</div></div>` }; };
 const rhCfg = { ...sfCfg,
-  page: (p, st) => p.id === 'rhNom' ? rhNom(st, p) : p.id === 'rhSched' ? rhSched(st, p) : p.id === 'rhConf' ? rhConf(st) : sfCfg.page(p, st),
+  page: (p, st) => p.id === 'rhSched' ? rhSched(st, p) : p.id === 'rhConf' ? confPage(st, false) : sfCfg.page(p, st),
   pick(v, ctx) { sfStart(ctx.st, v); ctx.push({ id: 'rhSched' }); },
   confirm(ctx) { const st = ctx.st; st.amount = st.draftAmt; if (st.pages.at(-1).edit) return ctx.pop(null, true); st.agree = false; st.terms = false; ctx.push({ id: 'rhConf' }); },
   editPage: 'rhConf',
@@ -2693,10 +2680,6 @@ const rhCfg = { ...sfCfg,
       st.s = { ...st.s, day: null, date: null, ...SF_PRESET_SCHED[v], preset: v, end: 'forever', endDate: null };
       ctx.patch('[data-rhopts]', rhOpts(st)); ctx.focus(`[data-k="rh-${v}"]`); },
     rhNext(_, ctx) { const st = ctx.st; st.draftAmt = st.amount; st.amtErr = ''; ctx.push({ id: 'rhNom' }); },
-    // Confirmation rows open their step over it (fade, not the slide back through the steps); Simpan / back return to it.
-    rhEdit(v, ctx) { const st = ctx.st; st.editBak = { s: { ...st.s } }; st.draftAmt = st.amount; st.amtErr = ''; ctx.push({ id: v === 'nom' ? 'rhNom' : 'rhSched', edit: true, back: 'rhCancel' }, true); },
-    rhDone(_, ctx) { ctx.pop(null, true); },
-    rhCancel(_, ctx) { ctx.st.s = ctx.st.editBak.s; ctx.pop(null, true); },
     csBack(_, ctx) { ctx.closeSheet(() => ctx.focus('[data-k="rh-custom"]')); }, // Atur sendiri opens from the page, not the preset sheet
   },
 };
@@ -2715,13 +2698,13 @@ const snapshot = st => st && { ...Object.fromEntries(KEEP.map(k => [k, st[k]])),
 const isFirst = () => sel.pick === 'first' || sel.pick === 'rh';
 // Switching between Stock first and Robinhood mid-setup lands on the other flow's setup: Atur Rencana ↔ Tentukan nominal (its later steps fold into Atur Rencana);
 // while editing a plan, Atur Rencana ↔ Ubah Nabung Rutin.
-const swapSetup = (p, rh, editing) => rh && p.id === 'atur' ? { ...p, id: editing ? 'rhConf' : 'rhSched' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
+const swapSetup = (p, rh, editing) => p.edit ? null : rh && p.id === 'atur' ? { ...p, id: editing ? 'rhConf' : 'rhSched' } : !rh && p.id.startsWith('rh') ? { id: 'atur', exit: p.exit } : p;
 const pageFits = (p, first, rh) => p.id === 'sip' ? !!PLANS[p.i] : p.id === 'atur' ? first : p.id === 'stock' ? !first : p.id.startsWith('rh') ? rh : false;
 const build = (keep = null) => {
   const rh = sel.pick === 'rh', first = isFirst(); // Stock first (and Robinhood, built on it) ignores the Jadwal / opsi axes: it has its own Figma sheets
   syncSamples(first && sel.ord === 'sample');
   SF = first; TAB_L = first ? ['Mulai Beli Rutin', 'Rencana SIP'] : ['Mulai Nabung', 'Rencana SIP'];
-  const restore = keep && (st => { Object.assign(st, keep, { s: { ...st.s, ...keep.s }, pages: keep.pages.map(p => swapSetup(p, rh, keep.editI != null)).filter((p, i, a) => pageFits(p, first, rh) && !(p.id === 'atur' && a[i - 1]?.id === 'atur')) });
+  const restore = keep && (st => { Object.assign(st, keep, { s: { ...st.s, ...keep.s }, pages: keep.pages.map(p => swapSetup(p, rh, keep.editI != null)).filter(Boolean).filter((p, i, a) => pageFits(p, first, rh) && !(p.id === 'atur' && a[i - 1]?.id === 'atur')) });
     if (!st.stock) st.pages = st.pages.filter(p => p.id === 'sip'); });
   return app({ ...(rh ? rhCfg : first ? sfCfg : figCfg), restore, emptySched: !first && sel.sched === 'one', init: st => { figCfg.init(st); st.initStyle = sel.pick; st.stockFirst = first;
     st.oneSched = !first && sel.sched === 'one'; st.simpleSched = first || sel.opts === 'preset'; st.calStyle = sel.cal;
