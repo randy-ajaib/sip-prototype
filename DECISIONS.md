@@ -1,5 +1,11 @@
 # SIP creation — decisions from /sip-prototype
 
+## Robinhood confirmation per Figma 14380:16024 (6 Nov 2026)
+- Rows reordered: **Jadwal Pembelian** first, then **Nominal per pembelian** (schedule-first, matching the flow order).
+- Schedule copy is short ("Setiap tanggal 22.", "Setiap hari Kamis.", "Setiap hari bursa Senin - Jumat.");
+  an end date goes on its own line ("Berakhir 5 Desember 2026"). Day names stay capitalised (Figma has "kamis").
+- Button reads **Konfirmasi Beli Rutin** (was Konfirmasi); editing still reads Simpan Perubahan.
+
 ## Review tweaks (6 Nov 2026)
 - Robinhood **Atur sendiri** row has no chevron (it opens the sheet like the other options).
 - Stock first page button reads **Konfirmasi Beli Rutin** (was Beli Rutin); editing still reads Simpan Perubahan.

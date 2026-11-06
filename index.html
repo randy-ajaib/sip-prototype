@@ -2675,10 +2675,13 @@ const rhNom = (st, p) => { const a = st.draftAmt, id = p.edit ? 'amt-re' : 'amt-
     <div class="big-amt rh-amt"><span aria-hidden="true">$</span><input id="${id}" data-amt type="text" inputmode="none" placeholder="0" autocomplete="off" spellcheck="false" value="${esc(a)}" style="width:${Math.max(2, a.length) + 0.6}ch" aria-invalid="${!!st.amtErr}" aria-describedby="${id}-err"></div>
     <p class="err" id="${id}-err" data-err>${st.amtErr || ''}</p>${quickChips(parseAmt(a))}</div></div>
   <div class="footer rh-ft">${confirmBtn(st, p.edit ? 'Simpan' : 'Lanjut')}${keypad()}</div>` }; };
+// Figma 14380:16024: short schedule copy, end date on its own line.
+const rhSchedLine = s => { const e = endDay(s);
+  return (s.freq === 'daily' && !isRule(s) ? 'Setiap hari bursa Senin - Jumat.' : `Setiap ${sfWhen(s)}.`) + (e ? `<br>Berakhir ${longDate(e)}` : ''); };
 const rhConf = st => { const x = byT(st.stock), edit = st.editI != null, h = edit ? 'Ubah Nabung Rutin' : `Beli Rutin ${x.t}`;
   return { title: h, big: true, body: `<div class="scroll rh bl">${blHead(h, x)}
-  <div class="bl-rows">${blRow('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom', 'rh-row-nom')}${blRow('Jadwal Pembelian', schedLine(st.s), 'rhEdit', 'sched', 'rh-row-sched')}${blFund}${blHoliday}</div></div>
-  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi')}</div></div>` }; };
+  <div class="bl-rows">${blRow('Jadwal Pembelian', rhSchedLine(st.s), 'rhEdit', 'sched', 'rh-row-sched')}${blRow('Nominal per pembelian', usd(parseAmt(st.amount)), 'rhEdit', 'nom', 'rh-row-nom')}${blFund}${blHoliday}</div></div>
+  <div class="footer rh-ft">${agreeBox(st)}<div data-buy>${buyBtn(st, 'Konfirmasi Beli Rutin')}</div></div>` }; };
 const rhCfg = { ...sfCfg,
   page: (p, st) => p.id === 'rhNom' ? rhNom(st, p) : p.id === 'rhSched' ? rhSched(st, p) : p.id === 'rhConf' ? rhConf(st) : sfCfg.page(p, st),
   pick(v, ctx) { sfStart(ctx.st, v); ctx.push({ id: 'rhSched' }); },
