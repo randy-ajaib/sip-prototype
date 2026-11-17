@@ -1,5 +1,103 @@
 # SIP creation — decisions from /sip-prototype
 
+## Beli Rutin list: filter options and date box (Figma 14780:46369, 14721:35530, 16 Nov 2026)
+
+- Date box on list rows now matches the Figma component: a white day tile with a hairline border on a tinted card, month below in 10px. Blue card for a purchase today, grey otherwise; no blue border.
+- Gear → Filter compares three ways to deal with stopped plans:
+  - Chips (14724:36439): Semua / Aktif / Berhenti with counts. Current Figma.
+  - Toggle (14780:46364): Small switch (PD switch 436:1321/436:1319) with "Hanya tampilkan Rencana Aktif", off by default, hidden when nothing is stopped. Recommended over chips: the only real need is hiding stopped plans, and it's quieter.
+  - Pemisah (not in Figma): no control; active plans first, under "Aktif (n)" and "Berhenti (n)" labels (no labels when nothing is stopped). Preferred until users pile up stopped plans. Label style is mine.
+- Decision (16 Nov 2026): go with Chips for now. They match Figma and hold up best with a long active list (one tap to stopped plans). Toggle and Pemisah stay in the gear for reference; revisit once there is data on how many plans users keep.
+- Copy note: the toggle says "Rencana Aktif" while the rest of the flow says "Beli Rutin". Suggested "Hanya tampilkan yang aktif". Kept Figma's copy for now.
+
+## Beli Rutin "New Update" (Figma 14724:34974, 16 Nov 2026)
+
+- Empty state (14701:34598): grey band with "Mulai Beli Rutin saham AS", the most-bought ranking cards, then Cari Saham US (search, pills, list). No title in the header. The search field opens Pilih Saham AS.
+- Pilih Saham AS (14740:37267): same layout, "Paling banyak dibeli rutin." and a live search. Pills are Fundamental / AI & Tech / Dividen Rutin / ETF Pilihan (no Trending), lists have no gain.
+- Gear → Kosong is now Figma / Satu daftar. Sekarang (historical gain), Stakeholder and Rapi are removed, and so is the historical-gain code (period menu, gain column, simulated values).
+- Landing (14701:34304): Semua / Aktif / Berhenti chips with counts replace "Rencana Aktif (n)" and its note. An empty filter shows a short line (copy not in Figma).
+- Creation: amount centred (14646:28818). The success sheet is back (14666:90137) over the list, with Tutup. Syarat dan Ketentuan opens its page (14740:37890, text as in Figma).
+- Detail (14651:31832): logo, "Beli Rutin NVDA" and the status tag on one line; Jadwal selanjutnya is one row without an amount. A stopped plan shows Dibatalkan.
+- Ubah (14666:93816, 14666:93693): titles "Ubah Beli Rutin NVDA", a highlighted "Pembelian baru berikutnya" row on confirm, then back to the detail with "Beli Rutin berhasil diubah".
+- Berhenti (14666:94304, 14651:32102): sheet "Berhenti Beli Rutin" / Berhenti; stays on the detail, now stopped, with "Beli Rutin berhasil dihentikan".
+- USDP / Portofolio Beli Rutin (14765:39185, 14765:40934): with an active plan for that stock, the "Beli Rutin Aktif (n)" sheet opens first (rows → detail, Lihat Semua → list, Beli Rutin Baru → amount page); without one, the amount page.
+- Not built: push notifications (Notif section), the "(n) jadwal minggu ini" banner variant, and #4's rank-down arrow on Pilih Saham AS (no rank-change data).
+- Figma copy slips kept or flagged: META at #4 and #5 (NVDA stands in); T&C repeats the Ketentuan Umum sentence under 3. Perintah SIP (kept); stopped detail history rows use a different format than active ones (active format used).
+
+## Beli Rutin suggestions: most bought, no historical data (Figma 14740:36189, 13 Nov 2026)
+
+- Suggestions on the empty state rank the stocks most bought for Beli Rutin. No historical gain or simulated value for now, since it can mislead.
+- Gear → Kosong: Stakeholder (14740:36189 as drawn), Rapi (same layout plus intro, sticky search and pills), Satu daftar (ranking as the first pill, Terpopuler).
+- Pilih Saham AS drops the gain column with these versions. Sekarang (14687:95399) keeps it only as a reference.
+- Open: the ranking source and window (e.g. last 30 days); the prototype order AAPL, AMZN, GOOGL, META, NVDA is a placeholder.
+- Home widget (Bento Section 14698:96292) follows the same rule: the five logos are the most bought for Beli Rutin, and the card shows the rank ("#1 paling banyak dibeli rutin") instead of Figma's value and "Potensi cuan". The Grafik variant is dropped; Figma, Kartu and Ringkas remain.
+
+## Beli Rutin empty state and stock list gain (Figma 14687:95399, 14685:94892, 13 Nov 2026)
+- **Empty state (14687:95399, updated):** no page title; "Mulai Beli Rutin dari saham AS populer"; "Kalau kamu Beli Rutin $10 tiap bulan sejak
+  <month> (total $X), nilainya sekarang:"; the same header row as the stock list ("Saham" | "Gain 3 tahun terakhir ▾" opening a 1 / 2 / 3 tahun
+  menu, 3 years by default); 5 Trending stocks with value and %, ranked by gain for the period; disclaimer for that period;
+  **Cek Saham Lainnya** (search icon) opens Pilih Saham AS. No docked + Beli Rutin. Figma's "360$" is written "$360", and its disclaimer
+  ("1 tahun") follows the selected period.
+- **Stock list (14685:94892):** in Beli Rutin, Pilih Saham AS shows the same value and % on every row. A white header row reads "Saham" and a blue
+  "Gain N tahun terakhir ▾" that opens a 1 / 2 / 3 tahun menu (closes on choice, outside tap or Escape). The period is shared with the empty state.
+  Category order and search relevance are kept (not sorted by gain). A stock without enough history shows "Belum ada data N tahun".
+  One disclaimer at the end of the list (**Unknown:** Figma doesn't show one; kept because the list shows past performance).
+- Numbers come from simulated prices: 1 year the weekly series, 2–3 years the simulated 3-year annual return. Not market data.
+- Copy review still open: "$1,603" vs "+24,3%" mixes number formats ("potensi cuan" is now "nilainya sekarang" in Figma).
+- **Rejected on the gear:** empty state Figma 14685:94486 (3-year table), Periode, Nilai uang, Tema, Simulasi with hero; Kalkulator in all
+  versions (Batang, Kalimat, Waktu, Target); the 1 / 2 / 3 Tahun mini switch in a grey header row (first 14687:95399); stock list switch as a grey header row, a filter pill with a sheet, or fixed 1 year; gain shown only
+  while browsing, or not at all.
+
+## Beli Rutin creation update (Figma 14654:52685, 12 Nov 2026)
+- Amount page: the schedule dropdown gets a leading calendar icon.
+- Atur Jadwal summary ends "Berlaku sampai dibatalkan." (was "Sampai dibatalkan.").
+- Confirmation (14666:49643): label and value on one line, dividers between rows, then the infobox ("Jika libur, …"). The first-purchase line is gone.
+- The success sheet (14651:31631) was deleted from Figma. Konfirmasi Beli Rutin now returns to the list with a toast
+  "Beli Rutin NVDA berhasil diaktifkan" (editing: "… berhasil diubah"). **Unknown:** what replaces the success sheet; the section now holds
+  a Groww AutoPay mandate screenshot as reference, which isn't built.
+
+## Beli Rutin list and empty state per Figma 14666:89967 (12 Nov 2026)
+Decided after exploring the active list on the gear (stock-based beats schedule-based: a daily plan would repeat on every day).
+- **Active list (14666:48504):** a blue banner on top: "N jadwal Beli Rutin hari ini", "Pastikan kamu punya saldo $X di Rekening Saham AS"
+  (X = that day's purchases), **Deposit Saldo**, illustration (assets/br-banner.png, a 1x export). Then Rencana Aktif with the market-order note,
+  one row per plan; today's date boxes are blue; a stopped plan shows only its amount and the Berhenti tag, last.
+- The banner is for the next purchase day: "hari ini" as in Figma, otherwise "besok" or "pada <date>". **Unknown:** whether it should hide
+  when nothing is due today.
+- Deposit Saldo shows a toast; the prototype has no deposit flow.
+- Note copy follows Figma ("sesuai harga pasar saat itu … di hari berikutnya"); Figma's capitalised "SAAT ITU" is set in normal case.
+- **Empty state (14666:32972)** replaces Simulasi: grey hero with the illustration and "Belum ada rencana aktif", then "Yuk, Beli Rutin saham
+  populer" with "potensi cuan" for $10 every month, rows with value and %, and the shorter disclaimer. Kalkulator stays on the gear for later.
+- Rejected on the gear: Ringkasan (balance + Deposit summary), Jadwal (5-day agenda), Hasil (value per plan), Status (failed-order line,
+  folded Berhenti), Grup waktu (Hari ini / Minggu ini / Nanti), Berikutnya (next-day card). Figma's banner covers what Berikutnya and Status aimed at.
+
+## New approach: Beli Rutin (Figma 14666:48672, 14654:52685, 14654:52699, 12 Nov 2026)
+Gear → Approach → **Beli Rutin** (`?pick=br`). Stock first and Robinhood are unchanged.
+- **List (14666:48504):** opens on Beli Rutin Saham AS (white header) with **Rencana Aktif (n)**, the market-order note, one row per plan
+  (logo, ticker, "$7 • Setiap tanggal 12", day / month box for the next purchase) and a docked **+ Beli Rutin**.
+  No plans (not in Figma): two directions on gear → **Empty state** (`?emp=sim|calc`), both based on $10 every month over the last year:
+  - **Simulasi** (default): now Figma 14666:32972 (see the 12 Nov entry above).
+  - **Kalkulator**: "Berapa hasilnya kalau Beli Rutin?": pick one of the 5 stocks; two bars compare "Uang yang kamu setor" ($120)
+    with "Nilai X sekarang", then "Untung $19 (+16,0%)" (or Rugi). Its **Beli Rutin X** button opens the amount page with $10 monthly.
+    The line chart with legend and the "modal" wording were dropped as too confusing.
+  - Both show the past-performance disclaimer. Results come from the prototype's simulated prices, not market data.
+  - Rejected: Rencana siap (example plans read as advice), Cara kerja (reading before acting), Harga rata-rata (cost averaging needs
+    explaining first), and amount / weekly controls in Kalkulator (too much for an empty state; $10 monthly matches the amount page default).
+- **Creation (14654:52685):** Pilih Saham AS (the Stock first list as a page) → amount page: $10 typed on the keypad, $5–$50 chips,
+  schedule dropdown (default "Sebulan sekali, setiap tanggal <today>"), "Beli Rutin dimulai <date>.", **Beli Rutin** →
+  confirmation (Nominal, Jadwal, Berlaku hingga Sampai dibatalkan, Sumber dana, market-order infobox, agreement,
+  Konfirmasi Beli Rutin) → back to the list with a toast (see the creation update above).
+- **Atur Jadwal sheet:** Harian / Mingguan (one weekday) / Bulanan (one date, 1–31), with the summary updating as you pick; Simpan applies,
+  X discards. No end date anywhere in this flow: plans run until stopped. The Bulanan frame is titled "Atur Jadwal Sendiri"; all three
+  use **Atur Jadwal** (the other two frames).
+- **Detail (14654:52699):** bordered stock card with a blue "Pembelian berikutnya" strip, rows (Berlaku hingga, or Tanggal berakhir for a plan
+  with an end or a stopped plan), **Riwayat Beli Rutin**, Berhenti / Ubah. A stopped plan has no strip and no buttons (14651:32102).
+- **Ubah:** opens the amount page prefilled; the confirmation's button reads Simpan Perubahan and returns to the list with a toast.
+  **Unknown:** no Figma for editing.
+- Day names keep their capital ("Setiap Kamis"; Figma has "kamis"). The Harian start date shows the real next trading day
+  (Figma has a "[Next Date Market Hours]" placeholder).
+- The first-purchase line uses the PD **refresh** icon; Figma's ic_Transaction isn't in the PD icon set.
+- The keypad is the prototype's existing keypad; Figma shows the iOS system keyboard.
+
 ## Beli Rutin entry points and one confirmation order (6 Nov 2026)
 - **Robinhood confirmation (14385:17621):** Nominal first, then Jadwal, same as Stock first. Schedule copy has no full stop
   ("Setiap tanggal 22"), which settles the earlier unknown.
